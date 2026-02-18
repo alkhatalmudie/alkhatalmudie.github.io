@@ -4,9 +4,8 @@
    ========================================================================== */
 
 // 1. Import the specific tools we need (App + Database + Analytics)
-// We use the same version (12.9.0) provided by your console.
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 import { 
     getFirestore, 
     collection, 
@@ -14,7 +13,7 @@ import {
     doc, 
     getDoc, 
     setDoc 
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // 2. Your Specific Keys (Direct from your console)
 const firebaseConfig = {
