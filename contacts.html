@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        /* PAGE SPECIFIC STYLES */
+        body { padding-top: 80px; background: #f0f4f8; }
+
+        .contact-hero {
+            background: var(--brand-navy);
+            color: white;
+            padding: 80px 0 120px; /* Extra padding bottom for overlap */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* DNA Background Effect */
+        .contact-hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,174,239,0.1) 0%, rgba(15,24,46,0) 70%);
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+        .contact-container {
+            max-width: 1100px;
+            margin: -80px auto 50px; /* Pulls content up into the blue hero */
+            position: relative;
+            z-index: 10;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+
+        /* LEFT SIDE: INFO */
+        .info-card {
+            background: var(--brand-navy);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-card::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 100px; height: 100px;
+            background: linear-gradient(to top left, var(--brand-magenta), transparent);
+            opacity: 0.2; border-radius: 50% 0 0 0;
+        }
+
+        .info-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 30px; }
+        .info-icon { 
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--brand-cyan); font-size: 1.2rem; flex-shrink: 0;
+        }
+        .info-content h5 { color: #aaa; margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .info-content p { color: white; font-weight: 600; font-size: 1.1rem; line-height: 1.5; }
+
+        /* RIGHT SIDE: FORM */
+        .form-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .form-title { color: var(--brand-navy); font-size: 2rem; font-weight: 700; margin-bottom: 30px; }
+
+        .c-input {
+            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px;
+            margin-bottom: 20px; font-family: var(--font-primary); transition: 0.3s;
+        }
+        .c-input:focus { border-color: var(--brand-cyan); outline: none; }
+        
+        textarea.c-input { height: 150px; resize: none; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .contact-container { grid-template-columns: 1fr; margin-top: -50px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+			<div class="container">
+				<nav class="navbar">
+					<a href="index.html" class="logo-box" style="text-decoration: none;">
+						<div class="dna-logo">
+							<div class="dna-drop dna-magenta"></div>
+							<div class="dna-drop dna-cyan"></div>
+						</div>
+						<div class="brand-text">
+							<h3>Al-Khat Al-Mudi</h3>
+							<span id="header-brand_sub">TRANSLATION SERVICES</span>
+						</div>
+					</a>
+
+					<a href="#menu" class="menu-toggle" id="menuToggle">
+						<span class="text" id="header-menu_btn">MENU</span>
+						<div class="hamburger">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</a>
+				</nav>
+			</div>
+	</header>
+
+    <div class="contact-hero">
+        <div class="container">
+            <h1 id="contact-hero_title" style="font-size: 3rem; margin-bottom: 10px;">Get in Touch</h1>
+            <p id="contact-hero_desc" style="opacity: 0.8; font-size: 1.2rem;">We are here to answer your questions and discuss your projects.</p>
+        </div>
+    </div>
+
+    <div class="contact-container">
+        
+        <div class="info-card">
+            <h3 id="contact-info_title" style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">Contact Info</h3>
+            
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-content">
+                    <h5 id="contact-label_address">Address</h5>
+                    <p id="contact-text_address">Marka Al-Shamaliya<br>Amman, Jordan</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone"></i></div>
+                <div class="info-content">
+                    <h5 id="contact-label_phone">Phone</h5>
+                    <p>+962 79 785 2640</p>
+                    <p style="font-size: 0.9rem; opacity: 0.7;">+962 78 077 0085</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-content">
+                    <h5 id="contact-label_email">Email</h5>
+                    <p>mhstudios.836@gmail.com</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; border-radius: 10px; overflow: hidden; opacity: 0.8;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" style="width: 100%; height: 150px; object-fit: cover;" alt="Amman Map">
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-title" id="contact-form_title">Send Message</div>
+            
+            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
+                <div class="split-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <input type="text" class="c-input" id="contact-ph_name" placeholder="Your Name" required>
+                    <input type="email" class="c-input" id="contact-ph_email" placeholder="Email Address" required>
+                </div>
+                
+                <input type="text" class="c-input" id="contact-ph_subject" placeholder="Subject" required>
+                
+                <textarea class="c-input" id="contact-ph_msg" placeholder="How can we help you?" required></textarea>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span id="contact-btn_send">Send Message</span> <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+    </div>
+	
+	<div class="container" style="margin-bottom: 80px;">
+        <div class="section-divider">
+            <span style="background:var(--brand-navy); color:white; padding:5px 15px; border-radius:20px; font-size:0.8rem;">OPERATIONS</span>
+        </div>
+
+        <div class="support-grid">
+            
+            <div class="panel-card" style="border-left: 5px solid var(--brand-cyan);">
+                <div class="panel-title"><i class="fas fa-satellite-dish"></i> <span id="supp-track_title">Track Request</span></div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;" id="supp-track_desc">Enter Invoice ID to check document status.</p>
+                
+                <div class="tracker-box" style="display: flex; gap: 10px;">
+                    <input type="text" id="track-input" class="c-input" placeholder="INV-..." style="margin:0; text-transform: uppercase;">
+                    <button class="btn btn-primary" onclick="checkTicketStatus()" style="width: auto; padding: 0 20px;"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div id="track-result" style="margin-top: 15px; display: none; padding: 10px; background: #f0f4f8; border-radius: 8px; font-size: 0.9rem;">
+                    <strong>Status:</strong> <span id="status-text" style="color: var(--brand-cyan); font-weight: bold;">Processing</span>
+                </div>
+            </div>
+
+            <div class="panel-card" style="border-left: 5px solid var(--brand-magenta); background: #f9f9f9;">
+                <div class="panel-title" style="color: var(--brand-dark);"><i class="fas fa-user-shield"></i> <span id="supp-agent_title">Staff Portal</span></div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;" id="supp-agent_desc">Authorized personnel workspace.</p>
+                <button class="btn btn-outline" onclick="unlockStaffPortal()" style="width: 100%; border-color: #ddd; color: #555;">
+                    <i class="fas fa-lock"></i> Access Dashboard
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="staff-dashboard" class="modal-overlay">
+        <div class="modal-box" style="max-width: 800px; background: #f4f7f6;">
+            <a href="javascript:void(0)" class="close-modal" onclick="closeStaffPortal()">&times;</a>
+            
+            <div class="modal-header" style="background: var(--brand-navy); color: white; margin: -30px -30px 20px -30px; padding: 20px; border-radius: 20px 20px 0 0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="dna-logo small-logo"><div class="dna-drop dna-magenta"></div><div class="dna-drop dna-cyan"></div></div>
+                    <h3 style="color: white; margin: 0;">Agent Workspace</h3>
+                </div>
+                <div style="font-size: 0.8rem; opacity: 0.7;">Logged in as: Staff Member</div>
+            </div>
+
+            <div class="staff-grid">
+                <a href="https://docs.google.com/spreadsheets" target="_blank" class="staff-tool">
+                    <div class="tool-icon"><i class="fas fa-database"></i></div>
+                    <h4>Open Database</h4>
+                    <span>View Form Responses (Sheets)</span>
+                </a>
+
+                <div class="staff-tool" onclick="launchWhatsApp()">
+                    <div class="tool-icon"><i class="fab fa-whatsapp"></i></div>
+                    <h4>Quick WhatsApp</h4>
+                    <input type="text" id="wa-number" placeholder="9627..." onclick="event.stopPropagation()" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 5px; margin-top: 5px;">
+                </div>
+
+                <div class="staff-tool" style="grid-column: span 2;">
+                    <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                    <h4>Phone Quote Calculator</h4>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="number" id="staff-pages" placeholder="Pages" style="width: 60px; padding: 5px;">
+                        <select id="staff-type" style="padding: 5px;">
+                            <option value="10">Standard (10 JOD)</option>
+                            <option value="15">Legal (15 JOD)</option>
+                            <option value="20">Medical (20 JOD)</option>
+                        </select>
+                        <button onclick="staffCalc()" style="background: var(--brand-cyan); color: white; border: none; padding: 0 15px; border-radius: 5px;">=</button>
+                        <span id="staff-result" style="font-weight: bold; padding: 5px;">0 JOD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
+                    </p>
+                     <div class="social-icons">
+                        <a href="#" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="menu-home-footer">Home</a></li>
+                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
+                        <li><a href="#services" id="menu-services-footer">Services</a></li>
+                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                        <li><a href="#">Confidentiality</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>078-077-0085</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>alkhatalmudi@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+	
+	<div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+
+        <div class="menu-content">
+            <h4 class="menu-label" id="menu-label_nav">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" id="menu-home">Home</a></li>
+                <li class="dropdown-trigger">
+                    <a href="javascript:void(0)"><span id="menu-pages">Pages</span> <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-list">
+                        <li><a href="about.html" id="menu-about">About Us</a></li>
+                        <li><a href="services.html" id="menu-services">Services</a></li>
+                        <li><a href="translation.html" id="menu-translation">Translation Info</a></li>
+                        <li><a href="packages.html" id="menu-packages">Packages & Pricing</a></li>
+                        <li><a href="shop.html" id="menu-shop">Shop / Products</a></li>
+                        <li><a href="reservation.html" id="menu-reservation">Book Reservation</a></li>
+                        <li><a href="contacts.html" id="menu-contact">Contact Us</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="menu-label" id="menu-label_member">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" id="menu-login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" id="menu-signup">Sign Up</a>
+            </div>
+
+            <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="#" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="#" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="#" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="#" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+	
+	<script type="module">
+		import { db, doc, getDoc } from './assets/js/firebase-init.js';
+
+		// We attach this to 'window' so your HTML button onclick="checkTicketStatus()" can find it!
+		window.checkTicketStatus = async function() {
+			const idInput = document.getElementById('track-input');
+			const resultBox = document.getElementById('track-result');
+			const statusText = document.getElementById('status-text');
+			
+			// 1. Basic Validation
+			const id = idInput.value.trim().toUpperCase();
+
+			if (!id.startsWith('INV-')) {
+				alert("Invalid ID format. Must start with 'INV-'");
+				return;
+			}
+
+			// 2. UI Updates (Searching state)
+			resultBox.style.display = 'block';
+			statusText.innerText = "Connecting to Database...";
+			statusText.style.color = "#999";
+
+			try {
+				// 3. REAL FIREBASE CHECK
+				const docRef = doc(db, "orders", id);
+				const docSnap = await getDoc(docRef);
+
+				if (docSnap.exists()) {
+					const data = docSnap.data();
+					
+					// 4. Update Status Text
+					// If the order has a 'status' field, use it. Otherwise default to 'Received'.
+					const realStatus = data.status || "Received"; 
+					statusText.innerText = realStatus; 
+					
+					// 5. Color Logic based on Status
+					if(realStatus === "Completed" || realStatus === "Approved") {
+						statusText.style.color = "#2ecc71"; // Green
+					} else if(realStatus === "Pending" || realStatus === "Processing") {
+						statusText.style.color = "orange";
+					} else if(realStatus === "Rejected" || realStatus === "Cancelled") {
+						statusText.style.color = "red";
+					} else {
+						statusText.style.color = "var(--brand-cyan)"; // Blue (Default)
+					}
+					
+				} else {
+					// ID doesn't exist in Database
+					statusText.innerText = "Order Not Found";
+					statusText.style.color = "red";
+				}
+			} catch (e) {
+				console.error("Firebase Error:", e);
+				statusText.innerText = "Connection Error";
+				statusText.style.color = "red";
+			}
+		}
+	</script>
+</body>
+</html>

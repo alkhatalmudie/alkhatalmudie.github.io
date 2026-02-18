@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation & Booking | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        /* HEADER CLEARANCE FIX */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 1. DARK MAP STAGE (DIMMED MODE) */
+        .map-stage {
+            position: relative;
+            width: 100%;
+            height: 650px;
+            background-color: #0f182e; /* DEEP NAVY BACK */
+            /* World Map with overlay blend for dimmed look */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay; /* This dims the map */
+            overflow: hidden;
+            border-bottom: 5px solid var(--brand-cyan);
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.8); /* Inner vignette shadow */
+        }
+
+        /* 2. THE INTERACTIVE DOTS (NEON STYLE) */
+        .map-point {
+            position: absolute;
+            width: 16px; height: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--brand-cyan); /* Cyan Border */
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 10px rgba(0, 174, 239, 0.3);
+        }
+
+        /* Hover & Active States */
+        .map-point:hover, .map-point.active {
+            background: var(--brand-magenta); /* Turns Magenta */
+            border-color: white;
+            transform: scale(1.4);
+            z-index: 20;
+            box-shadow: 0 0 20px var(--brand-magenta); /* Glowing Effect */
+        }
+
+        /* The Ripple Effect (Only on Hover/Active) */
+        .map-point::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            border: 1px solid var(--brand-magenta);
+            border-radius: 50%;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .map-point:hover::before, .map-point.active::before {
+            animation: ripple 1.5s infinite;
+            opacity: 1;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* 3. THE INFO PANEL (Hidden by Default) */
+        .location-card {
+            position: absolute;
+            bottom: 35px; left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(255, 255, 255, 0.95); /* Glassy White */
+            padding: 15px 20px;
+            border-radius: 12px;
+            width: 220px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none; /* Can't click when hidden */
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-top: 3px solid var(--brand-magenta);
+            z-index: 100;
+        }
+
+        /* Show Panel ONLY on Hover or Active */
+        .map-point:hover .location-card,
+        .map-point.active .location-card {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: all;
+        }
+
+        .location-card h4 { color: var(--brand-navy); margin-bottom: 5px; font-weight: 700; font-size: 1.1rem; }
+        .location-card p { color: #555; font-size: 0.85rem; margin-bottom: 10px; }
+        
+        .btn-select-loc {
+            background: var(--brand-navy);
+            color: white;
+            font-size: 0.8rem;
+            padding: 6px 15px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-select-loc:hover { background: var(--brand-cyan); }
+
+        /* BOOKING WIZARD STYLES */
+        .booking-section { padding: 80px 0; background: var(--bg-body); }
+        .booking-card {
+            background: white; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            overflow: hidden; display: grid; grid-template-columns: 1.5fr 1fr;
+        }
+        .booking-form { padding: 40px; }
+        .booking-summary { background: var(--brand-navy); color: white; padding: 40px; display: flex; flex-direction: column; justify-content: space-between; }
+        .price-display { font-size: 3rem; font-weight: 900; color: var(--brand-cyan); font-family: var(--font-primary); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+
+        @media (max-width: 992px) { .booking-card { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo"><div class="dna-drop dna-magenta"></div><div class="dna-drop dna-cyan"></div></div>
+                    <div class="brand-text"><h3>Al-Khat Al-Mudi</h3><span>RESERVATION SYSTEM</span></div>
+                </a>
+                <a href="index.html" style="font-weight: 600; color: var(--brand-navy); display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="map-stage" id="worldMap">
+        <div style="position: absolute; top: 30px; left: 30px; z-index: 5;">
+            <h2 style="color: var(--brand-cyan); font-size: 2rem; margin-bottom: 5px;">Select Your Region</h2>
+            <p style="color: rgba(255,255,255,0.7);">Click on the nearest office to handle your documents.</p>
+        </div>
+        </div>
+
+    <section class="booking-section">
+        <div class="container">
+            <div class="booking-card">
+                
+                <div class="booking-form">
+                    <h2 class="section-title">Step 2: Document Details</h2>
+                    
+                    <form id="calcForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:5px;">Translate From</label>
+                                <select class="glass-input" id="langFrom">
+                                    <option value="en">English</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="de">German</option>
+                                    <option value="nl">Dutch</option>
+                                    <option value="fr">French</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:5px;">Translate To</label>
+                                <select class="glass-input" id="langTo">
+                                    <option value="ar">Arabic</option>
+                                    <option value="en">English</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="de">German</option>
+                                    <option value="nl">Dutch</option>
+                                    <option value="fr">French</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:5px;">Document Type</label>
+                            <select class="glass-input" id="docType" onchange="calculatePrice()">
+                                <option value="" disabled selected>Loading Documents...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:5px;">Page Count</label>
+                                <input type="number" id="pageCount" class="glass-input" value="1" min="1" onchange="calculatePrice()" oninput="calculatePrice()">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:5px;">Service Level</label>
+                                <select class="glass-input" id="urgency" onchange="calculatePrice()">
+                                    <option value="1">Standard (48h)</option>
+                                    <option value="1.5">Express (24h) [+50%]</option>
+                                    <option value="2">Immediate (Same Day) [+100%]</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="booking-summary">
+                    <div>
+                        <h3 style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">Order Summary</h3>
+                        
+                        <div class="summary-row">
+                            <span>Selected Office:</span>
+                            <span id="summaryLocation" style="color: var(--brand-cyan); font-weight: bold; font-size: 1.1rem;">--</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Document:</span>
+                            <span id="summaryDoc">--</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Pages:</span>
+                            <span id="summaryPages">1</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Fees:</span>
+                            <span id="summaryFees">0.00 JOD</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="text-align: right; margin-bottom: 20px;">
+                            <span style="display: block; font-size: 0.9rem; opacity: 0.7;">Estimated Total</span>
+                            <span class="price-display" id="totalPrice">0.00</span> <span style="font-size: 1.5rem;">JOD</span>
+                        </div>
+                        <button onclick="proceedToCheckout()" class="btn btn-primary" style="width: 100%; background: white; color: var(--brand-navy);">
+                            Proceed to Checkout <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/js/pricing-db.js"></script>
+	<script>
+		// --- 1. MAP INITIALIZATION ---
+		// (Keep your existing Map logic here...)
+		const mapContainer = document.getElementById('worldMap');
+		if (mapContainer && SYSTEM_DB) {
+			SYSTEM_DB.locations.forEach(loc => {
+				const dot = document.createElement('div');
+				dot.className = `map-point`; 
+				dot.style.top = loc.top;
+				dot.style.left = loc.left;
+				dot.onclick = (e) => { e.stopPropagation(); selectLocation(loc.id, dot); };
+				dot.innerHTML = `
+					<div class="location-card">
+						<h4>${loc.name}</h4>
+						<p><i class="fas fa-phone"></i> ${loc.phone}</p>
+						<button class="btn-select-loc" onclick="selectLocation('${loc.id}', this.parentElement.parentElement)">Select Region</button>
+					</div>`;
+				mapContainer.appendChild(dot);
+			});
+		}
+
+		let selectedLocName = "";
+		function selectLocation(id, element) {
+			document.querySelectorAll('.map-point').forEach(el => el.classList.remove('active'));
+			if(element.classList.contains('map-point')) element.classList.add('active');
+			const locData = SYSTEM_DB.locations.find(l => l.id === id);
+			selectedLocName = locData.name;
+			const summaryLoc = document.getElementById('summaryLocation');
+			summaryLoc.innerText = locData.name;
+			summaryLoc.style.color = "white";
+			setTimeout(() => { summaryLoc.style.color = "var(--brand-cyan)"; }, 300);
+		}
+
+		// --- 2. POPULATE DROPDOWNS ---
+		const docSelect = document.getElementById('docType');
+		if(docSelect && SYSTEM_DB) {
+			docSelect.innerHTML = ""; 
+			SYSTEM_DB.documents.forEach(doc => {
+				const opt = document.createElement('option');
+				opt.value = doc.id;
+				opt.innerText = doc.label;
+				opt.dataset.price = doc.price_mod;
+				docSelect.appendChild(opt);
+			});
+		}
+
+		// --- 3. CALCULATOR LOGIC ---
+		function calculatePrice() {
+			const pages = parseInt(document.getElementById('pageCount').value) || 1;
+			const urgency = parseFloat(document.getElementById('urgency').value);
+			const docOption = docSelect.options[docSelect.selectedIndex];
+			
+			if(!docOption) return;
+
+			const docFactor = parseFloat(docOption.dataset.price);
+			const baseRate = SYSTEM_DB.rates.base_per_page;
+			const total = (baseRate * docFactor * pages * urgency);
+			
+			document.getElementById('summaryDoc').innerText = docOption.text;
+			document.getElementById('summaryPages').innerText = pages;
+			document.getElementById('totalPrice').innerText = total.toFixed(2);
+		}
+		
+		setTimeout(calculatePrice, 100);
+
+		// --- 4. CHECKOUT LOGIC (THE FIX) ---
+		function proceedToCheckout() {
+			if(!selectedLocName) {
+				alert("Please select a region from the map first!");
+				return;
+			}
+
+			// PACK THE BRIEFCASE (URL Parameters)
+			const params = new URLSearchParams({
+				loc: selectedLocName,
+				from: document.getElementById('langFrom').value,
+				to: document.getElementById('langTo').value,
+				doc: docSelect.options[docSelect.selectedIndex].text,
+				pages: document.getElementById('pageCount').value,
+				urgency: document.getElementById('urgency').options[document.getElementById('urgency').selectedIndex].text,
+				price: document.getElementById('totalPrice').innerText + " JOD"
+			});
+
+			// GO TO CHECKOUT WITH DATA
+			window.location.href = 'checkout.html?' + params.toString();
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Al-Khat Al-Mudi Translation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        .page-header {
+            background-color: var(--brand-navy);
+            padding: 160px 0 100px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            color: white;
+        }
+
+        /* Watermark Background */
+        .page-header .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--brand-cyan);
+            transition: 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-top-color: var(--brand-magenta);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            color: var(--brand-navy);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h3>Al-Khat Al-Mudi</h3>
+                        <span id="header-brand_sub">TRANSLATION SERVICES</span>
+                    </div>
+                </a>
+
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" id="header-menu_btn">MENU</span>
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="watermark">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 32H12C12 43.0457 20.9543 52 32 52C43.0457 52 52 43.0457 52 32C52 20.9543 43.0457 12 32 12V32Z" fill="#E91E63" transform="rotate(45 32 32) translate(-6, 0)"/>
+                <path d="M32 32H12C12 43.0457 20.9543 52 32 52C43.0457 52 52 43.0457 52 32C52 20.9543 43.0457 12 32 12V32Z" fill="#00AEEF" transform="rotate(225 32 32) translate(-6, 0)"/>
+            </svg>
+        </div>
+
+        <div class="container">
+            <h1 id="about_page-hero_title" style="font-size: 3.5rem; margin-bottom: 20px;">Our Journey</h1>
+            <p id="about_page-hero_desc" style="font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin: 0 auto;">
+                From Marka Al-Shamaliya to the World. The story of precision.
+            </p>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div class="about-shape">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
+                            <i class="fas fa-history" style="font-size: 8rem; opacity: 0.2;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <h2 class="section-title" id="about-title">Who We Are</h2>
+                    <h3 class="arabic-text" id="about-arabic_name" style="color: var(--text-grey); margin-bottom: 20px; font-size: 1.5rem;">الخط المضيء للترجمة</h3>
+                    <p id="about-p1" style="margin-bottom: 20px;">
+                        At Al-Khat Al-Mudi, we believe translation is about preserving meaning. Located in Marka Al-Shamaliya, we serve individuals and businesses.
+                    </p>
+                    <p id="about-p2">
+                        Whether you are a student or a business, our team ensures your message remains clear.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background-color: #f0f4f8;">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title" id="about_page-values_title">Core Values</h2>
+            </div>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fas fa-bullseye value-icon"></i>
+                    <h3 id="about_page-mission_title">Our Mission</h3>
+                    <p id="about_page-mission_desc" style="color: #666;">To eliminate language barriers for businesses and individuals with 100% legal accuracy.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-eye value-icon"></i>
+                    <h3 id="about_page-vision_title">Our Vision</h3>
+                    <p id="about_page-vision_desc" style="color: #666;">To be the #1 reference for certified translation in the Middle East.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-balance-scale value-icon"></i>
+                    <h3 id="about-badge_confidential">Confidentiality</h3>
+                    <p style="color: #666;">We treat every document with the highest level of security and privacy protocols.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+	<section class="section-padding" style="background: #f8fafc;">
+		<div class="container">
+			<div class="text-center" style="margin-bottom: 60px;">
+				<h2 class="section-title" id="timeline-title">Our History</h2>
+			</div>
+			
+			<div class="timeline">
+				<div class="timeline-item left">
+					<div class="timeline-content">
+						<span class="year-badge" id="timeline-year1">2026</span>
+						<h3 id="timeline-title1">The Foundation</h3>
+						<p id="timeline-desc1">Al-Khat Al-Mudi was established in Marka Al-Shamaliya with a single mission: Precision.</p>
+					</div>
+				</div>
+				<div class="timeline-item right">
+					<div class="timeline-content">
+						<span class="year-badge" id="timeline-year2">2027</span>
+						<h3 id="timeline-title2">Official Certification</h3>
+						<p id="timeline-desc2">Recognized by the Ministry of Justice and all major embassies in Jordan.</p>
+					</div>
+				</div>
+				<div class="timeline-item left">
+					<div class="timeline-content">
+						<span class="year-badge" id="timeline-year3">2028</span>
+						<h3 id="timeline-title3">Digital Expansion</h3>
+						<p id="timeline-desc3">Launched our AI-assisted translation portal and website localization services.</p>
+					</div>
+				</div>
+				<div class="timeline-item right">
+					<div class="timeline-content">
+						<span class="year-badge" id="timeline-year4">2029</span>
+						<h3 id="timeline-title4">Going Global</h3>
+						<p id="timeline-desc4">Serving 500+ corporate clients across Europe and the Middle East.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="map-section">
+		<div class="map-overlay"></div>
+		<div class="container" style="position: relative; z-index: 2; text-align: center; color: white;">
+			<h2 id="map-title" style="font-size: 2.5rem; margin-bottom: 10px;">Global Reach</h2>
+			<p id="map-desc" style="opacity: 0.8; font-size: 1.2rem;">Headquartered in Amman, connecting the world.</p>
+			
+			<div class="map-dot amman">
+				<div class="pulse"></div>
+				<span class="city-label">AMMAN HQ</span>
+			</div>
+		</div>
+	</section>
+
+	<section class="section-padding">
+		<div class="container">
+			<div class="text-center" style="margin-bottom: 50px;">
+				<h2 class="section-title" id="merch-title">Corporate Identity</h2>
+				<p id="merch-desc" style="color: var(--text-light); max-width: 600px; margin: 0 auto;">Professional tools for a professional lifestyle.</p>
+			</div>
+
+			<div class="merch-grid">
+				<div class="merch-card">
+					<div class="mockup-box">
+						<i class="fas fa-flag" style="font-size: 4rem; color: #ddd;"></i>
+						<div class="dna-logo small-logo">
+							<div class="dna-drop dna-magenta"></div>
+							<div class="dna-drop dna-cyan"></div>
+						</div>
+					</div>
+					<h4 id="merch-item1">Official Flag</h4>
+				</div>
+
+				<div class="merch-card">
+					<div class="mockup-box">
+						<i class="fas fa-calendar-alt" style="font-size: 4rem; color: #ddd;"></i>
+						<div class="watermark-text">2030</div>
+					</div>
+					<h4 id="merch-item2">2030 Calendar</h4>
+				</div>
+
+				<div class="merch-card">
+					<div class="mockup-box">
+						<i class="fas fa-mug-hot" style="font-size: 4rem; color: #ddd;"></i>
+						<div class="dna-logo small-logo" style="bottom: 30px;">
+							<div class="dna-drop dna-magenta"></div>
+							<div class="dna-drop dna-cyan"></div>
+						</div>
+					</div>
+					<h4 id="merch-item3">Brand Mug</h4>
+				</div>
+
+				<div class="merch-card">
+					<div class="mockup-box">
+						<i class="fas fa-book" style="font-size: 4rem; color: #ddd;"></i>
+					</div>
+					<h4 id="merch-item4">Sample Book</h4>
+				</div>
+			</div>
+
+			<div class="text-center" style="margin-top: 40px;">
+				<a href="shop.html" class="btn btn-primary" id="merch-btn_shop">See All Products</a>
+			</div>
+		</div>
+	</section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers.
+                    </p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" id="menu-home-footer">Home</a></li>
+                        <li><a href="about.html" id="menu-about-footer">About Us</a></li>
+                        <li><a href="services.html" id="menu-services-footer">Services</a></li>
+                        <li><a href="index.html#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i><span>Marka Al-Shamaliya, Nadi Al-Sibaq</span></li>
+                        <li><i class="fas fa-phone-alt"></i><span>078-077-0085</span></li>
+                        <li><i class="fas fa-envelope"></i><span>alkhatalmudi@gmail.com</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+        <div class="menu-content">
+            <h4 class="menu-label" id="menu-label_nav">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" id="menu-home">Home</a></li>
+                <li class="dropdown-trigger">
+                    <a href="javascript:void(0)"><span id="menu-pages">Pages</span> <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-list">
+                        <li><a href="about.html" id="menu-about">About Us</a></li>
+                        <li><a href="services.html" id="menu-services">Services</a></li>
+                        <li><a href="translation.html" id="menu-translation">Translation Info</a></li>
+                        <li><a href="packages.html" id="menu-packages">Packages & Pricing</a></li>
+                        <li><a href="shop.html" id="menu-shop">Shop / Products</a></li>
+                        <li><a href="index.html#reservation" id="menu-reservation">Book Reservation</a></li>
+                        <li><a href="#contact" id="menu-contact">Contact Us</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <h4 class="menu-label" id="menu-label_member">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" id="menu-login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" id="menu-signup">Sign Up</a>
+            </div>
+            <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="#" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="#" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="#" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="#" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

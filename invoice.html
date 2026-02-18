@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        body { padding-top: 80px; background: #f0f4f8; }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        /* CARDS */
+        .panel-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand-navy);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ORDER SUMMARY (Right Side) */
+        .summary-box {
+            background: var(--brand-navy);
+            color: white;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .summary-total {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand-cyan);
+        }
+
+        /* CREDIT CARD FORM */
+        .cc-visual {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .cc-icon { font-size: 2rem; color: #ccc; transition: 0.3s; }
+        .cc-icon.active { color: var(--brand-navy); }
+
+        .input-group { margin-bottom: 15px; }
+        .input-label { display: block; font-size: 0.85rem; font-weight: 600; color: #666; margin-bottom: 5px; }
+        
+        .checkout-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: var(--font-primary);
+            transition: 0.3s;
+        }
+        .checkout-input:focus { border-color: var(--brand-cyan); outline: none; box-shadow: 0 0 0 3px rgba(0,174,239,0.1); }
+
+        .split-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        /* PROCESSING OVERLAY */
+        .pay-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(15, 24, 46, 0.95);
+            z-index: 5000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.5s;
+        }
+        .pay-overlay.active { opacity: 1; pointer-events: all; }
+
+        .spinner {
+            width: 60px; height: 60px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--brand-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+            .summary-box { order: -1; position: relative; top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo"><div class="dna-drop dna-magenta"></div><div class="dna-drop dna-cyan"></div></div>
+                    <div class="brand-text"><h3>Al-Khat Al-Mudi</h3><span>SECURE CHECKOUT</span></div>
+                </a>
+                <div style="color: #2ecc71; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-lock"></i> 256-Bit SSL Encrypted
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="checkout-grid">
+            
+            <div class="forms-col">
+                <div class="panel-card">
+                    <div class="panel-title"><i class="fas fa-user-circle"></i> Billing Information</div>
+                    <div class="split-inputs">
+                        <div class="input-group">
+                            <label class="input-label">First Name</label>
+                            <input type="text" class="checkout-input" id="bill_fname" placeholder="John" required>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Last Name</label>
+                            <input type="text" class="checkout-input" id="bill_lname" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Email Address (For Invoice)</label>
+                        <input type="email" class="checkout-input" id="bill_email" placeholder="john@example.com" required>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-title"><i class="fas fa-credit-card"></i> Payment Method</div>
+                    
+                    <div class="cc-visual">
+                        <i class="fab fa-cc-visa cc-icon active" id="icon-visa"></i>
+                        <i class="fab fa-cc-mastercard cc-icon" id="icon-master"></i>
+                        <i class="fab fa-cc-amex cc-icon" id="icon-amex"></i>
+                    </div>
+
+                    <form id="payment-form" onsubmit="processPayment(event)">
+                        <div class="input-group">
+                            <label class="input-label">Card Number</label>
+                            <input type="text" class="checkout-input" id="cc_number" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                        </div>
+
+                        <div class="split-inputs">
+                            <div class="input-group">
+                                <label class="input-label">Expiry Date</label>
+                                <input type="text" class="checkout-input" id="cc_expiry" placeholder="MM / YY" maxlength="5" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">CVC / CVV</label>
+                                <input type="password" class="checkout-input" id="cc_cvc" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Cardholder Name</label>
+                            <input type="text" class="checkout-input" id="cc_name" placeholder="As shown on card" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                            Pay <span id="btn-amount">...</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="summary-col">
+                <div class="panel-card summary-box">
+                    <div class="panel-title" style="color: white; border-color: rgba(255,255,255,0.2);">Order Summary</div>
+                    
+                    <div class="summary-row">
+                        <span>Service Location</span>
+                        <strong id="sum_loc">--</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Document Type</span>
+                        <strong id="sum_doc">--</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Languages</span>
+                        <strong id="sum_lang">--</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Pages</span>
+                        <strong id="sum_pages">--</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Urgency</span>
+                        <strong id="sum_urgency">--</strong>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="sum_total">0.00 JOD</span>
+                    </div>
+
+                    <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7; text-align: center;">
+                        <i class="fas fa-shield-alt"></i> Payments are processed via Stripe/PayPal Secure Gateway.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pay-overlay" id="processing">
+        <div class="spinner"></div>
+        <h3 style="color: white; margin-bottom: 10px;">Processing Payment...</h3>
+        <p style="color: #aaa; font-size: 0.9rem;">Do not close this window.</p>
+    </div>
+
+    <script type="module">
+		import { db, doc, getDoc } from './assets/js/firebase-init.js';
+
+		async function loadInvoice() {
+			// 1. Get ID from URL
+			const urlParams = new URLSearchParams(window.location.search);
+			const invoiceId = urlParams.get('id');
+
+			if (!invoiceId) {
+				document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:100px;'>No ID Provided.</h1>";
+				return;
+			}
+
+			// 2. READ FROM FIREBASE
+			const docRef = doc(db, "orders", invoiceId);
+			const docSnap = await getDoc(docRef);
+
+			if (docSnap.exists()) {
+				const data = docSnap.data();
+
+				// 3. FILL UI
+				document.getElementById('inv_ref').innerText = '#' + data.invoiceId;
+				document.getElementById('client_name').innerText = data.clientName;
+				document.getElementById('client_email').innerText = data.clientEmail;
+				document.getElementById('inv_date').innerText = data.createdAt;
+				document.getElementById('txn_id').innerText = data.transactionId;
+
+				document.getElementById('item_desc').innerText = data.docType;
+				document.getElementById('item_detail').innerText = `${data.from} to ${data.to}`;
+				document.getElementById('item_urgency').innerText = data.urgency;
+				document.getElementById('item_pages').innerText = data.pages;
+				document.getElementById('item_price').innerText = data.totalPrice;
+				document.getElementById('total_amount').innerText = data.totalPrice;
+
+				// QR Code
+				new QRCode(document.getElementById("qrcode"), {
+					text: `https://your-site.com/contacts.html?track=${data.invoiceId}`,
+					width: 100, height: 100
+				});
+
+			} else {
+				document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:100px;'>Invoice Not Found!</h1>";
+			}
+		}
+
+		loadInvoice();
+	</script>
+</body>
+</html>

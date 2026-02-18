@@ -1,0 +1,1754 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   AL-KHAT AL-MUDI | MASTER STYLESHEET
+   Identity: DNA v2 (Local Fonts Edition)
+   Fonts: Purista (English) + Janna LT (Arabic)
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/*	1. FONT INJECTORS (LOCAL DNA)
+/* -------------------------------------------------------------------------- */
+
+/* --- PURISTA (English / Body) --- */
+@font-face {
+    font-family: 'Purista';
+    src: url('../webfonts/purista_thin-webfont.woff2') format('woff2'),
+         url('../webfonts/Purista Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Purista';
+    src: url('../webfonts/purista_light-webfont.woff2') format('woff2'),
+         url('../webfonts/Purista Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Purista';
+    src: url('../webfonts/Purista.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Purista';
+    src: url('../webfonts/Purista SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Purista';
+    src: url('../webfonts/purista_bold-webfont.woff2') format('woff2'),
+         url('../webfonts/Purista Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* --- JANNA LT (Arabic / Headings) --- */
+@font-face {
+    font-family: 'Janna LT';
+    src: url('../webfonts/Janna_LT_Regular.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Janna LT';
+    src: url('../webfonts/Janna_LT_Regular.ttf') format('truetype');
+    font-weight: 700; /* Force Bold to use the same file if no bold exists */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	2. VARIABLES (THE BRAND DNA)
+/* -------------------------------------------------------------------------- */
+:root {
+    /* TYPOGRAPHY SYSTEM */
+    --font-primary:   'Purista', 'Segoe UI', sans-serif; 
+    --font-secondary: 'Purista', 'Janna LT', 'Cairo', sans-serif;    /* The Modern Arabic Look */
+	--direction: ltr;
+
+    /* Core Identity */
+    --brand-magenta: #E91E63;
+    --brand-cyan:    #00AEEF;
+    --brand-navy:    #1B2A4E;
+    --brand-dark:    #0f182e;
+    
+    /* UI Colors */
+    --text-main:     #1B2A4E;
+    --text-light:    #555555;
+    --text-white:    #ffffff;
+    --bg-body:       #F8FAFC;
+    --bg-white:      #ffffff;
+    
+    /* Glassmorphism Variables */
+    --glass-bg:      rgba(255, 255, 255, 0.95);
+    --glass-border:  rgba(255, 255, 255, 0.2);
+    --glass-shadow:  0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+    /* Transitions */
+    --ease-smooth:   all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	3. RESET & BASE
+/* -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Overrides */
+h1, h2, h3, h4, h5, h6, .arabic-text {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* Force Janna LT for Arabic specific classes or lang attributes if needed */
+:lang(ar) {
+    font-family: var(--font-secondary);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--ease-smooth);
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- ARABIC OVERRIDE (THE SWITCH) --- */
+html[lang="ar"] {
+    /* When Arabic is active, Janna LT takes over EVERYTHING */
+    --font-primary:   'Janna LT', sans-serif;
+    --font-secondary: 'Janna LT', sans-serif;
+    
+    --direction: rtl;
+}
+
+/* Apply the variables */
+body {
+    font-family: var(--font-primary);
+    direction: var(--direction);
+    text-align: start; /* Aligns left for EN, Right for AR automatically */
+}
+
+h1, h2, h3, h4, h5, h6, .brand-text h3, .nav-link, .btn {
+    font-family: var(--font-secondary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*	4. COMPONENT: BUTTONS
+/* -------------------------------------------------------------------------- */
+.btn {
+    display: inline-block;
+    padding: 12px 35px;
+    border-radius: 50px;
+    font-family: var(--font-secondary); /* Using Janna for buttons looks premium */
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: var(--ease-smooth);
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--brand-magenta), var(--brand-cyan));
+    color: var(--text-white);
+    box-shadow: 0 10px 20px rgba(0, 174, 239, 0.2);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(45deg, var(--brand-cyan), var(--brand-magenta));
+    z-index: -1;
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(233, 30, 99, 0.3);
+}
+
+.btn-primary:hover::before {
+    opacity: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	5. COMPONENT: DNA LOGO (PURE CSS)
+/* -------------------------------------------------------------------------- */
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dna-logo {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.dna-drop {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 0 50% 50% 50%;
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+}
+
+.dna-magenta {
+    background-color: var(--brand-magenta);
+    transform: rotate(45deg);
+    left: 0;
+}
+
+.dna-cyan {
+    background-color: var(--brand-cyan);
+    transform: rotate(225deg);
+    right: 0;
+    top: 0;
+}
+
+.brand-text h3 {
+    font-size: 1.25rem;
+    color: var(--brand-navy);
+    margin-bottom: -2px;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    font-family: var(--font-secondary); /* Janna LT */
+}
+
+.brand-text span {
+    font-size: 0.75rem;
+    color: var(--brand-cyan);
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: block;
+    font-family: var(--font-primary); /* Purista */
+}
+
+/* -------------------------------------------------------------------------- */
+/*	6. LAYOUT: HEADER & NAVIGATION
+/* -------------------------------------------------------------------------- */
+header {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0 20px;
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-link {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--brand-navy);
+    position: relative;
+    padding: 5px 0;
+    font-family: var(--font-secondary); /* Arabic/Heading Font for Menu */
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background: var(--brand-cyan);
+    transition: width 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--brand-magenta);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	7. SECTION: HERO CAROUSEL
+/* -------------------------------------------------------------------------- */
+.carousel {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: var(--brand-dark);
+}
+
+.slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide.active { opacity: 1; }
+
+.slide-bg {
+    position: absolute;
+    width: 100%; height: 100%;
+    z-index: 1;
+    background-size: cover;
+    background-position: center;
+    animation: kenBurns 15s infinite alternate;
+}
+
+/* Slide Gradients */
+.bg-1 { background: radial-gradient(circle at top right, var(--brand-cyan), var(--brand-navy)); }
+.bg-2 { background: radial-gradient(circle at bottom left, var(--brand-magenta), var(--brand-navy)); }
+.bg-3 { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+
+@keyframes kenBurns {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+.slide-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.slide-content.dark-text h1 { color: var(--brand-navy); }
+.slide-content.dark-text p { color: var(--brand-dark); }
+
+.slide-content h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s forwards 0.5s;
+    font-family: var(--font-secondary); /* Janna for Big Titles */
+	/* Initial State: Hollow */
+    color: transparent;
+    -webkit-text-stroke: 1px white; /* Thin elegant white outline */
+    transition: all 0.5s ease;
+    cursor: default;
+}
+
+/* Add this NEW RULE right below it */
+.slide-content h1:hover {
+    color: white; /* Fills with white */
+    -webkit-text-stroke: 0px transparent; /* Outline disappears */
+    text-shadow: 0 0 20px var(--brand-cyan); /* Boom! Neon Glow */
+}
+
+.slide-content p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s forwards 0.8s;
+    font-weight: 300; /* Purista Light */
+}
+
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Carousel Controls */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    font-size: 1.2rem;
+    transition: var(--ease-smooth);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.carousel-btn:hover {
+    background: var(--brand-cyan);
+    border-color: var(--brand-cyan);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev { left: 40px; }
+.next { right: 40px; }
+
+/* -------------------------------------------------------------------------- */
+/*	8. UTILITY: GRID SYSTEM
+/* -------------------------------------------------------------------------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-padding {
+    padding: 100px 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--brand-navy);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-secondary);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 60px;
+    height: 4px;
+    background: var(--brand-magenta);
+    border-radius: 2px;
+}
+
+.text-center { text-align: center; }
+
+/* -------------------------------------------------------------------------- */
+/*	9. SECTION: SERVICES (Glass Cards)
+/* -------------------------------------------------------------------------- */
+.services-section {
+    background-color: #f0f4f8;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.service-card {
+    background: var(--bg-white);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: var(--ease-smooth);
+    border-bottom: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.service-card::before {
+    /* Background Icon Watermark */
+    content: '\f1ab';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    font-size: 10rem;
+    color: rgba(0,0,0,0.02);
+    transform: rotate(-15deg);
+    z-index: -1;
+    transition: var(--ease-smooth);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    border-bottom-color: var(--brand-cyan);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+}
+
+.service-card:hover::before {
+    color: rgba(0, 174, 239, 0.05);
+    transform: rotate(0deg);
+}
+
+.service-icon {
+    font-size: 3rem;
+    color: var(--brand-navy);
+    margin-bottom: 25px;
+    transition: var(--ease-smooth);
+    display: inline-block;
+}
+
+.service-card:hover .service-icon {
+    color: var(--brand-magenta);
+    transform: scale(1.1);
+}
+
+.service-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-family: var(--font-secondary);
+}
+
+.service-card p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	10. SECTION: ABOUT
+/* -------------------------------------------------------------------------- */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.about-shape {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--brand-navy), var(--brand-cyan));
+    border-radius: 30px 150px 30px 150px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(27, 42, 78, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	11. SECTION: STATS
+/* -------------------------------------------------------------------------- */
+.stats-section {
+    background: var(--brand-navy);
+    color: white;
+    position: relative;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    text-align: center;
+}
+
+.stat-item h2 {
+    font-size: 3.5rem;
+    color: var(--brand-cyan);
+    margin-bottom: 10px;
+    font-weight: 900;
+    font-family: var(--font-primary); /* Numbers look better in Purista/Sans */
+}
+
+.stat-item p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	12. SECTION: FOOTER
+/* -------------------------------------------------------------------------- */
+footer {
+    background-color: #111a2e; /* Darker Navy */
+    color: white;
+    padding-top: 100px;
+    border-top: 5px solid var(--brand-cyan);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 50px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-col h4 {
+    color: var(--brand-cyan);
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-secondary);
+}
+
+.footer-links li {
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #a0aec0;
+    transition: var(--ease-smooth);
+}
+
+.footer-links a:hover {
+    color: var(--brand-magenta);
+    padding-left: 8px;
+}
+
+.contact-info li {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    color: #a0aec0;
+}
+
+.contact-info i {
+    color: var(--brand-cyan);
+    margin-top: 5px;
+}
+
+.copyright {
+    text-align: center;
+    padding: 30px 0;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	13. RESPONSIVE MEDIA QUERIES
+/* -------------------------------------------------------------------------- */
+@media screen and (max-width: 992px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .slide-content h1 { font-size: 3rem; }
+}
+
+@media screen and (max-width: 768px) {
+    .navbar { flex-direction: column; height: auto; padding: 20px 0; }
+    .nav-menu { margin-top: 20px; gap: 20px; }
+    .carousel-btn { width: 40px; height: 40px; }
+    .prev { left: 10px; } .next { right: 10px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 2rem; }
+}
+
+/* -------------------------------------------------------------------------- */
+/*	5. COMPONENT: DNA LOGO (INTERACTIVE VERSION)
+/* -------------------------------------------------------------------------- */
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer; /* Shows the hand cursor */
+    user-select: none; /* Prevents text highlighting when clicking rapidly */
+    transition: transform 0.1s ease-out; /* Smooth click release */
+}
+
+/* The Click Effect (Whole Container Shrinks) */
+.logo-box:active {
+    transform: scale(0.92); /* Satisfying "Press" feel */
+}
+
+.dna-logo {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy spring effect */
+}
+
+.dna-drop {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 0 50% 50% 50%;
+    mix-blend-mode: multiply;
+    opacity: 0.9;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- STATE: DEFAULT --- */
+.dna-magenta {
+    background-color: var(--brand-magenta);
+    transform: rotate(45deg); /* Pointing Up */
+    left: 0;
+}
+
+.dna-cyan {
+    background-color: var(--brand-cyan);
+    transform: rotate(225deg); /* Pointing Down */
+    right: 0;
+    top: 0;
+}
+
+/* --- STATE: HOVER (The Luminous Pulse) --- */
+
+/* 1. The Container spins slightly */
+.logo-box:hover .dna-logo {
+    transform: rotate(180deg); /* Optional: Remove this line if you don't want it to spin! */
+}
+
+/* 2. Magenta Drop: Moves out and glows */
+.logo-box:hover .dna-magenta {
+    background-color: #ff4081; /* Gets slightly brighter */
+    /* Rotate + Move away from center */
+    transform: rotate(45deg) translate(-4px, -4px) scale(1.1); 
+    /* The Neon Glow */
+    filter: drop-shadow(0 0 8px rgba(233, 30, 99, 0.8));
+}
+
+/* 3. Cyan Drop: Moves out and glows */
+.logo-box:hover .dna-cyan {
+    background-color: #00d4ff; /* Gets slightly brighter */
+    /* Rotate + Move away from center */
+    transform: rotate(225deg) translate(-4px, -4px) scale(1.1);
+    /* The Neon Glow */
+    filter: drop-shadow(0 0 8px rgba(0, 174, 239, 0.8));
+}
+
+/* Text Reaction on Hover */
+.logo-box:hover .brand-text h3 {
+    color: var(--brand-magenta);
+    transition: 0.3s;
+}
+.logo-box:hover .brand-text span {
+    color: var(--brand-navy);
+    letter-spacing: 3px; /* Stretches out */
+    transition: 0.3s;
+}
+
+.brand-text h3 {
+    font-size: 1.25rem;
+    color: var(--brand-navy);
+    margin-bottom: -2px;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    font-family: var(--font-secondary);
+    transition: 0.3s;
+}
+
+.brand-text span {
+    font-size: 0.75rem;
+    color: var(--brand-cyan);
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: block;
+    font-family: var(--font-primary);
+    transition: 0.3s;
+}
+
+/* -------------------------------------------------------------------------- */
+/*	TEXT ANIMATIONS (ZOOM IN / ZOOM OUT)
+/* -------------------------------------------------------------------------- */
+
+/* 1. Base State Setup */
+.brand-text h3, 
+.brand-text span {
+    transform-origin: left center; /* Critical: Anchors the zoom to the left */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 2. THE TITLE: ZOOMS IN (Gets Big) */
+.logo-box:hover .brand-text h3 {
+    color: var(--brand-magenta);
+    transform: scale(1.15) translateX(5px); /* Zooms In and moves slightly right */
+    text-shadow: 0 5px 15px rgba(233, 30, 99, 0.2); /* Soft ambient glow */
+}
+
+/* 3. THE SUBTITLE: ZOOMS OUT (Gets Small & Wide) */
+.logo-box:hover .brand-text span {
+    color: var(--brand-navy);
+    transform: scale(0.85); /* Zooms Out */
+    letter-spacing: 5px; /* Spreads wide like a sci-fi interface */
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+/* ==========================================================================
+   THE "BASTARD" MENU PANEL (COMMAND CENTER)
+   ========================================================================== */
+
+/* --- 1. THE TRIGGER BUTTON --- */
+.menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.menu-toggle .text {
+    font-weight: 700;
+    color: var(--brand-navy);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.hamburger {
+    width: 30px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: var(--brand-cyan);
+    border-radius: 2px;
+    transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.menu-toggle:hover .hamburger span:nth-child(2) {
+    width: 70%; /* Cool jagged effect on hover */
+    margin-left: auto;
+}
+
+.menu-toggle:hover .text {
+    color: var(--brand-magenta);
+}
+
+/* --- 2. THE PANEL (GLASS HUD) --- */
+.menu-panel {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Hidden by default */
+    width: 350px;
+    height: 100vh;
+    background: rgba(27, 42, 78, 0.95); /* Deep Navy Glass */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 2000;
+    padding: 80px 40px;
+    transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+    border-left: 1px solid rgba(255,255,255,0.1);
+    overflow-y: auto;
+}
+
+.menu-panel.active {
+    right: 0; /* Slide In */
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 2.5rem;
+    color: white;
+    transition: 0.3s;
+    line-height: 0.5;
+}
+.close-btn:hover { color: var(--brand-magenta); transform: rotate(90deg); }
+
+.menu-label {
+    font-size: 0.7rem;
+    color: var(--brand-cyan);
+    letter-spacing: 2px;
+    margin: 30px 0 15px 0;
+    opacity: 0.8;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+/* --- 3. LINKS & DROPDOWN --- */
+.main-links li { margin-bottom: 15px; }
+.main-links a {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: var(--font-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.main-links a:hover { color: var(--brand-cyan); padding-left: 10px; }
+
+/* Dropdown Animation */
+.dropdown-list {
+    max-height: 0;
+    overflow: hidden;
+    margin-left: 15px;
+    border-left: 2px solid rgba(255,255,255,0.1);
+    transition: max-height 0.4s ease-out;
+}
+.dropdown-list li { margin: 10px 0 10px 15px; }
+.dropdown-list a { font-size: 1rem; color: #a0aec0; }
+.dropdown-list a:hover { color: var(--brand-magenta); }
+
+/* Class added by JS to open */
+.dropdown-trigger.open .dropdown-list {
+    max-height: 500px; /* Big enough to fit content */
+}
+.dropdown-trigger.open i { transform: rotate(180deg); }
+
+/* --- 4. AUTH BUTTONS (NEON) --- */
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-auth {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.login {
+    border: 1px solid var(--brand-cyan);
+    color: var(--brand-cyan);
+}
+.login:hover {
+    background: var(--brand-cyan);
+    color: var(--brand-navy);
+    box-shadow: 0 0 15px var(--brand-cyan);
+}
+
+.signup {
+    background: var(--brand-magenta);
+    color: white;
+}
+.signup:hover {
+    background: white;
+    color: var(--brand-magenta);
+    box-shadow: 0 0 15px var(--brand-magenta);
+}
+
+/* --- 5. LANGUAGE ORBS (ZOOM EFFECT) --- */
+.lang-grid {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.lang-orb {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy */
+    filter: grayscale(100%); /* Start Black & White */
+}
+
+.lang-orb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* HOVER EFFECT: The "Bastard" Zoom */
+.lang-orb:hover {
+    transform: scale(1.3) translateY(-5px); /* Big Zoom */
+    border-color: var(--brand-cyan);
+    filter: grayscale(0%); /* Full Color */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+/* ==========================================================================
+   RESERVATION SYSTEM (GLASS FORM)
+   ========================================================================== */
+
+.reservation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* --- Left Side: Steps --- */
+.steps-container {
+    margin-top: 40px;
+    border-left: 2px solid rgba(0, 174, 239, 0.2); /* Cyan Line */
+    padding-left: 30px;
+}
+
+.step-item {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.step-item:last-child { margin-bottom: 0; }
+
+.step-number {
+    position: absolute;
+    left: -52px; /* Aligns circle on the line */
+    top: 0;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 2px solid var(--brand-cyan);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-navy);
+    font-weight: 900;
+    font-family: var(--font-secondary);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.step-content h4 {
+    color: var(--brand-navy);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+.step-content p {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+/* --- Right Side: Glass Form --- */
+.reservation-form-wrapper {
+    position: relative;
+}
+
+/* The Background Decor Blob */
+.reservation-form-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 200px; height: 200px;
+    background: linear-gradient(45deg, var(--brand-magenta), var(--brand-cyan));
+    border-radius: 50%;
+    opacity: 0.1;
+    z-index: 0;
+    filter: blur(40px);
+}
+
+.glass-form {
+    position: relative;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+    z-index: 1;
+}
+
+.form-header h4 {
+    margin-bottom: 25px;
+    color: var(--brand-navy);
+    border-left: 4px solid var(--brand-magenta);
+    padding-left: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Inputs & Selects */
+.glass-form input, 
+.glass-form select {
+    width: 100%;
+    padding: 15px 15px 15px 45px; /* Left padding for icon */
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.9);
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    color: var(--brand-navy);
+    outline: none;
+    transition: 0.3s;
+    appearance: none; /* Removes default dropdown arrow */
+}
+
+.glass-form input:focus, 
+.glass-form select:focus {
+    border-color: var(--brand-cyan);
+    box-shadow: 0 0 15px rgba(0, 174, 239, 0.1);
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    transition: 0.3s;
+}
+
+.glass-form input:focus + .input-icon,
+.glass-form select:focus + .input-icon {
+    color: var(--brand-cyan);
+}
+
+/* File Upload Area */
+.file-upload-box {
+    position: relative;
+    margin-top: 10px;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border: 2px dashed #cbd5e0;
+    border-radius: 10px;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: 0.3s;
+    color: var(--text-light);
+}
+
+.file-label i {
+    font-size: 2rem;
+    color: var(--brand-navy);
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.file-label:hover {
+    border-color: var(--brand-cyan);
+    background: rgba(0, 174, 239, 0.05);
+}
+
+.file-label:hover i {
+    transform: translateY(-5px);
+    color: var(--brand-cyan);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .reservation-grid { grid-template-columns: 1fr; }
+    .steps-container { margin-bottom: 50px; }
+}
+
+/* ==========================================================================
+   SOCIAL MEDIA ICONS (GLOW EFFECTS)
+   ========================================================================== */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1); /* Glassy background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.social-icon:hover {
+    transform: translateY(-5px) scale(1.1);
+    color: white;
+    border-color: transparent;
+}
+
+/* --- Brand Specific Glows --- */
+
+/* Facebook Blue */
+.social-icon.facebook:hover {
+    background: #1877F2;
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+/* Instagram Gradient */
+.social-icon.instagram:hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    box-shadow: 0 5px 15px rgba(214, 36, 159, 0.4);
+}
+
+/* WhatsApp Green */
+.social-icon.whatsapp:hover {
+    background: #25D366;
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+/* LinkedIn Blue */
+.social-icon.linkedin:hover {
+    background: #0077b5;
+    box-shadow: 0 5px 15px rgba(0, 119, 181, 0.4);
+}
+
+/* ==========================================================================
+   SERVER PROCESSING OVERLAY (THE 10s SEQUENCE)
+   ========================================================================== */
+.server-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #0f182e; /* Deepest Navy */
+    z-index: 9999; /* On top of EVERYTHING */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none; /* Click-through when hidden */
+    transition: opacity 0.5s ease;
+}
+
+.server-overlay.active {
+    opacity: 1;
+    pointer-events: all; /* Blocks clicks when active */
+}
+
+.terminal-box {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* Reusing DNA for the spinner but spinning it fast */
+.dna-loader {
+    position: relative;
+    width: 60px; height: 60px;
+    margin: 0 auto 30px auto;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.terminal-title {
+    color: var(--brand-cyan);
+    font-family: 'Courier New', monospace; /* Hacker font */
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 174, 239, 0.3);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.terminal-log {
+    font-family: 'Courier New', monospace;
+    color: white;
+    text-align: left;
+    height: 120px; /* Fixed height for log messages */
+    overflow: hidden;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Text pushes up */
+}
+
+.log-line {
+    display: block;
+    margin-bottom: 5px;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.log-line.success { color: #00ff00; } /* Matrix Green */
+.log-line.warning { color: #ffff00; }
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* The Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--brand-cyan);
+    box-shadow: 0 0 10px var(--brand-cyan);
+    transition: width 0.2s linear;
+}
+
+.status-blink {
+    font-family: 'Courier New', monospace;
+    color: var(--brand-magenta);
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ==========================================================================
+   FIX: FORCE ICONS TO LOAD CORRECTLY
+   ========================================================================== */
+.fas, .fab, .far, .fa {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+}
+
+/* Ensure Brands (Facebook, Instagram) use the correct weight */
+.fab {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400; 
+}
+
+/* ==========================================================================
+   TIMELINE STYLES
+   ========================================================================== */
+.timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* The Vertical Line */
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--brand-cyan);
+    top: 0; bottom: 0; left: 50%;
+    margin-left: -2px;
+    border-radius: 2px;
+}
+
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    width: 50%;
+}
+
+/* Dots on the line */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    right: -10px; top: 25px;
+    background-color: white;
+    border: 4px solid var(--brand-magenta);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.left { left: 0; }
+.right { left: 50%; }
+
+.right::after { left: -10px; } /* Move dot for right side */
+
+.timeline-content {
+    padding: 20px 30px;
+    background-color: white;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-bottom: 3px solid var(--brand-navy);
+    transition: 0.3s;
+}
+
+.timeline-content:hover { transform: translateY(-5px); }
+
+.year-badge {
+    display: inline-block;
+    background: var(--brand-navy);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Mobile Timeline Fix */
+@media screen and (max-width: 768px) {
+    .timeline::after { left: 31px; }
+    .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+    .timeline-item::after { left: 21px; }
+    .right { left: 0%; }
+}
+
+/* ==========================================================================
+   WORLD MAP SECTION
+   ========================================================================== */
+.map-section {
+    background-color: #0f182e;
+    padding: 100px 0;
+    position: relative;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg'); /* Using a generic map placeholder */
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay; /* Blends map with navy background */
+}
+
+/* The Glowing Pulse (Amman) */
+.map-dot.amman {
+    position: absolute;
+    top: 42%; left: 58%; /* Approx location of Jordan on standard map */
+    width: 15px; height: 15px;
+    background: var(--brand-magenta);
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.pulse {
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    border-radius: 50%;
+    border: 1px solid var(--brand-magenta);
+    animation: mapPulse 2s infinite;
+    opacity: 0;
+}
+
+@keyframes mapPulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+.city-label {
+    position: absolute;
+    top: -30px; left: -40px;
+    background: white;
+    color: var(--brand-navy);
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   MERCH GRID MOCKUPS
+   ========================================================================== */
+.merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.merch-card {
+    text-align: center;
+}
+
+.mockup-box {
+    background: #f1f5f9;
+    height: 250px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.mockup-box:hover {
+    background: white;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+
+.small-logo {
+    position: absolute;
+    transform: scale(0.8);
+    opacity: 0.8;
+}
+
+.watermark-text {
+    position: absolute;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-30deg);
+}
+
+/* Add to main.css */
+.glass-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.9);
+    font-family: var(--font-primary);
+    outline: none;
+    transition: 0.3s;
+}
+.glass-input:focus {
+    border-color: var(--brand-cyan);
+    box-shadow: 0 0 10px rgba(0,174,239,0.2);
+}
+
+/* ==========================================================================
+   DROPZONE STYLING (The Boss's Request)
+   ========================================================================== */
+.drop-zone-container {
+    position: relative;
+    width: 100%;
+    height: 100px; /* Big enough to look like a drop area */
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.drop-zone-container:hover, .drop-zone-container:focus-within {
+    border-color: var(--brand-cyan);
+    background: rgba(0, 174, 239, 0.05);
+}
+
+.drop-zone-visual {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-light);
+    pointer-events: none; /* Let clicks pass through to the input */
+    width: 100%;
+}
+
+.drop-zone-visual i {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    display: block;
+    color: var(--brand-cyan);
+}
+
+.drop-zone-visual span {
+    font-weight: 700;
+    display: block;
+    font-family: var(--font-primary);
+}
+
+.drop-zone-visual small {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+/* The actual input - Hidden visually but functional */
+.drop-zone-input {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0; /* Invisible */
+    cursor: text;
+    z-index: 2;
+}
+
+/* When the user types/pastes, we want to see the text! */
+.drop-zone-input:valid, .drop-zone-input:focus {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px 15px; /* Center text vertically */
+    text-align: center;
+    font-weight: bold;
+    color: var(--brand-navy);
+}
+
+/* ==========================================================================
+   TUTORIAL MODAL (GLASS POPUP)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 24, 46, 0.9); /* Dark Navy Fade */
+    backdrop-filter: blur(10px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-box {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    border-top: 5px solid var(--brand-cyan);
+    transform: translateY(20px);
+    transition: 0.3s ease;
+}
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0);
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 2rem;
+    color: #999;
+    line-height: 0.5;
+    transition: 0.3s;
+}
+.close-modal:hover { color: var(--brand-magenta); transform: rotate(90deg); }
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+.modal-header h3 { color: var(--brand-navy); font-size: 1.5rem; }
+
+/* Steps Styling */
+.tutorial-steps { margin-top: 20px; }
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.step-num {
+    background: var(--brand-navy);
+    color: white;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-text strong { display: block; color: var(--brand-dark); }
+.step-text span { font-size: 0.9rem; color: #666; }
+
+.btn-tiny {
+    font-size: 0.8rem;
+    background: #f0f4f8;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: var(--brand-cyan);
+    font-weight: bold;
+    margin-left: auto; /* Pushes button to right */
+    white-space: nowrap;
+}
+.btn-tiny:hover { background: var(--brand-cyan); color: white; }
+
+/* ==========================================================================
+   SUPPORT & STAFF DASHBOARD
+   ========================================================================== */
+.support-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.staff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.staff-tool {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    color: var(--brand-navy);
+    display: block;
+}
+.staff-tool:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+.tool-icon {
+    font-size: 1.5rem;
+    color: var(--brand-cyan);
+    margin-bottom: 10px;
+}
+.staff-tool h4 { margin: 0; font-size: 1rem; font-weight: 700; }
+.staff-tool span { font-size: 0.8rem; color: #888; }
+
+@media (max-width: 768px) {
+    .support-grid, .staff-grid { grid-template-columns: 1fr; }
+}

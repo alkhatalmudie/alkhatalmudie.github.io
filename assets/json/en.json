@@ -1,0 +1,105 @@
+{
+    "header": {
+        "brand_name": "Al-Khat Al-Mudi",
+        "brand_sub": "TRANSLATION SERVICES",
+        "menu_btn": "MENU"
+    },
+    "menu": {
+        "label_nav": "NAVIGATION",
+        "label_member": "MEMBER AREA",
+        "label_region": "REGION SELECT",
+        "home": "Home",
+        "pages": "Pages",
+        "about": "About Us",
+        "services": "Services",
+        "translation": "Translation Info",
+        "packages": "Packages & Pricing",
+        "shop": "Shop / Products",
+        "reservation": "Book Reservation",
+        "contact": "Contact Us",
+        "login": "Log In",
+        "signup": "Sign Up"
+    },
+    "hero": {
+        "slide1_title": "Bridging Languages,<br>Connecting Worlds",
+        "slide1_desc": "Amman's most trusted certified translation service. Accuracy you can rely on.",
+        "slide1_btn": "Get a Free Quote",
+        "slide2_title": "Official & Legal<br>Documentation",
+        "slide2_desc": "Certified by the Ministry of Justice. We handle your contracts, visas, and certificates with speed.",
+        "slide2_btn": "Our Services",
+        "slide3_title": "The Luminous Line<br>of Communication",
+        "slide3_desc": "Expert linguists located in the heart of Marka Al-Shamaliya.",
+        "slide3_btn": "Visit Our Office"
+    },
+    "about": {
+        "title": "Who We Are",
+        "arabic_name": "الخط المضيء للترجمة",
+        "p1": "At <strong>Al-Khat Al-Mudi</strong> (The Luminous Line), we believe that translation is more than just swapping words; it’s about preserving meaning, tone, and intent. Located in Marka Al-Shamaliya, we serve individuals and businesses with certified translation services accepted by all government bodies and embassies in Jordan.",
+        "p2": "Whether you are a student applying abroad, a business expanding internationally, or dealing with complex legal documents, our team ensures your message remains clear and professional.",
+        "badge_certified": "Certified",
+        "badge_confidential": "Confidential",
+        "badge_fast": "Fast"
+    },
+    "services": {
+        "section_title": "Our Services",
+        "section_desc": "Comprehensive language solutions tailored to your specific needs.",
+        "s1_title": "Legal Translation",
+        "s1_desc": "Certified translation for contracts, court documents, and powers of attorney. Recognized by the Ministry of Justice.",
+        "s2_title": "Immigration & Visas",
+        "s2_desc": "Accurate translation of birth certificates, marriage licenses, and passports for embassy appointments.",
+        "s3_title": "Academic Translation",
+        "s3_desc": "Translation of university transcripts, diplomas, and research papers for students studying abroad.",
+        "s4_title": "Website Localization",
+        "s4_desc": "Adapt your digital content for new markets. We translate websites, apps, and software interfaces.",
+        "s5_title": "Medical Translation",
+        "s5_desc": "Precise translation of medical reports, prescriptions, and pharmaceutical documents.",
+        "s6_title": "Proofreading",
+        "s6_desc": "Polishing your existing documents to ensure grammatical perfection and stylistic consistency."
+    },
+    "reservation": {
+        "title": "Get Your Quote",
+        "subtitle": "Ready to Translate?",
+        "desc": "Upload your documents securely and get a fast, certified quote within minutes. We respect your privacy and deadlines.",
+        "step1_title": "Upload File",
+        "step1_desc": "Select your document (PDF, Word, Image)",
+        "step2_title": "Select Details",
+        "step2_desc": "Choose languages and urgency",
+        "step3_title": "Receive Quote",
+        "step3_desc": "We send you the price & time instantly",
+        "form_header": "Quick Request",
+        "ph_name": "Full Name",
+        "ph_email": "Email Address",
+        "ph_phone": "Phone Number",
+        "ph_from": "Translate From...",
+        "ph_to": "Translate To...",
+        "ph_link": "Paste Document Link (Drive, Dropbox...)",
+        "btn_submit": "Send Request"
+    },
+    "stats": {
+        "languages": "Languages Supported",
+        "acceptance": "Acceptance Rate",
+        "clients": "Happy Clients",
+        "delivery": "Express Delivery"
+    },
+    "footer": {
+        "about_text": "Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.",
+        "col_links": "Quick Links",
+        "col_legal": "Legal",
+        "col_contact": "Contact Us",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "copyright": "© 2026 Al-Khat Al-Mudi Translation. All rights reserved."
+    },
+    "overlay": {
+        "title": "AL-KHAT SECURE GATEWAY v4.0",
+        "status": "PROCESSING...",
+        "log1": "> Establishing secure link (TLS 1.3)...",
+        "log2": "> Handshaking with Al-Khat Mainframe...",
+        "log3": "> Encrypting data packets...",
+        "log4": "> Verifying document integrity...",
+        "log5": "> Uploading to secure cloud storage...",
+        "log6": "> Generating quote reference ID...",
+        "log7": "> Transaction confirmed.",
+        "success_msg": "Request Received Successfully! We will contact you shortly."
+    }
+}
