@@ -1752,3 +1752,68 @@ footer {
 @media (max-width: 768px) {
     .support-grid, .staff-grid { grid-template-columns: 1fr; }
 }
+
+/* ==========================================================================
+   USER PROFILE ORB & AUTH UI
+   ========================================================================== */
+.user-status-hidden {
+    display: none; /* Default state: ghost */
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.user-status-hidden.active {
+    display: flex; /* Activated when logged in */
+}
+
+.user-orb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 242, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 50px;
+    border: 1px solid var(--brand-cyan);
+    color: var(--brand-navy);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.user-orb:hover {
+    background: var(--brand-cyan);
+    color: white;
+}
+
+.user-orb i {
+    font-size: 1.2rem;
+}
+
+#user-display-name {
+    font-family: 'Purista', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.logout-link {
+    background: none;
+    border: none;
+    color: #ff4b5c; /* Alert Red */
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0;
+}
+
+.logout-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    #user-display-name { display: none; } /* Show only icon on small screens */
+    .user-status-hidden { margin-right: 10px; }
+}

@@ -1,3 +1,6 @@
+// Add these to the top of your main.js if not already imported via a module
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. INITIAL SETUP
@@ -655,11 +658,18 @@ function updateContent(data, prefix = '') {
 
 // 2. STAFF PORTAL ACCESS
 function unlockStaffPortal() {
-    const pin = prompt("Enter Agent PIN Code:");
-    if (pin === "2026") { // <--- SIMPLE PASSWORD
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; // Your Alpha ID
+
+    if (user && user.uid === ADMIN_UID) {
+        console.log("Falcon 1-1: Identity Confirmed. Accessing Command Center.");
         document.getElementById('staff-dashboard').classList.add('active');
+    } else if (user) {
+        alert("Access Denied: You do not have High-Command clearance.");
     } else {
-        alert("Access Denied.");
+        alert("Access Denied: Please log in as Admin first.");
+        window.location.href = "login.html";
     }
 }
 

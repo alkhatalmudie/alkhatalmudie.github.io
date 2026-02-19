@@ -28,6 +28,14 @@
 							<span id="header-brand_sub">TRANSLATION SERVICES</span>
 						</div>
 					</a>
+					
+					<div id="user-profile-section" class="user-status-hidden">
+						<a href="profile.html" class="user-orb">
+							<i class="fas fa-user-circle"></i>
+							<span id="user-display-name">Client</span>
+						</a>
+						<button onclick="handleLogout()" class="logout-link">Logout</button>
+					</div>
 
 					<a href="#menu" class="menu-toggle" id="menuToggle">
 						<span class="text" id="header-menu_btn">MENU</span>
@@ -535,6 +543,83 @@
             if (slideIndex < 0) { slideIndex = totalSlides - 1; }
             slides[slideIndex].classList.add('active');
         }
+		
+		/* ==========================================================================
+		   SERVICE MODAL ENGINE
+		   ========================================================================== */
+		const serviceData = {
+			legal: {
+				title: "Legal Translation",
+				icon: "fas fa-gavel",
+				desc: "Certified translation for contracts, court documents, and powers of attorney. Recognized by the Ministry of Justice and all major embassies.",
+				steps: ["Document Assessment", "Certified Translation", "Legal Proofreading", "Official Stamping"]
+			},
+			immigration: {
+				title: "Immigration & Visas",
+				icon: "fas fa-passport",
+				desc: "Accurate translation of birth certificates, marriage licenses, and passports required for embassy appointments and residency applications.",
+				steps: ["ID Verification", "Standardized Translation", "Consistency Check", "Embassy-Ready Delivery"]
+			},
+			academic: {
+				title: "Academic Translation",
+				icon: "fas fa-graduation-cap",
+				desc: "Translation of university transcripts, diplomas, and research papers for students applying to international universities.",
+				steps: ["Grade Conversion", "Terminological Accuracy", "Formatting Sync", "Final Certification"]
+			},
+			website: {
+				title: "Website Localization",
+				icon: "fas fa-laptop-code",
+				desc: "Adapt your digital content for new markets. We translate websites, apps, and software interfaces while maintaining UI integrity.",
+				steps: ["String Extraction", "Cultural Adaptation", "UI/UX Review", "Linguistic Testing"]
+			},
+			medical: {
+				title: "Medical Translation",
+				icon: "fas fa-stethoscope",
+				desc: "Precise translation of medical reports, prescriptions, and pharmaceutical documents handled by specialized medical linguists.",
+				steps: ["Terminology Scan", "Expert Translation", "Confidentiality Audit", "Medical Review"]
+			},
+			proofreading: {
+				title: "Proofreading",
+				icon: "fas fa-file-signature",
+				desc: "Polishing your existing documents to ensure grammatical perfection, stylistic consistency, and natural-sounding language.",
+				steps: ["Grammar Audit", "Style Adjustment", "Flow Optimization", "Final Polish"]
+			}
+		};
+
+		window.openServiceModal = function(serviceKey) {
+			const data = serviceData[serviceKey];
+			if (!data) return;
+
+			// Inject Content
+			document.getElementById('modal-service-title').innerText = data.title;
+			document.getElementById('modal-service-desc').innerText = data.desc;
+			document.getElementById('modal-service-icon').innerHTML = `<i class="${data.icon}"></i>`;
+			
+			// Clear and Build Steps
+			const stepsContainer = document.getElementById('modal-service-steps');
+			stepsContainer.innerHTML = "";
+			data.steps.forEach((step, index) => {
+				const stepHtml = `
+					<div class="step">
+						<div class="step-num">${index + 1}</div>
+						<div class="step-text"><strong>${step}</strong></div>
+					</div>`;
+				stepsContainer.innerHTML += stepHtml;
+			});
+
+			// Show Modal
+			document.getElementById('service-modal').classList.add('active');
+		}
+
+		window.closeServiceModal = function() {
+			document.getElementById('service-modal').classList.remove('active');
+		}
+
+		// Close modal when clicking outside the box
+		window.addEventListener('click', (e) => {
+			const modal = document.getElementById('service-modal');
+			if (e.target === modal) closeServiceModal();
+		});
     </script>
 	
 	<script type="module">
