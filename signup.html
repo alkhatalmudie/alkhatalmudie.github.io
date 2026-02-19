@@ -14,14 +14,24 @@
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
     <style>
-        /* UI/UX Enhancement: Background matching your Hero Carousel */
+        /* --- GLITCH FIX --- */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         .auth-page {
+            position: relative;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(rgba(10, 25, 47, 0.8), rgba(10, 25, 47, 0.8)), url('images/hero-bg.jpg');
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.85), rgba(11, 20, 38, 0.85)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
         }
 
         .auth-container {
@@ -29,18 +39,60 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 100px 20px;
         }
 
         .auth-card {
             width: 100%;
             max-width: 450px;
+            perspective: 1000px;
+            z-index: 10;
             animation: fadeInUp 0.8s ease-out;
         }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-form {
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .glass-form:hover {
+            box-shadow: 0 20px 50px rgba(0, 242, 255, 0.15);
+        }
+
+        .tactical-dot {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: #ff4b5c; 
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .tactical-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            border: 1px solid #ff4b5c;
+            border-radius: 50%;
+            animation: pulse-wave 3s infinite;
+        }
+
+        @keyframes pulse-wave {
+            0% { width: 100%; height: 100%; opacity: 1; }
+            100% { width: 800%; height: 800%; opacity: 0; }
         }
 
         .auth-footer-note {
@@ -55,60 +107,71 @@
             font-weight: 600;
         }
 		
-		/* 1. TACTICAL DYNAMIC BACKGROUND */
-		.auth-page {
+		/* --- OAUTH & DIVIDER UI --- */
+		.auth-divider {
 			position: relative;
-			min-height: 100vh;
-			background-color: #0b1426; /* Deep tactical navy */
-			background-image: 
-				linear-gradient(rgba(11, 20, 38, 0.85), rgba(11, 20, 38, 0.85)),
-				url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
-			background-size: cover;
-			background-position: center;
-			background-attachment: fixed;
-			overflow-x: hidden;
+			text-align: center;
+			margin: 25px 0 20px;
 		}
 
-		/* 2. DYNAMIC RED DOTS (RADIO WAVES) */
-		.tactical-dot {
-			position: absolute;
-			width: 8px;
-			height: 8px;
-			background: #ff4b5c; /* Tactical Red */
-			border-radius: 50%;
-			z-index: 0;
-			opacity: 0.6;
-		}
-
-		.tactical-dot::after {
+		.auth-divider::before {
 			content: '';
 			position: absolute;
-			top: 50%; left: 50%;
-			transform: translate(-50%, -50%);
-			width: 100%; height: 100%;
-			border: 1px solid #ff4b5c;
+			left: 0; top: 50%;
+			width: 100%; height: 1px;
+			background: rgba(255, 255, 255, 0.15);
+			z-index: 1;
+		}
+
+		.auth-divider span {
+			background: #111b2f; /* Blends with the glass panel */
+			padding: 0 15px;
+			color: rgba(255, 255, 255, 0.5);
+			font-size: 0.8rem;
+			position: relative;
+			z-index: 2;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.social-auth-grid {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+		}
+
+		.btn-social {
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			color: white;
+			width: 45px; height: 45px;
 			border-radius: 50%;
-			animation: pulse-wave 3s infinite;
+			display: flex; align-items: center; justify-content: center;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
 		}
 
-		@keyframes pulse-wave {
-			0% { width: 100%; height: 100%; opacity: 1; }
-			100% { width: 800%; height: 800%; opacity: 0; }
+		.btn-social:hover {
+			background: var(--brand-cyan);
+			border-color: var(--brand-cyan);
+			transform: translateY(-3px);
+			box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
 		}
 
-		/* 3. HOVER CONTAINER MOVEMENT (TILT) */
-		.auth-card {
-			perspective: 1000px; /* Needed for 3D effect */
-			z-index: 10;
+		.forgot-pass-link {
+			display: block;
+			text-align: right;
+			margin-top: -5px;
+			margin-bottom: 15px;
+			color: var(--brand-cyan);
+			font-size: 0.8rem;
+			text-decoration: none;
+			transition: 0.3s;
 		}
 
-		.glass-form {
-			transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-			transform-style: preserve-3d;
-		}
-
-		.glass-form:hover {
-			box-shadow: 0 20px 50px rgba(0, 242, 255, 0.15);
+		.forgot-pass-link:hover {
+			color: white;
 		}
     </style>
 </head>
@@ -142,6 +205,14 @@
                         <span></span><span></span><span></span>
                     </div>
                 </a>
+				
+				<div id="user-profile-section" class="user-status-hidden">
+                    <a href="profile.html" class="user-orb">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Client</span>
+                    </a>
+                    <button onclick="handleLogout()" class="logout-link">Logout</button>
+                </div>
             </nav>
         </div>
     </header>
@@ -149,55 +220,108 @@
     <main class="auth-container">
         <div class="auth-card">
             <form id="signup-form" class="glass-form">
-                <div class="form-header">
-                    <h4 style="margin:0; font-size: 1.5rem; color: var(--brand-cyan);">Personnel Recruitment</h4>
-                    <p style="font-size: 0.85rem; opacity: 0.8;">Create your secure client profile</p>
-                </div>
+				<div class="form-header">
+					<h4 style="margin:0; font-size: 1.5rem; color: var(--brand-cyan);">Personnel Recruitment</h4>
+					<p style="font-size: 0.85rem; opacity: 0.8;">Create your secure client profile</p>
+				</div>
 
-                <div class="form-group">
-                    <input type="text" id="signup-name" placeholder="Full Name" required>
-                    <i class="fas fa-user input-icon"></i>
-                </div>
+				<div class="form-group">
+					<input type="text" id="signup-name" placeholder="Full Name" required>
+					<i class="fas fa-user input-icon"></i>
+				</div>
 
-                <div class="form-group">
-                    <input type="email" id="signup-email" placeholder="Email Address" required>
-                    <i class="fas fa-envelope input-icon"></i>
-                </div>
+				<div class="form-group">
+					<input type="email" id="signup-email" placeholder="Email Address" required>
+					<i class="fas fa-envelope input-icon"></i>
+				</div>
 
-                <div class="form-group">
-                    <input type="password" id="signup-password" placeholder="Secure Password" required>
-                    <i class="fas fa-shield-alt input-icon"></i>
-                </div>
+				<div class="form-group">
+					<input type="password" id="signup-password" placeholder="Secure Password" required>
+					<i class="fas fa-shield-alt input-icon"></i>
+				</div>
 
-                <button type="submit" id="signup-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                    INITIALIZE PROFILE
-                </button>
+				<button type="submit" id="signup-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+					INITIALIZE PROFILE
+				</button>
 
-                <div class="auth-footer-note">
-                    Already an agent? <a href="login.html">Log In Here</a>
-                </div>
-            </form>
+				<div class="auth-divider"><span>Or register via</span></div>
+				
+				<div class="social-auth-grid">
+					<button type="button" class="btn-social" id="btn-google"><i class="fab fa-google"></i></button>
+					<button type="button" class="btn-social" id="btn-facebook"><i class="fab fa-facebook-f"></i></button>
+					<button type="button" class="btn-social" id="btn-twitter"><i class="fab fa-twitter"></i></button>
+					<button type="button" class="btn-social" id="btn-github"><i class="fab fa-github"></i></button>
+				</div>
+
+				<div class="auth-footer-note">
+					Already an agent? <a href="login.html">Log In Here</a>
+				</div>
+			</form>
         </div>
     </main>
 
-    <div id="processing-overlay" class="server-overlay">
-        <div class="terminal-box">
-            <div class="dna-loader">
-                <div class="dna-drop dna-magenta"></div>
-                <div class="dna-drop dna-cyan"></div>
-            </div>
-            <div class="terminal-content">
-                <h4 class="terminal-title">ENCRYPTING PERSONNEL DATA</h4>
-                <div id="terminal-log" class="terminal-log">
-                    <span class="log-line">> Establishing secure tunnel...</span>
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
+                    </p>
+                     <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1Gtg7R2phb/" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/alkhatalmudi" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/message/BFW6NB4D4ZLLL1" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                <div class="progress-container">
-                    <div id="progress-bar" class="progress-bar"></div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="menu-home-footer">Home</a></li>
+                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
+                        <li><a href="#services" id="menu-services-footer">Services</a></li>
+                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
                 </div>
-                <div class="status-blink">SECURE UPLOAD...</div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                        <li><a href="#">Confidentiality</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>078-077-0085</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>alkhatalmudi@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
 
     <div id="side-menu" class="menu-panel">
         <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
@@ -235,90 +359,177 @@
             </div>
         </div>
     </div>
-	
-	<script>
-		// --- 1. GENERATE TACTICAL SIGNAL DOTS ---
-		const page = document.querySelector('.auth-page');
-		for (let i = 0; i < 15; i++) {
-			const dot = document.createElement('div');
-			dot.className = 'tactical-dot';
-			dot.style.top = Math.random() * 100 + '%';
-			dot.style.left = Math.random() * 100 + '%';
-			dot.style.animationDelay = Math.random() * 3 + 's';
-			page.appendChild(dot);
-		}
 
-		// --- 2. INTERACTIVE CONTAINER TILT ---
-		const card = document.querySelector('.glass-form');
-		const authCard = document.querySelector('.auth-card');
+    <div id="processing-overlay" class="server-overlay">
+        <div class="terminal-box">
+            <div class="dna-loader">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            <div class="terminal-content">
+                <h4 class="terminal-title">ENCRYPTING PERSONNEL DATA</h4>
+                <div id="terminal-log" class="terminal-log">
+                    <span class="log-line">> Establishing secure tunnel...</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="status-blink">SECURE UPLOAD...</div>
+            </div>
+        </div>
+    </div>
 
-		authCard.addEventListener('mousemove', (e) => {
-			const xAxis = (window.innerWidth / 2 - e.pageX) / 25; // Sensitivity
-			const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-			card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-		});
+    <script>
+        // TACTICAL DOTS
+        const page = document.querySelector('.auth-page');
+        for (let i = 0; i < 15; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'tactical-dot';
+            dot.style.top = Math.random() * 100 + '%';
+            dot.style.left = Math.random() * 100 + '%';
+            dot.style.animationDelay = Math.random() * 3 + 's';
+            page.appendChild(dot);
+        }
 
-		// Reset position on mouse leave
-		authCard.addEventListener('mouseleave', () => {
-			card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-		});
-	</script>
-		
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // TACTICAL TILT (Safe Mode)
+        const card = document.querySelector('.glass-form');
+        const authCard = document.querySelector('.auth-card');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
-            authDomain: "al-khat-backend.firebaseapp.com",
-            projectId: "al-khat-backend",
-            storageBucket: "al-khat-storage-doha",
-            messagingSenderId: "310033181926",
-            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.getElementById('signup-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        authCard.addEventListener('mousemove', (e) => {
+            const rect = authCard.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
             
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const overlay = document.getElementById('processing-overlay');
-            const logBox = document.getElementById('terminal-log');
-            const btn = document.getElementById('signup-btn');
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / 20) * -1;
+            const rotateY = (x - centerX) / 20;
 
-            btn.disabled = true;
-            btn.innerText = "AUTHENTICATING...";
-            overlay.classList.add('active');
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
 
-            try {
-                // Firebase Create User
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                
-                // Update Name
-                await updateProfile(userCredential.user, { displayName: name });
-
-                // Tactical Visuals
-                const p = document.createElement('div');
-                p.className = "log-line success";
-                p.innerText = "> ACCOUNT GENERATED SUCCESSFULLY.";
-                logBox.appendChild(p);
-
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 2000);
-
-            } catch (error) {
-                overlay.classList.remove('active');
-                btn.disabled = false;
-                btn.innerText = "RETRY INITIALIZATION";
-                alert("GATEWAY ERROR: " + error.message);
-            }
+        authCard.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
         });
     </script>
+        
+    <script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+		// IMPORT OAUTH & RESET TOOLS
+		import { 
+			getAuth, 
+			signInWithEmailAndPassword, 
+			createUserWithEmailAndPassword,
+			updateProfile,
+			sendPasswordResetEmail,
+			signInWithPopup, 
+			GoogleAuthProvider, 
+			FacebookAuthProvider, 
+			TwitterAuthProvider, 
+			GithubAuthProvider 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+			authDomain: "al-khat-backend.firebaseapp.com",
+			projectId: "al-khat-backend",
+			storageBucket: "al-khat-storage-doha",
+			messagingSenderId: "310033181926",
+			appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
+
+		const overlay = document.getElementById('processing-overlay');
+		const logBox = document.getElementById('terminal-log');
+
+		// --- STANDARD EMAIL SUBMIT (Works for both Login and Signup forms) ---
+		const mainForm = document.querySelector('.glass-form');
+		if(mainForm.id === 'login-form') {
+			mainForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const email = document.getElementById('login-email').value;
+				const password = document.getElementById('login-password').value;
+				const btn = document.getElementById('login-btn');
+
+				btn.disabled = true; btn.innerText = "LINKING..."; overlay.classList.add('active');
+				try {
+					await signInWithEmailAndPassword(auth, email, password);
+					logBox.innerHTML += `<div class="log-line success">> IDENTITY CONFIRMED.</div>`;
+					setTimeout(() => { window.location.href = "index.html"; }, 1500);
+				} catch (error) {
+					overlay.classList.remove('active'); btn.disabled = false; btn.innerText = "RETRY ACCESS";
+					alert("ACCESS DENIED: " + error.message);
+				}
+			});
+
+			// FORGOT PASSWORD LOGIC
+			document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+				const email = document.getElementById('login-email').value;
+				if(!email) {
+					alert("Please enter your email address in the field above first.");
+					return;
+				}
+				try {
+					await sendPasswordResetEmail(auth, email);
+					alert("Transmission Sent! Check your email for password reset instructions.");
+				} catch (error) {
+					alert("Error: " + error.message);
+				}
+			});
+		} else {
+			// SIGNUP LOGIC
+			mainForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const name = document.getElementById('signup-name').value;
+				const email = document.getElementById('signup-email').value;
+				const password = document.getElementById('signup-password').value;
+				const btn = document.getElementById('signup-btn');
+
+				btn.disabled = true; btn.innerText = "AUTHENTICATING..."; overlay.classList.add('active');
+				try {
+					const cred = await createUserWithEmailAndPassword(auth, email, password);
+					await updateProfile(cred.user, { displayName: name });
+					logBox.innerHTML += `<div class="log-line success">> ACCOUNT GENERATED.</div>`;
+					setTimeout(() => { window.location.href = "index.html"; }, 1500);
+				} catch (error) {
+					overlay.classList.remove('active'); btn.disabled = false; btn.innerText = "RETRY";
+					alert("GATEWAY ERROR: " + error.message);
+				}
+			});
+		}
+
+		// --- OAUTH LOGIC (Social Buttons) ---
+		const handleOAuth = async (providerName) => {
+			let provider;
+			switch(providerName) {
+				case 'google': provider = new GoogleAuthProvider(); break;
+				case 'facebook': provider = new FacebookAuthProvider(); break;
+				case 'twitter': provider = new TwitterAuthProvider(); break;
+				case 'github': provider = new GithubAuthProvider(); break;
+			}
+			
+			try {
+				overlay.classList.add('active');
+				logBox.innerHTML += `<div class="log-line">> Establishing External Link: ${providerName.toUpperCase()}...</div>`;
+				await signInWithPopup(auth, provider);
+				logBox.innerHTML += `<div class="log-line success">> EXTERNAL IDENTITY CONFIRMED.</div>`;
+				setTimeout(() => { window.location.href = "index.html"; }, 1500);
+			} catch (error) {
+				overlay.classList.remove('active');
+				console.error(error);
+				alert(`Failed to link with ${providerName}. Please check console or try another method.`);
+			}
+		};
+
+		document.getElementById('btn-google').addEventListener('click', () => handleOAuth('google'));
+		document.getElementById('btn-facebook').addEventListener('click', () => handleOAuth('facebook'));
+		document.getElementById('btn-twitter').addEventListener('click', () => handleOAuth('twitter'));
+		document.getElementById('btn-github').addEventListener('click', () => handleOAuth('github'));
+
+	</script>
 
     <script src="assets/js/main.js"></script>
 </body>

@@ -12,179 +12,226 @@
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
     <style>
-        body { padding-top: 80px; background: #f0f4f8; }
+        /* TACTICAL BACKGROUND */
+        .checkout-page {
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.95), rgba(11, 20, 38, 0.95)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding-top: 100px;
+            min-height: 100vh;
+            color: white;
+        }
 
         .checkout-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
+            grid-template-columns: 1fr 1.5fr;
             gap: 30px;
-            margin-top: 40px;
+            padding: 40px 0;
         }
 
-        /* CARDS */
-        .panel-card {
-            background: white;
+        /* DARK GLASS PANELS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             padding: 30px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .panel-title {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--brand-navy);
+            color: var(--brand-cyan);
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        /* ORDER SUMMARY (Right Side) */
-        .summary-box {
-            background: var(--brand-navy);
-            color: white;
-            position: sticky;
-            top: 100px;
-        }
-        
+        /* SUMMARY STYLES */
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             font-size: 0.95rem;
-            opacity: 0.8;
         }
-
-        .summary-total {
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 15px;
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--brand-cyan);
-        }
-
-        /* CREDIT CARD FORM */
-        .cc-visual {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .cc-icon { font-size: 2rem; color: #ccc; transition: 0.3s; }
-        .cc-icon.active { color: var(--brand-navy); }
-
-        .input-group { margin-bottom: 15px; }
-        .input-label { display: block; font-size: 0.85rem; font-weight: 600; color: #666; margin-bottom: 5px; }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { color: rgba(255,255,255,0.6); }
+        .summary-value { font-weight: bold; text-align: right;}
         
+        .price-highlight {
+            font-size: 2rem;
+            color: var(--brand-cyan);
+            font-weight: 900;
+            font-family: var(--font-primary);
+            text-align: right;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+        }
+
+        /* DARK FORM INPUTS */
+        .input-group { margin-bottom: 15px; }
+        .input-label { display: block; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 5px; }
+        .split-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
         .checkout-input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 8px;
+            color: white;
             font-family: var(--font-primary);
             transition: 0.3s;
         }
-        .checkout-input:focus { border-color: var(--brand-cyan); outline: none; box-shadow: 0 0 0 3px rgba(0,174,239,0.1); }
-
-        .split-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-        /* PROCESSING OVERLAY */
-        .pay-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(15, 24, 46, 0.95);
-            z-index: 5000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: 0.5s;
+        .checkout-input::placeholder { color: rgba(255,255,255,0.3); }
+        .checkout-input:focus { 
+            border-color: var(--brand-cyan); 
+            outline: none; 
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); 
         }
-        .pay-overlay.active { opacity: 1; pointer-events: all; }
 
-        .spinner {
-            width: 60px; height: 60px;
-            border: 5px solid rgba(255,255,255,0.1);
-            border-top-color: var(--brand-cyan);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* CREDIT CARD VISUALS */
+        .cc-visual { display: flex; gap: 10px; margin-bottom: 20px; }
+        .cc-icon { font-size: 2rem; color: rgba(255,255,255,0.2); transition: 0.3s; }
+        .cc-icon.active { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
         @media (max-width: 900px) {
             .checkout-grid { grid-template-columns: 1fr; }
-            .summary-box { order: -1; position: relative; top: 0; }
+            .summary-col { order: -1; } /* Puts summary on top for mobile */
         }
     </style>
 </head>
-<body>
+<body class="checkout-page">
 
     <header>
-			<div class="container">
-				<nav class="navbar">
-					<a href="index.html" class="logo-box" style="text-decoration: none;">
-						<div class="dna-logo">
-							<div class="dna-drop dna-magenta"></div>
-							<div class="dna-drop dna-cyan"></div>
+				<div class="container">
+					<nav class="navbar">
+						<a href="index.html" class="logo-box" style="text-decoration: none;">
+							<div class="dna-logo">
+								<div class="dna-drop dna-magenta"></div>
+								<div class="dna-drop dna-cyan"></div>
+							</div>
+							<div class="brand-text">
+								<h3>Al-Khat Al-Mudi</h3>
+								<span id="header-brand_sub">SECURE CHECKOUT</span>
+							</div>
+						</a>
+                
+						<div style="color: var(--brand-cyan); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+							<i class="fas fa-shield-alt"></i> 256-Bit SSL Encrypted
 						</div>
-						<div class="brand-text">
-							<h3>Al-Khat Al-Mudi</h3>
-							<span id="header-brand_sub">TRANSLATION SERVICES</span>
-						</div>
-					</a>
-					
-					<div style="color: #2ecc71; font-weight: 600; display: flex; align-items: center; gap: 5px;">
-						<i class="fas fa-lock"></i> 256-Bit SSL Encrypted
-					</div>
 
-					<a href="#menu" class="menu-toggle" id="menuToggle">
-						<span class="text" id="header-menu_btn">MENU</span>
-						<div class="hamburger">
-							<span></span>
-							<span></span>
-							<span></span>
+						<a href="#menu" class="menu-toggle" id="menuToggle">
+							<span class="text" id="header-menu_btn">MENU</span>
+							<div class="hamburger">
+								<span></span><span></span><span></span>
+							</div>
+						</a>
+						
+						<div id="user-profile-section" class="user-status-hidden">
+							<a href="profile.html" class="user-orb">
+								<i class="fas fa-user-circle"></i>
+								<span id="user-display-name">Client</span>
+							</a>
+							<button onclick="handleLogout()" class="logout-link">Logout</button>
 						</div>
-					</a>
-				</nav>
-			</div>
-	</header>
+					</nav>
+				</div>
+            </nav>
+        </div>
+    </header>
 
-    <div class="container">
+    <main class="container">
         <div class="checkout-grid">
             
-            <div class="forms-col">
-                <div class="panel-card">
-                    <div class="panel-title"><i class="fas fa-user-circle"></i> Billing Information</div>
-                    <div class="split-inputs">
-                        <div class="input-group">
-                            <label class="input-label">First Name</label>
-                            <input type="text" class="checkout-input" id="bill_fname" placeholder="John" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Last Name</label>
-                            <input type="text" class="checkout-input" id="bill_lname" placeholder="Doe" required>
-                        </div>
+            <div class="summary-col">
+                <div class="glass-panel" style="position: sticky; top: 100px;">
+                    <div class="panel-title"><i class="fas fa-clipboard-list"></i> Mission Briefing</div>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">Target Region</span>
+                        <span class="summary-value" id="sum_loc">--</span>
                     </div>
-                    <div class="input-group">
-                        <label class="input-label">Email Address (For Invoice)</label>
-                        <input type="email" class="checkout-input" id="bill_email" placeholder="john@example.com" required>
+                    <div class="summary-row">
+                        <span class="summary-label">Document Type</span>
+                        <span class="summary-value" id="sum_doc">--</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Translation</span>
+                        <span class="summary-value" id="sum_lang">--</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Page Count</span>
+                        <span class="summary-value" id="sum_pages">--</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Urgency Level</span>
+                        <span class="summary-value" id="sum_urgency">--</span>
+                    </div>
+
+                    <div class="price-highlight" id="sum_total">0.00 JOD</div>
+                    
+                    <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.5; text-align: center;">
+                        <i class="fas fa-lock"></i> Payments processed securely. No card data is stored on our servers.
                     </div>
                 </div>
+            </div>
 
-                <div class="panel-card">
-                    <div class="panel-title"><i class="fas fa-credit-card"></i> Payment Method</div>
+            <div class="forms-col">
+                <form id="master-checkout-form">
                     
-                    <div class="cc-visual">
-                        <i class="fab fa-cc-visa cc-icon active" id="icon-visa"></i>
-                        <i class="fab fa-cc-mastercard cc-icon" id="icon-master"></i>
-                        <i class="fab fa-cc-amex cc-icon" id="icon-amex"></i>
+                    <div class="glass-panel">
+                        <div class="panel-title"><i class="fas fa-cloud-upload-alt"></i> Secure Document Transfer</div>
+                        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 20px;">Upload your source files. Transmission is routed directly to our secure Doha vault.</p>
+
+                        <input type="file" id="real-file-input" style="display: none;" onchange="updateFileLabel()" required>
+                        <label for="real-file-input" class="drop-zone-container" style="cursor: pointer; margin-top: 0;">
+                            <div class="drop-zone-visual">
+                                <i class="fas fa-file-shield"></i>
+                                <span id="drop-label-text" style="color: white;">Select File for Extraction</span>
+                                <small>(PDF, DOCX, JPG supported)</small>
+                            </div>
+                        </label>
                     </div>
 
-                    <form id="payment-form" onsubmit="processPayment(event)">
+                    <div class="glass-panel">
+                        <div class="panel-title"><i class="fas fa-user-astronaut"></i> Billing Identity</div>
+                        <div class="split-inputs">
+                            <div class="input-group">
+                                <label class="input-label">First Name</label>
+                                <input type="text" class="checkout-input" id="bill_fname" placeholder="John" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Last Name</label>
+                                <input type="text" class="checkout-input" id="bill_lname" placeholder="Doe" required>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-bottom: 0;">
+                            <label class="input-label">Communication Email</label>
+                            <input type="email" class="checkout-input" id="bill_email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <div class="panel-title"><i class="fas fa-credit-card"></i> Payment Uplink</div>
+                        
+                        <div class="cc-visual">
+                            <i class="fab fa-cc-visa cc-icon active" id="icon-visa"></i>
+                            <i class="fab fa-cc-mastercard cc-icon" id="icon-master"></i>
+                            <i class="fab fa-cc-amex cc-icon" id="icon-amex"></i>
+                        </div>
+
                         <div class="input-group">
                             <label class="input-label">Card Number</label>
                             <input type="text" class="checkout-input" id="cc_number" placeholder="0000 0000 0000 0000" maxlength="19" required>
@@ -196,131 +243,47 @@
                                 <input type="text" class="checkout-input" id="cc_expiry" placeholder="MM / YY" maxlength="5" required>
                             </div>
                             <div class="input-group">
-                                <label class="input-label">CVC / CVV</label>
-                                <input type="password" class="checkout-input" id="cc_cvc" placeholder="123" maxlength="4" required>
+                                <label class="input-label">Security Code (CVC)</label>
+                                <input type="password" class="checkout-input" id="cc_cvc" placeholder="***" maxlength="4" required>
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label class="input-label">Cardholder Name</label>
-                            <input type="text" class="checkout-input" id="cc_name" placeholder="As shown on card" required>
+                            <label class="input-label">Name on Card</label>
+                            <input type="text" class="checkout-input" id="cc_name" placeholder="Exactly as shown on card" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                            Pay <span id="btn-amount">...</span>
+                        <button type="submit" id="btn-submit" class="btn btn-primary" style="width: 100%; margin-top: 15px; font-size: 1.1rem; padding: 15px;">
+                            AUTHORIZE <span id="btn-amount">...</span>
                         </button>
-                    </form>
-                </div>
+                    </div>
+
+                </form>
             </div>
+            
+        </div>
+    </main>
 
-            <div class="summary-col">
-                <div class="panel-card summary-box">
-                    <div class="panel-title" style="color: white; border-color: rgba(255,255,255,0.2);">Order Summary</div>
-                    
-                    <div class="summary-row">
-                        <span>Service Location</span>
-                        <strong id="sum_loc">--</strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Document Type</span>
-                        <strong id="sum_doc">--</strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Languages</span>
-                        <strong id="sum_lang">--</strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Pages</span>
-                        <strong id="sum_pages">--</strong>
-                    </div>
-                    <div class="summary-row">
-                        <span>Urgency</span>
-                        <strong id="sum_urgency">--</strong>
-                    </div>
-
-                    <div class="summary-total">
-                        <span>Total</span>
-                        <span id="sum_total">0.00 JOD</span>
-                    </div>
-
-                    <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7; text-align: center;">
-                        <i class="fas fa-shield-alt"></i> Payments are processed via Stripe/PayPal Secure Gateway.
-                    </div>
+    <div id="processing-overlay" class="server-overlay">
+        <div class="terminal-box">
+            <div class="dna-loader">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            <div class="terminal-content">
+                <h4 class="terminal-title">ENCRYPTING CARGO & PAYMENT</h4>
+                <div id="terminal-log" class="terminal-log">
+                    <span class="log-line">> Establishing secure tunnel...</span>
                 </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="status-blink">PROCESSING...</div>
             </div>
         </div>
-    </div>
-
-    <div class="pay-overlay" id="processing">
-        <div class="spinner"></div>
-        <h3 style="color: white; margin-bottom: 10px;">Processing Payment...</h3>
-        <p style="color: #aaa; font-size: 0.9rem;">Do not close this window.</p>
     </div>
 	
-	<footer id="contact">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <div class="dna-logo" style="margin-bottom: 20px;">
-                        <div class="dna-drop dna-magenta"></div>
-                        <div class="dna-drop dna-cyan"></div>
-                    </div>
-                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
-                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
-                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
-                    </p>
-                     <div class="social-icons">
-                        <a href="#" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-col">
-                    <h4 id="footer-col_links">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" id="menu-home-footer">Home</a></li>
-                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
-                        <li><a href="#services" id="menu-services-footer">Services</a></li>
-                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4 id="footer-col_legal">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
-                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
-                        <li><a href="#">Confidentiality</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4 id="footer-col_contact">Contact Us</h4>
-                    <ul class="contact-info">
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone-alt"></i>
-                            <span>078-077-0085</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>alkhatalmudi@gmail.com</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <div id="side-menu" class="menu-panel">
+	<div id="side-menu" class="menu-panel">
         <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
 
         <div class="menu-content">
@@ -357,79 +320,147 @@
         </div>
     </div>
 
+    <script>
+        // 1. URL PAYLOAD INTERCEPT
+        let orderDataObj = {};
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            
+            orderDataObj = {
+                location: params.get('loc') || "Unknown Base",
+                langFrom: params.get('from') || "Auto",
+                langTo: params.get('to') || "Auto",
+                docType: params.get('doc') || "General Document",
+                pages: params.get('pages') || "1",
+                urgency: params.get('urgency') || "Standard",
+                totalPrice: params.get('price') || "0.00 JOD"
+            };
+
+            document.getElementById('sum_loc').innerText = orderDataObj.location;
+            document.getElementById('sum_doc').innerText = orderDataObj.docType;
+            document.getElementById('sum_lang').innerText = `${orderDataObj.langFrom} → ${orderDataObj.langTo}`;
+            document.getElementById('sum_pages').innerText = orderDataObj.pages;
+            document.getElementById('sum_urgency').innerText = orderDataObj.urgency;
+            document.getElementById('sum_total').innerText = orderDataObj.totalPrice;
+            document.getElementById('btn-amount').innerText = orderDataObj.totalPrice;
+        });
+
+        // 2. FILE DROP ZONE VISUALS
+        window.updateFileLabel = function() {
+            const input = document.getElementById('real-file-input');
+            const labelText = document.getElementById('drop-label-text');
+            const container = document.querySelector('.drop-zone-container');
+            
+            if(input.files.length > 0) {
+                labelText.innerText = "CARGO SECURED: " + input.files[0].name;
+                container.classList.add('file-selected');
+                const icon = container.querySelector('i');
+                icon.style.color = "var(--brand-magenta)";
+                icon.className = "fas fa-check-circle"; 
+            }
+        }
+
+        // 3. CREDIT CARD FORMATTING
+        document.getElementById('cc_number').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+        document.getElementById('cc_expiry').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/^(\d{2})/, '$1/').substr(0, 5);
+        });
+    </script>
+
     <script type="module">
-		import { db, setDoc, doc } from './assets/js/firebase-init.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-		// 1. GET DATA FROM URL (The Briefcase)
-		const urlParams = new URLSearchParams(window.location.search);
-		const orderData = {
-			location: urlParams.get('loc'),
-			from: urlParams.get('from'),
-			to: urlParams.get('to'),
-			docType: urlParams.get('doc'),
-			pages: urlParams.get('pages'),
-			urgency: urlParams.get('urgency'),
-			totalPrice: urlParams.get('price')
-		};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
 
-		// UI Population (Keep existing logic)
-		document.getElementById('sum_loc').innerText = orderData.location;
-		document.getElementById('sum_doc').innerText = orderData.docType;
-		document.getElementById('sum_lang').innerText = `${orderData.from} → ${orderData.to}`;
-		document.getElementById('sum_pages').innerText = orderData.pages;
-		document.getElementById('sum_urgency').innerText = orderData.urgency;
-		document.getElementById('sum_total').innerText = orderData.totalPrice;
-		document.getElementById('btn-amount').innerText = orderData.totalPrice;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
 
-		// Credit Card Visuals (Keep existing logic)
-		document.getElementById('cc_number').addEventListener('input', function (e) {
-			e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-		});
-		document.getElementById('cc_expiry').addEventListener('input', function (e) {
-			e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/^(\d{2})/, '$1/').substr(0, 5);
-		});
+        let currentUid = "guest"; // Default fallback
 
-		// 2. THE NEW PAYMENT FUNCTION
-		window.processPayment = async function(e) {
-			e.preventDefault();
-			
-			const fname = document.getElementById('bill_fname').value;
-			const lname = document.getElementById('bill_lname').value;
-			const email = document.getElementById('bill_email').value;
+        // Identify Agent
+        onAuthStateChanged(auth, (user) => {
+            if (user) currentUid = user.uid;
+        });
 
-			if(!fname || !lname || !email) { alert("Please fill in billing info."); return; }
+        document.getElementById('master-checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('real-file-input');
+            const fname = document.getElementById('bill_fname').value;
+            const lname = document.getElementById('bill_lname').value;
+            const email = document.getElementById('bill_email').value;
 
-			document.getElementById('processing').classList.add('active');
+            const btn = document.getElementById('btn-submit');
+            const overlay = document.getElementById('processing-overlay');
+            const logBox = document.getElementById('terminal-log');
+            const progressBar = document.getElementById('progress-bar');
 
-			// GENERATE IDS
-			const invoiceId = 'INV-' + Math.floor(100000 + Math.random() * 900000); // e.g. INV-849201
-			const txnId = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            if(fileInput.files.length === 0) return;
 
-			try {
-				// --- WRITE TO FIREBASE ---
-				await setDoc(doc(db, "orders", invoiceId), {
-					...orderData,
-					clientName: `${fname} ${lname}`,
-					clientEmail: email,
-					invoiceId: invoiceId,
-					transactionId: txnId,
-					status: "Pending", // <--- REAL STATUS
-					timestamp: new Date().toISOString(),
-					createdAt: new Date().toLocaleDateString()
-				});
+            // Lock UI & Start Hacker Sequence
+            btn.disabled = true;
+            overlay.classList.add('active');
+            let progress = 0;
+            const loader = setInterval(() => { progress += 5; if(progress <= 90) progressBar.style.width = progress + '%'; }, 200);
 
-				// Redirect using ONLY the ID (Data is in cloud now!)
-				window.location.href = `invoice.html?id=${invoiceId}`;
+            try {
+                // Generate Tracking IDs
+                const invoiceId = 'INV-' + Math.floor(100000 + Math.random() * 900000);
+                const txnId = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 
-			} catch (error) {
-				console.error("Error writing document: ", error);
-				alert("System Error: Could not save order. Please try again.");
-				document.getElementById('processing').classList.remove('active');
-			}
-		}
-		
-		// Attach listener manually because of module scope
-		document.getElementById('payment-form').addEventListener('submit', window.processPayment);
-	</script>
+                // 1. Upload File
+                logBox.innerHTML += `<div class="log-line">> Initiating secure file transfer to Doha...</div>`;
+                const file = fileInput.files[0];
+                const storageRef = ref(storage, 'client_uploads/' + invoiceId + '_' + file.name);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                logBox.innerHTML += `<div class="log-line">> Cargo secured. Authorizing payment gateway...</div>`;
+
+                // 2. Package all data
+                const finalOrderData = {
+                    ...orderDataObj, // Inherits data from URL
+                    userId: currentUid,
+                    clientName: `${fname} ${lname}`,
+                    clientEmail: email,
+                    fileUrl: downloadURL,
+                    invoiceId: invoiceId,
+                    transactionId: txnId,
+                    status: "Paid & Processing",
+                    timestamp: new Date()
+                };
+
+                // 3. Save to Firestore under the Invoice ID
+                await setDoc(doc(db, "orders", invoiceId), finalOrderData);
+
+                clearInterval(loader);
+                progressBar.style.width = '100%';
+                logBox.innerHTML += `<div class="log-line success">> PAYMENT CLEARED. Redirecting to invoice...</div>`;
+
+                // 4. Send them to their invoice!
+                setTimeout(() => { window.location.href = `invoice.html?id=${invoiceId}`; }, 2000);
+
+            } catch (error) {
+                clearInterval(loader);
+                overlay.classList.remove('active');
+                btn.disabled = false;
+                alert("GATEWAY ERROR: " + error.message);
+            }
+        });
+    </script>
 </body>
 </html>

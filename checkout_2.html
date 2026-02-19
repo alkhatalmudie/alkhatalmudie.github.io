@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        .checkout-page {
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.95), rgba(11, 20, 38, 0.95)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding-top: 100px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            padding: 40px 0;
+            flex: 1;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+        .summary-value { font-weight: bold; color: white; text-align: right;}
+        
+        .price-highlight {
+            font-size: 2rem;
+            color: var(--brand-cyan);
+            font-weight: 900;
+            font-family: var(--font-primary);
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="checkout-page">
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h3>Al-Khat Al-Mudi</h3>
+                        <span id="header-brand_sub">SECURE CHECKOUT</span>
+                    </div>
+                </a>
+                
+                <div id="user-profile-section" class="user-status-hidden">
+                    <a href="profile.html" class="user-orb">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Client</span>
+                    </a>
+                </div>
+
+                <a href="reservation.html" style="font-weight: 600; color: white; display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i> Back to Quote
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="checkout-grid">
+            
+            <div class="glass-panel" style="align-self: start;">
+                <h3 style="color: var(--brand-cyan); margin-bottom: 20px;"><i class="fas fa-clipboard-check"></i> Mission Briefing</h3>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Target Region</span>
+                    <span class="summary-value" id="chk-loc">--</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Translation</span>
+                    <span class="summary-value"><span id="chk-from">--</span> <i class="fas fa-arrow-right" style="color: var(--brand-magenta); margin: 0 5px;"></i> <span id="chk-to">--</span></span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Document Type</span>
+                    <span class="summary-value" id="chk-doc">--</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Page Count</span>
+                    <span class="summary-value" id="chk-pages">--</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Urgency Level</span>
+                    <span class="summary-value" id="chk-urgency">--</span>
+                </div>
+
+                <div class="price-highlight" id="chk-price">0.00 JOD</div>
+            </div>
+
+            <div class="glass-panel">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-cloud-upload-alt" style="color: var(--brand-cyan);"></i> Secure Document Transfer</h3>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 25px;">Upload your source files here. The transmission is encrypted and routed directly to our secure Doha servers.</p>
+
+                <form id="checkout-form">
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <input type="file" id="real-file-input" style="display: none;" onchange="updateFileLabel()" required>
+                        
+                        <label for="real-file-input" class="drop-zone-container" style="cursor: pointer;">
+                            <div class="drop-zone-visual">
+                                <i class="fas fa-file-shield"></i>
+                                <span id="drop-label-text" style="color: white;">Select File for Extraction</span>
+                                <small>(PDF, DOCX, JPG supported)</small>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 25px;">
+                        <input type="text" id="chk-name" class="glass-input" placeholder="Full Name (For the translated document)" required style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;">
+                    </div>
+
+                    <button type="submit" id="final-submit-btn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">
+                        INITIATE TRANSFER
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </main>
+
+    <div id="processing-overlay" class="server-overlay">
+        <div class="terminal-box">
+            <div class="dna-loader">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            <div class="terminal-content">
+                <h4 class="terminal-title">UPLOADING TO SECURE VAULT</h4>
+                <div id="terminal-log" class="terminal-log">
+                    <span class="log-line">> Establishing secure tunnel...</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="status-blink">ENCRYPTING CARGO...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. INTERCEPT URL PAYLOAD ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            
+            document.getElementById('chk-loc').innerText = params.get('loc') || "Unknown Base";
+            document.getElementById('chk-from').innerText = params.get('from') || "Auto";
+            document.getElementById('chk-to').innerText = params.get('to') || "Auto";
+            document.getElementById('chk-doc').innerText = params.get('doc') || "General Document";
+            document.getElementById('chk-pages').innerText = params.get('pages') || "1";
+            document.getElementById('chk-urgency').innerText = params.get('urgency') || "Standard";
+            document.getElementById('chk-price').innerText = params.get('price') || "TBD";
+        });
+
+        // --- 2. DROP ZONE VISUAL UPDATE ---
+        window.updateFileLabel = function() {
+            const input = document.getElementById('real-file-input');
+            const labelText = document.getElementById('drop-label-text');
+            const container = document.querySelector('.drop-zone-container');
+            
+            if(input.files.length > 0) {
+                labelText.innerText = "CARGO SECURED: " + input.files[0].name;
+                container.classList.add('file-selected');
+                const icon = container.querySelector('i');
+                icon.style.color = "var(--brand-magenta)";
+                icon.className = "fas fa-check-circle"; 
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentUser = null;
+
+        // Check Identity
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('user-profile-section').classList.add('active');
+                document.getElementById('user-display-name').innerText = user.displayName || "Agent";
+            }
+        });
+
+        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('real-file-input');
+            const clientName = document.getElementById('chk-name').value;
+            const btn = document.getElementById('final-submit-btn');
+            const overlay = document.getElementById('processing-overlay');
+            const logBox = document.getElementById('terminal-log');
+            const progressBar = document.getElementById('progress-bar');
+
+            if (!currentUser) {
+                alert("ACCESS DENIED: You must be logged in to submit classified documents.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            if(fileInput.files.length === 0) return;
+
+            // Lock UI & Start Hacker Sequence
+            btn.disabled = true;
+            overlay.classList.add('active');
+            let progress = 0;
+            const loader = setInterval(() => { progress += 5; if(progress <= 90) progressBar.style.width = progress + '%'; }, 200);
+
+            try {
+                const file = fileInput.files[0];
+                const fileName = Date.now() + '_' + file.name; 
+                const storageRef = ref(storage, 'client_uploads/' + fileName);
+
+                logBox.innerHTML += `<div class="log-line">> Transmitting data to Doha servers...</div>`;
+                
+                // 1. Upload File
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                logBox.innerHTML += `<div class="log-line">> Cargo verified. Registering coordinates...</div>`;
+
+                // 2. Package the parameters from the URL
+                const params = new URLSearchParams(window.location.search);
+                const orderData = {
+                    userId: currentUser.uid,
+                    customerName: clientName,
+                    email: currentUser.email,
+                    fileUrl: downloadURL,
+                    location: params.get('loc'),
+                    langFrom: params.get('from'),
+                    langTo: params.get('to'),
+                    docType: params.get('doc'),
+                    pages: params.get('pages'),
+                    urgency: params.get('urgency'),
+                    price: params.get('price'),
+                    status: "Pending Review",
+                    timestamp: new Date()
+                };
+
+                // 3. Save to Database
+                await addDoc(collection(db, "orders"), orderData);
+
+                clearInterval(loader);
+                progressBar.style.width = '100%';
+                logBox.innerHTML += `<div class="log-line success">> OPERATION COMPLETE. Redirecting to Dashboard...</div>`;
+
+                setTimeout(() => { window.location.href = "profile.html"; }, 2000);
+
+            } catch (error) {
+                clearInterval(loader);
+                overlay.classList.remove('active');
+                btn.disabled = false;
+                alert("GATEWAY ERROR: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

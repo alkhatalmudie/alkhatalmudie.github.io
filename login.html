@@ -14,6 +14,12 @@
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
     <style>
+        /* --- GLITCH FIX: STABILIZE SCROLLBARS --- */
+        html, body {
+            overflow-x: hidden; /* Stops horizontal scrollbar from appearing during tilt */
+            width: 100%;
+        }
+
         .auth-page {
             position: relative;
             min-height: 100vh;
@@ -24,17 +30,16 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
         }
 
         .auth-container {
-            flex: 1;
+            flex: 1; /* Pushes footer down */
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 100px 20px; /* Added padding to prevent header overlap */
         }
 
         .auth-card {
@@ -53,6 +58,12 @@
         .glass-form {
             transition: transform 0.1s ease-out, box-shadow 0.3s ease;
             transform-style: preserve-3d;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
         }
 
         .glass-form:hover {
@@ -95,6 +106,73 @@
             text-decoration: none;
             font-weight: 600;
         }
+		
+		/* --- OAUTH & DIVIDER UI --- */
+		.auth-divider {
+			position: relative;
+			text-align: center;
+			margin: 25px 0 20px;
+		}
+
+		.auth-divider::before {
+			content: '';
+			position: absolute;
+			left: 0; top: 50%;
+			width: 100%; height: 1px;
+			background: rgba(255, 255, 255, 0.15);
+			z-index: 1;
+		}
+
+		.auth-divider span {
+			background: #111b2f; /* Blends with the glass panel */
+			padding: 0 15px;
+			color: rgba(255, 255, 255, 0.5);
+			font-size: 0.8rem;
+			position: relative;
+			z-index: 2;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.social-auth-grid {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+		}
+
+		.btn-social {
+			background: rgba(255, 255, 255, 0.05);
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			color: white;
+			width: 45px; height: 45px;
+			border-radius: 50%;
+			display: flex; align-items: center; justify-content: center;
+			font-size: 1.2rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.btn-social:hover {
+			background: var(--brand-cyan);
+			border-color: var(--brand-cyan);
+			transform: translateY(-3px);
+			box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+		}
+
+		.forgot-pass-link {
+			display: block;
+			text-align: right;
+			margin-top: -5px;
+			margin-bottom: 15px;
+			color: var(--brand-cyan);
+			font-size: 0.8rem;
+			text-decoration: none;
+			transition: 0.3s;
+		}
+
+		.forgot-pass-link:hover {
+			color: white;
+}
     </style>
 </head>
 <body class="auth-page">
@@ -113,20 +191,20 @@
                     </div>
                 </a>
 
-                <div id="user-profile-section" class="user-status-hidden">
-                    <a href="profile.html" class="user-orb">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="user-display-name">Client</span>
-                    </a>
-                    <button onclick="handleLogout()" class="logout-link">Logout</button>
-                </div>
-
                 <a href="#menu" class="menu-toggle" id="menuToggle">
                     <span class="text" id="header-menu_btn">MENU</span>
                     <div class="hamburger">
                         <span></span><span></span><span></span>
                     </div>
                 </a>
+				
+				<div id="user-profile-section" class="user-status-hidden">
+                    <a href="profile.html" class="user-orb">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Client</span>
+                    </a>
+                    <button onclick="handleLogout()" class="logout-link">Logout</button>
+                </div>
             </nav>
         </div>
     </header>
@@ -134,31 +212,142 @@
     <main class="auth-container">
         <div class="auth-card">
             <form id="login-form" class="glass-form">
-                <div class="form-header">
-                    <h4 style="margin:0; font-size: 1.5rem; color: var(--brand-cyan);">Agent Check-In</h4>
-                    <p style="font-size: 0.85rem; opacity: 0.8;">Verify credentials to access secure terminal</p>
-                </div>
+				<div class="form-header">
+					<h4 style="margin:0; font-size: 1.5rem; color: var(--brand-cyan);">Agent Check-In</h4>
+					<p style="font-size: 0.85rem; opacity: 0.8;">Verify credentials to access secure terminal</p>
+				</div>
 
-                <div class="form-group">
-                    <input type="email" id="login-email" placeholder="Email Address" required>
-                    <i class="fas fa-id-badge input-icon"></i>
-                </div>
+				<div class="form-group">
+					<input type="email" id="login-email" placeholder="Email Address" required>
+					<i class="fas fa-id-badge input-icon"></i>
+				</div>
 
-                <div class="form-group">
-                    <input type="password" id="login-password" placeholder="Access Cipher" required>
-                    <i class="fas fa-key input-icon"></i>
-                </div>
+				<div class="form-group">
+					<input type="password" id="login-password" placeholder="Access Cipher" required>
+					<i class="fas fa-key input-icon"></i>
+				</div>
 
-                <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                    ESTABLISH LINK
-                </button>
+				<a href="javascript:void(0)" id="forgot-password-btn" class="forgot-pass-link">Forgot Cipher?</a>
 
-                <div class="auth-footer-note">
-                    New Personnel? <a href="signup.html">Register File</a>
-                </div>
-            </form>
+				<button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%;">
+					ESTABLISH LINK
+				</button>
+
+				<div class="auth-divider"><span>Or link via</span></div>
+				
+				<div class="social-auth-grid">
+					<button type="button" class="btn-social" id="btn-google"><i class="fab fa-google"></i></button>
+					<button type="button" class="btn-social" id="btn-facebook"><i class="fab fa-facebook-f"></i></button>
+					<button type="button" class="btn-social" id="btn-twitter"><i class="fab fa-twitter"></i></button>
+					<button type="button" class="btn-social" id="btn-github"><i class="fab fa-github"></i></button>
+				</div>
+
+				<div class="auth-footer-note">
+					New Personnel? <a href="signup.html">Register File</a>
+				</div>
+			</form>
         </div>
     </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
+                    </p>
+                     <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1Gtg7R2phb/" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/alkhatalmudi" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/message/BFW6NB4D4ZLLL1" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="menu-home-footer">Home</a></li>
+                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
+                        <li><a href="#services" id="menu-services-footer">Services</a></li>
+                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                        <li><a href="#">Confidentiality</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>078-077-0085</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>alkhatalmudi@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+
+        <div class="menu-content">
+            <h4 class="menu-label" id="menu-label_nav">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" id="menu-home">Home</a></li>
+                <li class="dropdown-trigger">
+                    <a href="javascript:void(0)"><span id="menu-pages">Pages</span> <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-list">
+                        <li><a href="about.html" id="menu-about">About Us</a></li>
+                        <li><a href="services.html" id="menu-services">Services</a></li>
+                        <li><a href="translation.html" id="menu-translation">Translation Info</a></li>
+                        <li><a href="packages.html" id="menu-packages">Packages & Pricing</a></li>
+                        <li><a href="shop.html" id="menu-shop">Shop / Products</a></li>
+                        <li><a href="reservation.html" id="menu-reservation">Book Reservation</a></li>
+                        <li><a href="contacts.html" id="menu-contact">Contact Us</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="menu-label" id="menu-label_member">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" id="menu-login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" id="menu-signup">Sign Up</a>
+            </div>
+
+            <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="#" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="#" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="#" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="#" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
 
     <div id="processing-overlay" class="server-overlay">
         <div class="terminal-box">
@@ -180,7 +369,7 @@
     </div>
 
     <script>
-        // --- 1. SIGNAL DOT GENERATOR ---
+        // TACTICAL DOTS
         const page = document.querySelector('.auth-page');
         for (let i = 0; i < 15; i++) {
             const dot = document.createElement('div');
@@ -191,64 +380,147 @@
             page.appendChild(dot);
         }
 
-        // --- 2. TACTICAL TILT EFFECT ---
+        // TACTICAL TILT (Safe Mode)
         const card = document.querySelector('.glass-form');
         const authCard = document.querySelector('.auth-card');
+        
         authCard.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            // Calculated relative to the card, not window, to reduce jitter
+            const rect = authCard.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
+            
+            // Center point
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / 20) * -1; // Invert logic for natural feel
+            const rotateY = (x - centerX) / 20;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
+
         authCard.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
         });
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+		// IMPORT OAUTH & RESET TOOLS
+		import { 
+			getAuth, 
+			signInWithEmailAndPassword, 
+			createUserWithEmailAndPassword,
+			updateProfile,
+			sendPasswordResetEmail,
+			signInWithPopup, 
+			GoogleAuthProvider, 
+			FacebookAuthProvider, 
+			TwitterAuthProvider, 
+			GithubAuthProvider 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
-            authDomain: "al-khat-backend.firebaseapp.com",
-            projectId: "al-khat-backend",
-            storageBucket: "al-khat-storage-doha",
-            messagingSenderId: "310033181926",
-            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
-        };
+		const firebaseConfig = {
+			apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+			authDomain: "al-khat-backend.firebaseapp.com",
+			projectId: "al-khat-backend",
+			storageBucket: "al-khat-storage-doha",
+			messagingSenderId: "310033181926",
+			appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+		};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const overlay = document.getElementById('processing-overlay');
-            const logBox = document.getElementById('terminal-log');
-            const btn = document.getElementById('login-btn');
+		const overlay = document.getElementById('processing-overlay');
+		const logBox = document.getElementById('terminal-log');
 
-            btn.disabled = true;
-            btn.innerText = "LINKING...";
-            overlay.classList.add('active');
+		// --- STANDARD EMAIL SUBMIT (Works for both Login and Signup forms) ---
+		const mainForm = document.querySelector('.glass-form');
+		if(mainForm.id === 'login-form') {
+			mainForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const email = document.getElementById('login-email').value;
+				const password = document.getElementById('login-password').value;
+				const btn = document.getElementById('login-btn');
 
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                
-                const p = document.createElement('div');
-                p.className = "log-line success";
-                p.innerText = "> IDENTITY CONFIRMED. REDIRECTING...";
-                logBox.appendChild(p);
+				btn.disabled = true; btn.innerText = "LINKING..."; overlay.classList.add('active');
+				try {
+					await signInWithEmailAndPassword(auth, email, password);
+					logBox.innerHTML += `<div class="log-line success">> IDENTITY CONFIRMED.</div>`;
+					setTimeout(() => { window.location.href = "index.html"; }, 1500);
+				} catch (error) {
+					overlay.classList.remove('active'); btn.disabled = false; btn.innerText = "RETRY ACCESS";
+					alert("ACCESS DENIED: " + error.message);
+				}
+			});
 
-                setTimeout(() => { window.location.href = "index.html"; }, 1500);
-            } catch (error) {
-                overlay.classList.remove('active');
-                btn.disabled = false;
-                btn.innerText = "RETRY ACCESS";
-                alert("ACCESS DENIED: " + error.message);
-            }
-        });
-    </script>
+			// FORGOT PASSWORD LOGIC
+			document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+				const email = document.getElementById('login-email').value;
+				if(!email) {
+					alert("Please enter your email address in the field above first.");
+					return;
+				}
+				try {
+					await sendPasswordResetEmail(auth, email);
+					alert("Transmission Sent! Check your email for password reset instructions.");
+				} catch (error) {
+					alert("Error: " + error.message);
+				}
+			});
+		} else {
+			// SIGNUP LOGIC
+			mainForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const name = document.getElementById('signup-name').value;
+				const email = document.getElementById('signup-email').value;
+				const password = document.getElementById('signup-password').value;
+				const btn = document.getElementById('signup-btn');
+
+				btn.disabled = true; btn.innerText = "AUTHENTICATING..."; overlay.classList.add('active');
+				try {
+					const cred = await createUserWithEmailAndPassword(auth, email, password);
+					await updateProfile(cred.user, { displayName: name });
+					logBox.innerHTML += `<div class="log-line success">> ACCOUNT GENERATED.</div>`;
+					setTimeout(() => { window.location.href = "index.html"; }, 1500);
+				} catch (error) {
+					overlay.classList.remove('active'); btn.disabled = false; btn.innerText = "RETRY";
+					alert("GATEWAY ERROR: " + error.message);
+				}
+			});
+		}
+
+		// --- OAUTH LOGIC (Social Buttons) ---
+		const handleOAuth = async (providerName) => {
+			let provider;
+			switch(providerName) {
+				case 'google': provider = new GoogleAuthProvider(); break;
+				case 'facebook': provider = new FacebookAuthProvider(); break;
+				case 'twitter': provider = new TwitterAuthProvider(); break;
+				case 'github': provider = new GithubAuthProvider(); break;
+			}
+			
+			try {
+				overlay.classList.add('active');
+				logBox.innerHTML += `<div class="log-line">> Establishing External Link: ${providerName.toUpperCase()}...</div>`;
+				await signInWithPopup(auth, provider);
+				logBox.innerHTML += `<div class="log-line success">> EXTERNAL IDENTITY CONFIRMED.</div>`;
+				setTimeout(() => { window.location.href = "index.html"; }, 1500);
+			} catch (error) {
+				overlay.classList.remove('active');
+				console.error(error);
+				alert(`Failed to link with ${providerName}. Please check console or try another method.`);
+			}
+		};
+
+		document.getElementById('btn-google').addEventListener('click', () => handleOAuth('google'));
+		document.getElementById('btn-facebook').addEventListener('click', () => handleOAuth('facebook'));
+		document.getElementById('btn-twitter').addEventListener('click', () => handleOAuth('twitter'));
+		document.getElementById('btn-github').addEventListener('click', () => handleOAuth('github'));
+
+	</script>
 
     <script src="assets/js/main.js"></script>
 </body>
