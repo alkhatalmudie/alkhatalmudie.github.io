@@ -1,6 +1,3 @@
-// Add these to the top of your main.js if not already imported via a module
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. INITIAL SETUP

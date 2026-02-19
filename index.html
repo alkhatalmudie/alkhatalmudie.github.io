@@ -624,6 +624,8 @@
 	
 	<script type="module">
 		import { storage, ref, uploadBytes, getDownloadURL } from './assets/js/firebase-init.js';
+		// Add these to the top of your main.js if not already imported via a module
+		import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 		// 1. Update File Selection UI
 		window.updateFileLabel = function() {
