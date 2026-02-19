@@ -1817,3 +1817,55 @@ footer {
     #user-display-name { display: none; } /* Show only icon on small screens */
     .user-status-hidden { margin-right: 10px; }
 }
+
+/* ==========================================================================
+   TACTICAL DROP ZONE STYLES
+   ========================================================================== */
+.drop-zone-container {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(0, 242, 255, 0.3);
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.drop-zone-container:hover {
+    background: rgba(0, 242, 255, 0.05);
+    border-color: var(--brand-cyan);
+    transform: translateY(-2px);
+}
+
+.drop-zone-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--brand-navy);
+}
+
+.drop-zone-visual i {
+    font-size: 2rem;
+    color: var(--brand-cyan);
+    margin-bottom: 5px;
+}
+
+.drop-zone-visual span {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.drop-zone-visual small {
+    color: #666;
+    font-size: 0.75rem;
+}
+
+/* State when file is selected */
+.file-selected {
+    border-style: solid;
+    background: rgba(0, 242, 255, 0.1);
+    border-color: var(--brand-cyan);
+}
