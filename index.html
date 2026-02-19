@@ -685,73 +685,7 @@
 		}
 	</script>
 	
-	<script type="module">
-		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-		const firebaseConfig = {
-			apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
-			authDomain: "al-khat-backend.firebaseapp.com",
-			projectId: "al-khat-backend",
-			storageBucket: "al-khat-storage-doha",
-			messagingSenderId: "310033181926",
-			appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
-		};
-
-		const app = initializeApp(firebaseConfig);
-		const auth = getAuth(app);
-
-		// 1. THE RADAR: SCAN FOR ACTIVE IDENTITIES
-		onAuthStateChanged(auth, (user) => {
-			const profileSection = document.getElementById('user-profile-section');
-			const displayName = document.getElementById('user-display-name');
-			const sideMenuAuth = document.querySelector('.auth-buttons'); // The login/signup buttons in the mobile menu
-
-			if (user) {
-				// Agent Detected -> Unhide Orb, Inject Name
-				profileSection.classList.add('active');
-				
-				// Easter Egg: Check if it's the Alpha Admin
-				if(user.uid === "EOQEt04azKTTWcmNXVtpgSVsRxt2") {
-					displayName.innerText = "COMMANDER";
-					profileSection.querySelector('.user-orb').style.background = "var(--brand-magenta)";
-					profileSection.querySelector('.user-orb').style.color = "white";
-					profileSection.querySelector('.user-orb').style.borderColor = "var(--brand-magenta)";
-				} else {
-					displayName.innerText = user.displayName || "Agent";
-				}
-
-				// Hide the "Log In / Sign Up" buttons in the side menu since they are already inside
-				if(sideMenuAuth) sideMenuAuth.style.display = 'none';
-
-			} else {
-				// Civilian Detected -> Hide Orb
-				profileSection.classList.remove('active');
-				if(sideMenuAuth) sideMenuAuth.style.display = 'flex';
-			}
-		});
-
-		// 2. LOGOUT PROTOCOL
-		window.handleLogout = function() {
-			signOut(auth).then(() => {
-				window.location.reload(); // Refresh the page to clear the UI
-			});
-		};
-
-		// 3. 🚨 SECRET ALPHA COMMAND BACKDOOR (HOTKEY) 🚨
-		document.addEventListener('keydown', (e) => {
-			// Trigger: Ctrl + Shift + A
-			if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-				const user = auth.currentUser;
-				if (user && user.uid === "EOQEt04azKTTWcmNXVtpgSVsRxt2") {
-					console.log("> Alpha Command Override Initiated...");
-					window.location.href = "alpha.html";
-				} else {
-					console.log("> Access Denied: Insufficient Clearance.");
-				}
-			}
-		});
-	</script>
+	<script type="module" src="assets/js/global-auth.js"></script>
 	
 </body>
 </html>
