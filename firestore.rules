@@ -1,18 +1,10 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to create an order (from your checkout page)
-    // But restrict deleting or listing all orders to protect privacy
     match /orders/{orderId} {
+      // Public can create, but only YOU (Admin) can read
       allow create: if true;
-      allow read: if true;
-      allow update, delete: if false;
-    }
-    
-    // Default rule for other collections
-    match /{document=**} {
-      allow read, write: if false;
+      allow read, delete: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
     }
   }
 }

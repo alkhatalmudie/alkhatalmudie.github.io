@@ -12,6 +12,7 @@
     ]
   },
   "storage": {
-    "rules": "storage.rules"
-  }
+  "bucket": "al-khat-storage-doha",
+  "rules": "storage.rules"
+}
 }

@@ -540,63 +540,60 @@
 	<script type="module">
 		import { storage, ref, uploadBytes, getDownloadURL } from './assets/js/firebase-init.js';
 
-		// Make function available globally
-		window.processUploadAndSubmit = async function(e) {
-			e.preventDefault(); // Stop normal submit
-
-			const fileInput = document.getElementById('real-file-input');
-			const googleInput = document.getElementById('google-entry-link'); // The hidden field
-			const submitBtn = document.getElementById('reservation-btn_submit');
-			
-			// 1. Validation
-			if(fileInput.files.length === 0) {
-				alert("Please select a document to upload.");
-				return;
-			}
-
-			// 2. Visual Feedback (Lock button)
-			submitBtn.innerText = "Encrypting & Uploading...";
-			submitBtn.disabled = true;
-			submitBtn.style.background = "#666";
-
-			try {
-				const file = fileInput.files[0];
-				// Create a unique name: timestamp_filename
-				const fileName = Date.now() + '_' + file.name; 
-				const storageRef = ref(storage, 'client_uploads/' + fileName);
-
-				// 3. Upload to Firebase
-				const snapshot = await uploadBytes(storageRef, file);
-				
-				// 4. Get the URL
-				const downloadURL = await getDownloadURL(snapshot.ref);
-				
-				// 5. Inject URL into Google Form Hidden Field
-				googleInput.value = downloadURL;
-
-				// 6. Start the Visual Sequence (The Cool Part)
-				startServerSequence();
-				
-				// 7. Actually Submit the Form to Google (Hidden)
-				document.getElementById('main-request-form').submit();
-
-			} catch (error) {
-				console.error("Upload failed", error);
-				alert("Upload Error: " + error.message);
-				submitBtn.innerText = "Try Again";
-				submitBtn.disabled = false;
-				submitBtn.style.background = "var(--brand-cyan)";
-			}
-		}
-
-		// File Selection UI (Updates the text when file picked)
+		// 1. Update File Selection UI
 		window.updateFileLabel = function() {
 			const input = document.getElementById('real-file-input');
 			const label = document.getElementById('drop-label-text');
 			if(input.files.length > 0) {
-				label.innerText = "SELECTED: " + input.files[0].name;
-				label.style.color = "var(--brand-cyan)";
+				label.innerText = "READY: " + input.files[0].name;
+				label.style.color = "#00f2ff"; // Cyan highlight
 				label.style.fontWeight = "bold";
+			}
+		}
+
+		// 2. The Main Processing Logic
+		window.processUploadAndSubmit = async function(e) {
+			e.preventDefault(); 
+
+			const fileInput = document.getElementById('real-file-input');
+			const googleInput = document.getElementById('google-entry-link'); 
+			const submitBtn = document.getElementById('reservation-btn_submit');
+			const form = document.getElementById('main-request-form');
+			
+			if(fileInput.files.length === 0) {
+				alert("Please select a document for translation.");
+				return;
+			}
+
+			// Lock UI
+			submitBtn.innerText = "SECURING CONNECTION...";
+			submitBtn.disabled = true;
+
+			try {
+				const file = fileInput.files[0];
+				const fileName = Date.now() + '_' + file.name; 
+				const storageRef = ref(storage, 'client_uploads/' + fileName);
+
+				// Trigger the visual "Hacker Sequence" first
+				if (typeof startServerSequence === "function") {
+					startServerSequence();
+				}
+
+				// Perform the real background upload
+				const snapshot = await uploadBytes(storageRef, file);
+				const downloadURL = await getDownloadURL(snapshot.ref);
+				
+				// Inject URL for Google Forms
+				googleInput.value = downloadURL;
+
+				// Submit to Google Form via the hidden iframe
+				form.submit();
+
+			} catch (error) {
+				console.error("Transmission Error:", error);
+				alert("Gateway Error: " + error.message);
+				submitBtn.disabled = false;
+				submitBtn.innerText = "Retry Transmission";
 			}
 		}
 	</script>
