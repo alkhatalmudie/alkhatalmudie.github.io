@@ -332,8 +332,20 @@
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const date = data.timestamp ? data.timestamp.toDate().toLocaleDateString() : "Unknown Date";
+                    
+                    // --- UPGRADED LOGIC AREA ---
                     const statusClass = data.status === "Completed" ? "status-completed" : "status-pending";
                     const statusText = data.status || "Pending Review";
+
+                    // Build the status and button area
+                    let actionArea = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+                    
+                    // If mission is completed and the file exists, append the download button
+                    if(data.status === "Completed" && data.translatedFileUrl) {
+                        actionArea += `<br><a href="${data.translatedFileUrl}" target="_blank" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem; margin-top: 10px; display: inline-block;">
+                            <i class="fas fa-file-download"></i> Download Translation
+                        </a>`;
+                    }
 
                     const itemHtml = `
                         <div class="order-item">
@@ -341,11 +353,13 @@
                                 <h4>Order ID: ${doc.id.substring(0, 8).toUpperCase()}</h4>
                                 <p><i class="fas fa-calendar-alt"></i> ${date} | Contact: ${data.customerName || 'N/A'}</p>
                             </div>
-                            <div class="order-status">
-                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            <div class="order-status" style="text-align: right;">
+                                ${actionArea}
                             </div>
                         </div>
                     `;
+                    // --- END UPGRADED LOGIC ---
+
                     container.innerHTML += itemHtml;
                 });
             } catch (error) {

@@ -227,7 +227,7 @@
 					<i class="fas fa-key input-icon"></i>
 				</div>
 
-				<a href="javascript:void(0)" id="forgot-password-btn" class="forgot-pass-link">Forgot Cipher?</a>
+				<a href="recovery.html" class="forgot-pass-link">Forgot Cipher?</a>
 
 				<button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%;">
 					ESTABLISH LINK
@@ -456,20 +456,7 @@
 				}
 			});
 
-			// FORGOT PASSWORD LOGIC
-			document.getElementById('forgot-password-btn').addEventListener('click', async () => {
-				const email = document.getElementById('login-email').value;
-				if(!email) {
-					alert("Please enter your email address in the field above first.");
-					return;
-				}
-				try {
-					await sendPasswordResetEmail(auth, email);
-					alert("Transmission Sent! Check your email for password reset instructions.");
-				} catch (error) {
-					alert("Error: " + error.message);
-				}
-			});
+			
 		} else {
 			// SIGNUP LOGIC
 			mainForm.addEventListener('submit', async (e) => {

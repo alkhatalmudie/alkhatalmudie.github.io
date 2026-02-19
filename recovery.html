@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Recovery | Al-Khat Al-Mudi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        html, body { overflow-x: hidden; width: 100%; }
+
+        .auth-page {
+            position: relative;
+            min-height: 100vh;
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.85), rgba(11, 20, 38, 0.85)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            perspective: 1000px;
+            z-index: 10;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-form {
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .tactical-dot {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: #ff4b5c; 
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .tactical-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            border: 1px solid #ff4b5c;
+            border-radius: 50%;
+            animation: pulse-wave 3s infinite;
+        }
+
+        @keyframes pulse-wave {
+            0% { width: 100%; height: 100%; opacity: 1; }
+            100% { width: 800%; height: 800%; opacity: 0; }
+        }
+
+        .auth-footer-note {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+        .auth-footer-note a { color: var(--brand-cyan); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body class="auth-page">
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h3>Al-Khat Al-Mudi</h3>
+                        <span id="header-brand_sub">TRANSLATION SERVICES</span>
+                    </div>
+                </a>
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" id="header-menu_btn">MENU</span>
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <form id="recovery-form" class="glass-form">
+                <div class="form-header">
+                    <h4 style="margin:0; font-size: 1.5rem; color: var(--brand-cyan);"><i class="fas fa-satellite-dish"></i> Signal Recovery</h4>
+                    <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">Enter your email to receive a secure cipher reset link.</p>
+                </div>
+
+                <div class="form-group" style="margin-top: 25px;">
+                    <input type="email" id="recovery-email" placeholder="Registered Email Address" required>
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <button type="submit" id="recovery-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                    TRANSMIT RECOVERY SIGNAL
+                </button>
+
+                <div class="auth-footer-note">
+                    Remembered your cipher? <a href="login.html">Abort & Return to Login</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div id="processing-overlay" class="server-overlay">
+        <div class="terminal-box">
+            <div class="dna-loader">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            <div class="terminal-content">
+                <h4 class="terminal-title">ROUTING SECURE EMAIL</h4>
+                <div id="terminal-log" class="terminal-log">
+                    <span class="log-line">> Connecting to Firebase Auth...</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="status-blink">TRANSMITTING...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+        <div class="menu-content">
+            <h4 class="menu-label">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="reservation.html">Get Quote</a></li>
+                <li><a href="contacts.html">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // TACTICAL DOTS
+        const page = document.querySelector('.auth-page');
+        for (let i = 0; i < 15; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'tactical-dot';
+            dot.style.top = Math.random() * 100 + '%';
+            dot.style.left = Math.random() * 100 + '%';
+            dot.style.animationDelay = Math.random() * 3 + 's';
+            page.appendChild(dot);
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('recovery-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('recovery-email').value;
+            const btn = document.getElementById('recovery-btn');
+            const overlay = document.getElementById('processing-overlay');
+            const logBox = document.getElementById('terminal-log');
+            const progressBar = document.getElementById('progress-bar');
+
+            btn.disabled = true;
+            overlay.classList.add('active');
+            let progress = 0;
+            const loader = setInterval(() => { progress += 10; if(progress <= 90) progressBar.style.width = progress + '%'; }, 100);
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                
+                clearInterval(loader);
+                progressBar.style.width = '100%';
+                logBox.innerHTML += `<div class="log-line success">> SIGNAL DELIVERED. Check your inbox.</div>`;
+                
+                setTimeout(() => { 
+                    alert("A secure reset link has been dispatched to your email address.");
+                    window.location.href = "login.html"; 
+                }, 1500);
+
+            } catch (error) {
+                clearInterval(loader);
+                overlay.classList.remove('active');
+                btn.disabled = false;
+                alert("TRANSMISSION FAILED: " + error.message);
+            }
+        });
+    </script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

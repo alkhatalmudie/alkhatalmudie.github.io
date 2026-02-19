@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA COMMAND | Overwatch Terminal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* TACTICAL TERMINAL STYLES */
+        :root {
+            --term-bg: #050a15;
+            --term-cyan: #00f2ff;
+            --term-red: #ff4b5c;
+            --term-green: #00ff88;
+            --term-panel: rgba(0, 242, 255, 0.03);
+            --term-border: rgba(0, 242, 255, 0.2);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--term-bg);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            color: var(--term-cyan);
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .cmd-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--term-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0, 242, 255, 0.05);
+        }
+
+        .cmd-title { font-size: 1.5rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--term-cyan); margin: 0; }
+        .cmd-status { display: flex; gap: 20px; font-size: 0.9rem; }
+        .status-orb { display: inline-block; width: 10px; height: 10px; background: var(--term-green); border-radius: 50%; box-shadow: 0 0 10px var(--term-green); animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* MAIN LAYOUT */
+        .cmd-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR / RADAR */
+        .cmd-sidebar {
+            width: 280px;
+            border-right: 1px solid var(--term-border);
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-box {
+            border: 1px solid var(--term-border);
+            background: var(--term-panel);
+            padding: 15px;
+            border-left: 3px solid var(--term-cyan);
+        }
+        .stat-box.alert { border-left-color: var(--term-red); color: var(--term-red); }
+        .stat-val { font-size: 2rem; margin: 10px 0 0 0; }
+        .stat-label { font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
+
+        /* DATA GRID */
+        .cmd-main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid var(--term-border);
+            color: rgba(0, 242, 255, 0.6);
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            background: var(--term-bg);
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .b-pending { background: rgba(255, 75, 92, 0.2); color: var(--term-red); border: 1px solid var(--term-red); }
+        .b-completed { background: rgba(0, 255, 136, 0.2); color: var(--term-green); border: 1px solid var(--term-green); }
+
+        /* ACTION BUTTONS */
+        .btn-cmd {
+            background: transparent;
+            border: 1px solid var(--term-cyan);
+            color: var(--term-cyan);
+            padding: 6px 12px;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+        .btn-cmd:hover { background: var(--term-cyan); color: var(--term-bg); }
+        .btn-cmd.action { border-color: var(--term-green); color: var(--term-green); margin-top: 5px; }
+        .btn-cmd.action:hover { background: var(--term-green); color: var(--term-bg); }
+
+        /* UPLOAD OVERLAY */
+        #upload-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; }
+        .upload-box { border: 1px solid var(--term-cyan); background: var(--term-bg); padding: 30px; width: 400px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
+        .upload-box h3 { margin-top: 0; }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--term-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--term-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--term-cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="cmd-header">
+        <h1 class="cmd-title"><i class="fas fa-radar"></i> ALPHA COMMAND</h1>
+        <div class="cmd-status">
+            <span><i class="fas fa-user-shield"></i> CMDR. AL-KHAT</span>
+            <span><div class="status-orb"></div> UPLINK SECURE</span>
+            <button onclick="handleLogout()" class="btn-cmd" style="border-color: var(--term-red); color: var(--term-red);">DISCONNECT</button>
+        </div>
+    </div>
+
+    <div class="cmd-layout">
+        
+        <div class="cmd-sidebar">
+            <div class="stat-box alert">
+                <div class="stat-label">Pending Extractions</div>
+                <div class="stat-val" id="stat-pending">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Completed Missions</div>
+                <div class="stat-val" id="stat-completed">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Total Revenue (JOD)</div>
+                <div class="stat-val" id="stat-revenue">0.00</div>
+            </div>
+            
+            <div style="margin-top: auto; opacity: 0.5; font-size: 0.8rem; text-align: center;">
+                SYSTEM VERSION 4.0.1<br>ENCRYPTION: AES-256
+            </div>
+        </div>
+
+        <div class="cmd-main">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mission ID</th>
+                        <th>Client Identity</th>
+                        <th>Parameters</th>
+                        <th>Status</th>
+                        <th>Tactical Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="mission-log">
+                    <tr><td colspan="5" style="text-align: center;">Establishing connection to Firestore...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="upload-modal">
+        <div class="upload-box">
+            <h3><i class="fas fa-upload"></i> UPLOAD TRANSLATION</h3>
+            <p style="font-size: 0.85rem; opacity: 0.7;">Target ID: <span id="target-id-display"></span></p>
+            
+            <input type="file" id="final-file" style="width: 100%; margin: 20px 0; color: var(--term-cyan);" accept=".pdf,.doc,.docx">
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="executeUpload()" class="btn-cmd action" style="flex: 1;" id="btn-exec">EXECUTE UPLOAD</button>
+                <button onclick="closeModal()" class="btn-cmd" style="border-color: var(--term-red); color: var(--term-red);">ABORT</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; // The Alpha Override Code
+        let activeOrderId = null;
+
+        // 1. SECURITY PERIMETER
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.uid !== ADMIN_UID) {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.<br>UNAUTHORIZED IDENTITY DETECTED.</h1>";
+                setTimeout(() => { window.location.href = "login.html"; }, 3000);
+            } else {
+                fetchRadarData();
+            }
+        });
+
+        // 2. FETCH RADAR DATA (Get all orders)
+        async function fetchRadarData() {
+            const logBox = document.getElementById('mission-log');
+            let pendingCount = 0; let completedCount = 0; let revenue = 0;
+
+            try {
+                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                logBox.innerHTML = "";
+
+                if(snapshot.empty) {
+                    logBox.innerHTML = "<tr><td colspan='5'>Radar clear. No incoming signals.</td></tr>";
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    const isPending = data.status !== "Completed";
+                    
+                    // Stats calculation
+                    if(isPending) pendingCount++; else completedCount++;
+                    revenue += parseFloat(data.price || 0);
+
+                    // Build Row
+                    const statusHtml = isPending 
+                        ? `<span class="badge b-pending">PENDING</span>` 
+                        : `<span class="badge b-completed">COMPLETED</span>`;
+
+                    const actionHtml = isPending
+                        ? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')"><i class="fas fa-download"></i> SOURCE</button><br>
+                           <button class="btn-cmd action" onclick="openUploadModal('${id}')"><i class="fas fa-upload"></i> UPLOAD FINAL</button>`
+                        : `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:gray; color:gray;"><i class="fas fa-check-double"></i> VIEW FINAL</button>`;
+
+                    logBox.innerHTML += `
+                        <tr>
+                            <td style="color: white;">${id}<br><span style="font-size:0.7rem; color:gray;">${data.createdAt || ''}</span></td>
+                            <td><strong>${data.clientName}</strong><br><span style="color:gray;">${data.clientEmail}</span></td>
+                            <td>${data.docType}<br><span style="color:var(--term-cyan);">${data.langFrom} > ${data.langTo}</span></td>
+                            <td>${statusHtml}</td>
+                            <td>${actionHtml}</td>
+                        </tr>
+                    `;
+                });
+
+                // Update UI Stats
+                document.getElementById('stat-pending').innerText = pendingCount;
+                document.getElementById('stat-completed').innerText = completedCount;
+                document.getElementById('stat-revenue').innerText = revenue.toFixed(2);
+
+            } catch(error) {
+                console.error(error);
+                logBox.innerHTML = `<tr><td colspan='5' style="color:red;">RADAR FAILURE: ${error.message}</td></tr>`;
+            }
+        }
+
+        // 3. UPLOAD TRANSLATION MODAL LOGIC
+        window.openUploadModal = function(orderId) {
+            activeOrderId = orderId;
+            document.getElementById('target-id-display').innerText = orderId;
+            document.getElementById('upload-modal').style.display = 'flex';
+        }
+
+        window.closeModal = function() {
+            document.getElementById('upload-modal').style.display = 'none';
+            document.getElementById('final-file').value = "";
+            activeOrderId = null;
+        }
+
+        window.executeUpload = async function() {
+            const fileInput = document.getElementById('final-file');
+            const btn = document.getElementById('btn-exec');
+
+            if(fileInput.files.length === 0) { alert("ERROR: No payload selected."); return; }
+
+            btn.innerText = "TRANSMITTING...";
+            btn.disabled = true;
+
+            try {
+                const file = fileInput.files[0];
+                const storageRef = ref(storage, `completed_translations/${activeOrderId}_FINAL.pdf`);
+                
+                // Upload to Storage
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                // Update Firestore Order Status
+                const orderRef = doc(db, "orders", activeOrderId);
+                await updateDoc(orderRef, {
+                    translatedFileUrl: downloadURL,
+                    status: "Completed",
+                    completedAt: new Date().toISOString()
+                });
+
+                alert("MISSION ACCOMPLISHED: Translation uploaded and client status updated.");
+                closeModal();
+                fetchRadarData(); // Refresh Radar
+
+            } catch(error) {
+                alert("TRANSMISSION FAILED: " + error.message);
+            } finally {
+                btn.innerText = "EXECUTE UPLOAD";
+                btn.disabled = false;
+            }
+        }
+
+        window.handleLogout = function() {
+            signOut(auth).then(() => { window.location.href = "login.html"; });
+        }
+    </script>
+</body>
+</html>
