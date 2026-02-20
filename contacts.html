@@ -107,7 +107,15 @@
 							<span id="header-brand_sub">TRANSLATION SERVICES</span>
 						</div>
 					</a>
-
+					
+					<div id="user-profile-section" class="user-status-hidden">
+						<a href="profile.html" class="user-orb">
+							<i class="fas fa-user-circle"></i>
+							<span id="user-display-name">Client</span>
+						</a>
+						<button onclick="handleLogout()" class="logout-link">Logout</button>
+					</div>
+					
 					<a href="#menu" class="menu-toggle" id="menuToggle">
 						<span class="text" id="header-menu_btn">MENU</span>
 						<div class="hamburger">
@@ -116,9 +124,10 @@
 							<span></span>
 						</div>
 					</a>
+					
 				</nav>
 			</div>
-	</header>
+		</header>
 
     <div class="contact-hero">
         <div class="container">
@@ -350,15 +359,16 @@
 
             <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
             <div class="lang-grid">
-                <a href="#" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
-                <a href="#" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
-                <a href="#" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
-                <a href="#" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('en')" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ar')" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('du')" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ru')" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
             </div>
         </div>
     </div>
 
     <script src="assets/js/main.js"></script>
+	<script src="assets/js/lang-engine.js"></script>
 	
 	<script type="module">
 		import { db, doc, getDoc } from './assets/js/firebase-init.js';

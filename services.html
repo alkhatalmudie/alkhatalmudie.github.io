@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Capabilities | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        /* TACTICAL BACKGROUND */
+        .services-page {
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.9), rgba(11, 20, 38, 0.9)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        /* HERO SECTION */
+        .services-hero {
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .services-hero h1 {
+            font-size: 3rem;
+            color: var(--brand-cyan);
+            margin-bottom: 15px;
+            font-family: var(--font-primary);
+        }
+
+        .services-hero p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* SERVICES GRID */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding-bottom: 60px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 242, 255, 0.05);
+            border-color: var(--brand-cyan);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--brand-magenta);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .glass-card:hover .card-icon {
+            color: var(--brand-cyan);
+            transform: scale(1.1);
+            transition: 0.3s;
+        }
+
+        .glass-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        .service-features li {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-features i {
+            color: var(--brand-cyan);
+            font-size: 0.7rem;
+        }
+
+        /* TACTICAL DECORATION */
+        .card-corner {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body class="services-page">
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h3 data-i18n="brand_name">Al-Khat Al-Mudi</h3>
+                        <span data-i18n="brand_sub">TRANSLATION SERVICES</span>
+                    </div>
+                </a>
+
+                <div id="user-profile-section" class="user-status-hidden">
+                    <a href="profile.html" class="user-orb">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Client</span>
+                    </a>
+                    <button onclick="handleLogout()" class="logout-link" data-i18n="menu_logout">Logout</button>
+                </div>
+
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" data-i18n="nav_menu">MENU</span>
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="services-hero">
+            <div class="container">
+                <h1 data-i18n="srv_hero_title">Operational Capabilities</h1>
+                <p data-i18n="srv_hero_desc">Precision linguistic extraction and localization for all major sectors. Secure, certified, and strictly confidential.</p>
+            </div>
+        </div>
+
+        <div class="container services-grid">
+            
+            <div class="glass-card">
+                <div class="card-corner">S-01</div>
+                <i class="fas fa-balance-scale card-icon"></i>
+                <h3 data-i18n="srv_legal_title">Certified Legal Translation</h3>
+                <p data-i18n="srv_legal_desc">Sworn translations accepted by embassies, ministries, and international courts. Full cryptographic confidentiality guaranteed.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_contracts">Contracts & Agreements</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_certificates">Birth/Marriage Certificates</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_power">Power of Attorney</span></li>
+                </ul>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-corner">S-02</div>
+                <i class="fas fa-laptop-code card-icon"></i>
+                <h3 data-i18n="srv_tech_title">Technical & IT Localization</h3>
+                <p data-i18n="srv_tech_desc">Accurate translation of technical manuals, software interfaces, and complex engineering schematics.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_software">App & Software UIs</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_manuals">User Manuals & Guides</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_data">Data Sheets</span></li>
+                </ul>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-corner">S-03</div>
+                <i class="fas fa-heartbeat card-icon"></i>
+                <h3 data-i18n="srv_med_title">Medical & Scientific</h3>
+                <p data-i18n="srv_med_desc">Error-free translation of clinical trials, patient records, and pharmaceutical documents by specialized linguistic agents.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_reports">Medical Reports</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_clinical">Clinical Trials</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_pharma">Pharmaceutical Dossiers</span></li>
+                </ul>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-corner">S-04</div>
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3 data-i18n="srv_fin_title">Financial & Corporate</h3>
+                <p data-i18n="srv_fin_desc">Clear, compliant translations of audits, tax reports, and global business communications.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_audit">Audit Reports</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_bank">Bank Statements</span></li>
+                    <li><i class="fas fa-check"></i> <span data-i18n="srv_feat_invest">Investment Portfolios</span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-bottom: 80px;">
+            <a href="reservation.html" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px;" data-i18n="btn_initiate">INITIATE UPLINK (GET QUOTE)</a>
+        </div>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p data-i18n="footer_about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Secure, certified translation services for the modern era.
+                    </p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                        <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+                        <li><a href="reservation.html" data-i18n="nav_quote">Get Quote</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer_contact">Contact</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="contact_address">Marka Al-Shamaliya</span></li>
+                        <li><i class="fas fa-phone-alt"></i> 078-077-0085</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p data-i18n="footer_copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+        <div class="menu-content">
+            <h4 class="menu-label" data-i18n="menu_nav_label">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+                <li><a href="services.html" data-i18n="nav_services">Services</a></li>
+                <li><a href="reservation.html" data-i18n="nav_quote">Get Quote</a></li>
+                <li><a href="contacts.html" data-i18n="nav_contact">Contact Us</a></li>
+            </ul>
+            
+            <h4 class="menu-label" data-i18n="menu_member_area">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" data-i18n="menu_login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" data-i18n="menu_signup">Sign Up</a>
+            </div>
+
+            <h4 class="menu-label" data-i18n="menu_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="javascript:void(0)" onclick="switchLanguage('en')" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ar')" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ru')" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/global-auth.js"></script>
+    <script src="assets/js/lang-engine.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>
