@@ -249,7 +249,7 @@
 				</div>
 
 				<div class="auth-footer-note">
-					Already an agent? <a href="login.html">Log In Here</a>
+					Already an agent? <a href="#" onclick="window.location.href='login.html' + window.location.search">Log In Here</a>
 				</div>
 			</form>
         </div>
@@ -490,8 +490,17 @@
 				try {
 					const cred = await createUserWithEmailAndPassword(auth, email, password);
 					await updateProfile(cred.user, { displayName: name });
+					
+					// NEW: Smart Redirect Protocol
+					const urlParams = new URLSearchParams(window.location.search);
+					const redirectUrl = urlParams.get('redirect');
+
 					logBox.innerHTML += `<div class="log-line success">> ACCOUNT GENERATED.</div>`;
-					setTimeout(() => { window.location.href = "index.html"; }, 1500);
+					
+					setTimeout(() => { 
+						window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : "index.html"; 
+					}, 1500);
+
 				} catch (error) {
 					overlay.classList.remove('active'); btn.disabled = false; btn.innerText = "RETRY";
 					alert("GATEWAY ERROR: " + error.message);
@@ -513,8 +522,17 @@
 				overlay.classList.add('active');
 				logBox.innerHTML += `<div class="log-line">> Establishing External Link: ${providerName.toUpperCase()}...</div>`;
 				await signInWithPopup(auth, provider);
+				
+				// NEW: Smart Redirect Protocol
+				const urlParams = new URLSearchParams(window.location.search);
+				const redirectUrl = urlParams.get('redirect');
+
 				logBox.innerHTML += `<div class="log-line success">> EXTERNAL IDENTITY CONFIRMED.</div>`;
-				setTimeout(() => { window.location.href = "index.html"; }, 1500);
+				
+				setTimeout(() => { 
+					window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : "index.html"; 
+				}, 1500);
+
 			} catch (error) {
 				overlay.classList.remove('active');
 				console.error(error);
