@@ -13,59 +13,77 @@
         body {
             background-color: #050a15;
             color: #00f2ff;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Share Tech Mono', monospace, sans-serif;
             margin: 0; padding: 20px;
+            transition: all 0.3s ease;
         }
-        .header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; }
+
+        /* RTL (Arabic) Support */
+        body[dir="rtl"] {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         
         .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.03); padding: 20px; }
         .panel h3 { margin-top: 0; color: #ff4b5c; border-bottom: 1px solid #ff4b5c; padding-bottom: 10px; }
         
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; }
+        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; font-weight: bold; }
         input, textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; box-sizing: border-box; }
         
-        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; transition: 0.3s; width: 100%; font-family: inherit; font-size: 1rem; }
+        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; transition: 0.3s; width: 100%; font-family: inherit; font-size: 1rem; font-weight: bold; }
         .btn:hover { background: #00f2ff; color: #050a15; }
         .btn-danger { border-color: #ff4b5c; color: #ff4b5c; width: auto; padding: 5px 10px; font-size: 0.8rem; }
         .btn-danger:hover { background: #ff4b5c; color: white; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; width: auto; padding: 10px 20px;}
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
 
         .package-card { border: 1px dashed rgba(0, 242, 255, 0.4); padding: 15px; margin-bottom: 15px; background: rgba(0,0,0,0.4); }
         .package-card h4 { margin: 0 0 10px 0; color: white; }
+
+        @media (max-width: 900px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 15px; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2><i class="fas fa-rocket"></i> PACKAGE DEPLOYMENT TERMINAL</h2>
-        <div><button onclick="window.location.href='index.html'" class="btn" style="width: auto;">Return to Base</button></div>
+        <h2 id="ui-header-title"><i class="fas fa-rocket"></i> PACKAGE DEPLOYMENT TERMINAL</h2>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
+            <button onclick="window.location.href='index.html'" class="btn" style="width: auto;" id="ui-btn-return">Return to Base</button>
+        </div>
     </div>
 
     <div class="grid-layout">
         <div class="panel">
-            <h3><i class="fas fa-plus-square"></i> CONSTRUCT NEW PACKAGE</h3>
+            <h3 id="ui-panel1-title"><i class="fas fa-plus-square"></i> CONSTRUCT NEW PACKAGE</h3>
             <form id="deploy-form">
                 <div class="form-group">
-                    <label>Operation Name (e.g., Travel to Germany)</label>
+                    <label id="ui-lbl-name">Operation Name (e.g., Travel to Germany)</label>
                     <input type="text" id="pkg-name" required>
                 </div>
                 <div class="form-group">
-                    <label>Mission Briefing (Description)</label>
+                    <label id="ui-lbl-desc">Mission Briefing (Description)</label>
                     <textarea id="pkg-desc" rows="3" required></textarea>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group"><label>Start Date</label><input type="date" id="pkg-start" required></div>
-                    <div class="form-group"><label>End Date</label><input type="date" id="pkg-end" required></div>
+                    <div class="form-group"><label id="ui-lbl-start">Start Date</label><input type="date" id="pkg-start" required></div>
+                    <div class="form-group"><label id="ui-lbl-end">End Date</label><input type="date" id="pkg-end" required></div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group"><label>Original Price ($)</label><input type="number" id="pkg-old-price" required></div>
-                    <div class="form-group"><label>Offer Price ($)</label><input type="number" id="pkg-new-price" required></div>
+                    <div class="form-group"><label id="ui-lbl-old">Original Price ($)</label><input type="number" id="pkg-old-price" required></div>
+                    <div class="form-group"><label id="ui-lbl-new">Offer Price ($)</label><input type="number" id="pkg-new-price" required></div>
                 </div>
                 <div class="form-group">
-                    <label>Requirements (Comma separated: Passport, ID, Photos...)</label>
+                    <label id="ui-lbl-req">Requirements (Comma separated: Passport, ID, Photos...)</label>
                     <textarea id="pkg-req" rows="2" required></textarea>
                 </div>
+                
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
                     <button type="button" class="btn btn-danger" id="btn-cancel" style="display: none; padding: 10px 20px; font-size: 1rem;" onclick="cancelOverride()">ABORT EDIT</button>
@@ -74,9 +92,9 @@
         </div>
 
         <div class="panel">
-            <h3 style="color: #00ff88; border-color: #00ff88;"><i class="fas fa-satellite-dish"></i> ACTIVE DEPLOYMENTS</h3>
+            <h3 style="color: #00ff88; border-color: #00ff88;" id="ui-panel2-title"><i class="fas fa-satellite-dish"></i> ACTIVE DEPLOYMENTS</h3>
             <div id="active-packages">
-                <p>Scanning frequencies...</p>
+                <p id="ui-loading">Scanning frequencies...</p>
             </div>
         </div>
     </div>
@@ -84,7 +102,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // NEW: Imported updateDoc and getDoc
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -101,10 +118,96 @@
         const db = getFirestore(app);
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; 
 
-        // TACTICAL MEMORY: Stores the ID of the package currently being edited
         let currentTargetId = null;
 
-        // 1. SECURITY CHECK
+        /* =======================================================
+           BILINGUAL DICTIONARY MATRIX
+           ======================================================= */
+        window.currentLang = 'en';
+        
+        const dictionary = {
+            en: {
+                header: "<i class='fas fa-rocket'></i> PACKAGE DEPLOYMENT TERMINAL",
+                btnReturn: "Return to Base",
+                panel1: "<i class='fas fa-plus-square'></i> CONSTRUCT NEW PACKAGE",
+                lblName: "Operation Name (e.g., Travel to Germany)",
+                lblDesc: "Mission Briefing (Description)",
+                lblStart: "Start Date",
+                lblEnd: "End Date",
+                lblOld: "Original Price ($)",
+                lblNew: "Offer Price ($)",
+                lblReq: "Requirements (Comma separated: Passport, ID, Photos...)",
+                btnDeploy: "AUTHORIZE DEPLOYMENT",
+                btnUpdate: "UPDATE DEPLOYMENT",
+                btnCancel: "ABORT EDIT",
+                panel2: "<i class='fas fa-satellite-dish'></i> ACTIVE DEPLOYMENTS",
+                loading: "Scanning frequencies...",
+                empty: "No active promotions.",
+                btnOverride: "OVERRIDE",
+                btnTerminate: "TERMINATE",
+                cardOffer: "Offer:",
+                cardWas: "was",
+                cardValid: "Valid:"
+            },
+            ar: {
+                header: "<i class='fas fa-rocket'></i> لوحة تحكم نشر الباقات",
+                btnReturn: "العودة للقاعدة الرئيسية",
+                panel1: "<i class='fas fa-plus-square'></i> إنشاء باقة جديدة",
+                lblName: "اسم العملية (مثال: السفر إلى إسبانيا)",
+                lblDesc: "تفاصيل المهمة (الوصف المستهدف)",
+                lblStart: "تاريخ البدء",
+                lblEnd: "تاريخ الانتهاء",
+                lblOld: "السعر الأصلي ($)",
+                lblNew: "سعر العرض ($)",
+                lblReq: "المتطلبات (افصل بينها بفاصلة: جواز سفر، هوية، صور...)",
+                btnDeploy: "تصريح النشر الآن",
+                btnUpdate: "تحديث بيانات النشر",
+                btnCancel: "إلغاء التعديل",
+                panel2: "<i class='fas fa-satellite-dish'></i> الباقات الفعالة حالياً",
+                loading: "جاري فحص قاعدة البيانات...",
+                empty: "لا يوجد باقات فعالة في الوقت الحالي.",
+                btnOverride: "تعديل",
+                btnTerminate: "إنهاء وحذف",
+                cardOffer: "العرض:",
+                cardWas: "بدلًا من",
+                cardValid: "صالح من:"
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const lang = window.currentLang;
+            const dict = dictionary[lang];
+
+            // Toggle Direction & Font
+            document.documentElement.lang = lang;
+            document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = lang === 'en' ? 'عربي' : 'English';
+
+            // Apply Dictionary
+            document.getElementById('ui-header-title').innerHTML = dict.header;
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-panel1-title').innerHTML = dict.panel1;
+            document.getElementById('ui-lbl-name').innerText = dict.lblName;
+            document.getElementById('ui-lbl-desc').innerText = dict.lblDesc;
+            document.getElementById('ui-lbl-start').innerText = dict.lblStart;
+            document.getElementById('ui-lbl-end').innerText = dict.lblEnd;
+            document.getElementById('ui-lbl-old').innerText = dict.lblOld;
+            document.getElementById('ui-lbl-new').innerText = dict.lblNew;
+            document.getElementById('ui-lbl-req').innerText = dict.lblReq;
+            document.getElementById('ui-panel2-title').innerHTML = dict.panel2;
+            
+            // Adjust buttons based on state
+            document.getElementById('btn-deploy').innerText = currentTargetId ? dict.btnUpdate : dict.btnDeploy;
+            document.getElementById('btn-cancel').innerText = dict.btnCancel;
+
+            // Re-render packages to translate dynamic buttons and text
+            fetchPackages();
+        }
+
+        /* =======================================================
+           FIREBASE ENGINE
+           ======================================================= */
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
                 document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
@@ -114,7 +217,6 @@
             }
         });
 
-        // 2. DEPLOY OR UPDATE PACKAGE
         document.getElementById('deploy-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-deploy');
@@ -132,52 +234,49 @@
 
             try {
                 if (currentTargetId) {
-                    // UPDATE EXISTING PACKAGE
                     await updateDoc(doc(db, "promotions", currentTargetId), payload);
-                    alert("Operation parameters updated successfully.");
+                    alert(window.currentLang === 'en' ? "Operation parameters updated successfully." : "تم تحديث بيانات العملية بنجاح.");
                 } else {
-                    // CREATE NEW PACKAGE
-                    payload.timestamp = new Date(); // Only add timestamp on creation so order doesn't change
+                    payload.timestamp = new Date(); 
                     await addDoc(collection(db, "promotions"), payload);
                 }
                 
-                // Reset terminal
                 cancelOverride();
                 fetchPackages();
             } catch (error) { 
                 alert("Error: " + error.message); 
-                btn.innerText = currentTargetId ? "UPDATE DEPLOYMENT" : "AUTHORIZE DEPLOYMENT";
+                btn.innerText = currentTargetId ? dictionary[window.currentLang].btnUpdate : dictionary[window.currentLang].btnDeploy;
                 btn.disabled = false;
             }
         });
 
-        // 3. FETCH AND RENDER PACKAGES
         async function fetchPackages() {
             const container = document.getElementById('active-packages');
+            const dict = dictionary[window.currentLang];
             container.innerHTML = "";
+            
             const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
             const snapshot = await getDocs(q);
 
-            if(snapshot.empty) { container.innerHTML = "<p>No active promotions.</p>"; return; }
+            if(snapshot.empty) { container.innerHTML = `<p>${dict.empty}</p>`; return; }
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 container.innerHTML += `
                     <div class="package-card">
                         <h4>${data.name}</h4>
-                        <p style="font-size:0.8rem; margin: 5px 0;">Offer: $${data.newPrice} (was <strike>$${data.oldPrice}</strike>)</p>
-                        <p style="font-size:0.8rem; color:gray;">Valid: ${data.startDate} to ${data.endDate}</p>
+                        <p style="font-size:0.8rem; margin: 5px 0;">${dict.cardOffer} $${data.newPrice} (${dict.cardWas} <strike>$${data.oldPrice}</strike>)</p>
+                        <p style="font-size:0.8rem; color:gray;">${dict.cardValid} ${data.startDate} ➝ ${data.endDate}</p>
                         
                         <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button class="btn" style="width: auto; padding: 5px 10px; font-size: 0.8rem; border-color: #00ff88; color: #00ff88;" onclick="overridePackage('${docSnap.id}')">OVERRIDE</button>
-                            <button class="btn btn-danger" onclick="deletePackage('${docSnap.id}')">TERMINATE</button>
+                            <button class="btn" style="width: auto; padding: 5px 10px; font-size: 0.8rem; border-color: #00ff88; color: #00ff88;" onclick="overridePackage('${docSnap.id}')">${dict.btnOverride}</button>
+                            <button class="btn btn-danger" onclick="deletePackage('${docSnap.id}')">${dict.btnTerminate}</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // 4. OVERRIDE (EDIT) PACKAGE LOGIC
         window.overridePackage = async function(id) {
             const docRef = doc(db, "promotions", id);
             const docSnap = await getDoc(docRef);
@@ -185,7 +284,6 @@
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 
-                // Inject data back into the form
                 document.getElementById('pkg-name').value = data.name;
                 document.getElementById('pkg-desc').value = data.desc;
                 document.getElementById('pkg-start').value = data.startDate;
@@ -194,25 +292,24 @@
                 document.getElementById('pkg-new-price').value = data.newPrice;
                 document.getElementById('pkg-req').value = data.reqs;
 
-                // Lock the target ID and change UI
                 currentTargetId = id;
-                document.getElementById('btn-deploy').innerText = "UPDATE DEPLOYMENT";
+                const dict = dictionary[window.currentLang];
+                
+                document.getElementById('btn-deploy').innerText = dict.btnUpdate;
                 document.getElementById('btn-deploy').style.borderColor = "#00ff88";
                 document.getElementById('btn-deploy').style.color = "#00ff88";
                 document.getElementById('btn-cancel').style.display = "block";
                 
-                // Smooth scroll to top of terminal
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        // 5. CANCEL OVERRIDE LOGIC
         window.cancelOverride = function() {
             currentTargetId = null;
             document.getElementById('deploy-form').reset();
             
             const btn = document.getElementById('btn-deploy');
-            btn.innerText = "AUTHORIZE DEPLOYMENT";
+            btn.innerText = dictionary[window.currentLang].btnDeploy;
             btn.disabled = false;
             btn.style.borderColor = "#00f2ff";
             btn.style.color = "#00f2ff";
@@ -220,9 +317,9 @@
             document.getElementById('btn-cancel').style.display = "none";
         }
 
-        // 6. DELETE PACKAGE
         window.deletePackage = async function(id) {
-            if(confirm("Are you sure you want to terminate this package? It will instantly vanish from the homepage.")) {
+            const msg = window.currentLang === 'en' ? "Are you sure you want to terminate this package?" : "هل أنت متأكد من رغبتك في حذف هذه الباقة؟";
+            if(confirm(msg)) {
                 await deleteDoc(doc(db, "promotions", id));
                 fetchPackages();
             }
