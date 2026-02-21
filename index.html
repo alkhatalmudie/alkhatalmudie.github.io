@@ -705,12 +705,24 @@
 			const track = document.getElementById('promo-track');
 			const section = document.getElementById('special-ops-section');
 			
+			// 1. Detect active language (defaults to English)
+			const currentLang = localStorage.getItem('site-lang') || 'en';
+			
+			// 2. Multilingual Matrix for Ad Cards ('du' maps to your German/Dutch switch)
+			const adDict = {
+				en: { badge: "LIMITED", offer: "Offer:", was: "was", valid: "Valid:", reqs: "Requirements:", btnRes: "Reserve", btnInq: "Inquiry" },
+				ar: { badge: "حصري", offer: "العرض:", was: "بدلاً من", valid: "صالح:", reqs: "المتطلبات:", btnRes: "حجز", btnInq: "استفسار" },
+				ru: { badge: "ОГРАНИЧЕНО", offer: "Предложение:", was: "было", valid: "Действителен:", reqs: "Требования:", btnRes: "Забронировать", btnInq: "Запрос" },
+				du: { badge: "BEGRENZT", offer: "Angebot:", was: "war", valid: "Gültig:", reqs: "Anforderungen:", btnRes: "Reservieren", btnInq: "Anfrage" }
+			};
+			const ui = adDict[currentLang] || adDict['en'];
+
 			try {
 				const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
 				const snapshot = await getDocs(q);
 				
 				if(snapshot.empty) {
-					section.style.display = 'none'; // Hide section completely if no offers exist!
+					section.style.display = 'none'; 
 					return;
 				}
 
@@ -722,31 +734,34 @@
 					// Format requirements into a list
 					const reqsList = data.reqs.split(',').map(item => `<li><i class="fas fa-check" style="color:#00ff88; margin-right:5px;"></i> ${item.trim()}</li>`).join('');
 
+					// Determine alignment for Arabic RTL
+					const alignStyle = currentLang === 'ar' ? 'text-align: right; direction: rtl;' : 'text-align: left; direction: ltr;';
+
 					track.innerHTML += `
-						<div class="promo-card">
-							<div class="promo-badge">LIMITED</div>
+						<div class="promo-card" style="${alignStyle}">
+							<div class="promo-badge">${ui.badge}</div>
 							<h3 style="margin-top:0; color:white;">${data.name}</h3>
 							<p style="font-size:0.9rem; color:#ccc;">${data.desc}</p>
 							
 							<div class="promo-price">
-								<span class="price-old">$${data.oldPrice}</span>
+								<span class="price-old" style="margin: 0 10px;">${ui.was} <strike>$${data.oldPrice}</strike></span>
 								<span class="price-new">$${data.newPrice}</span>
 							</div>
 
 							<div style="font-size: 0.75rem; color: #ff4b5c; margin-bottom: 15px;">
-								<i class="fas fa-clock"></i> Valid: ${data.startDate} to ${data.endDate}
+								<i class="fas fa-clock"></i> ${ui.valid} ${data.startDate} ➝ ${data.endDate}
 							</div>
 
-							<div class="promo-reqs">
-								<strong>Requirements:</strong>
+							<div class="promo-reqs" style="${alignStyle}">
+								<strong>${ui.reqs}</strong>
 								<ul style="list-style:none; padding:0; margin: 5px 0 0 0;">
 									${reqsList}
 								</ul>
 							</div>
 
 							<div class="promo-actions">
-								<button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">Reserve</button>
-								<button class="btn-inq" onclick="window.location.href='contacts.html'">Inquiry</button>
+								<button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">${ui.btnRes}</button>
+								<button class="btn-inq" onclick="window.location.href='contacts.html'">${ui.btnInq}</button>
 							</div>
 						</div>
 					`;
