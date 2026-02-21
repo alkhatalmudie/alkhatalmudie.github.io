@@ -685,10 +685,21 @@
 	
 	<script type="module">
 		import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-		// We don't need to initialize app again because global-auth.js already did it!
-		import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+		import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 
-		const db = getFirestore(getApp());
+		const firebaseConfig = {
+			apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+			authDomain: "al-khat-backend.firebaseapp.com",
+			projectId: "al-khat-backend",
+			storageBucket: "al-khat-storage-doha",
+			messagingSenderId: "310033181926",
+			appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+		};
+
+		// ANTI-RACE CONDITION ARMOR: 
+        // If Firebase isn't built yet, build it. If it is, just grab the existing one.
+		const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+		const db = getFirestore(app);
 
 		async function loadPromotions() {
 			const track = document.getElementById('promo-track');
