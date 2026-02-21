@@ -66,7 +66,10 @@
                     <label>Requirements (Comma separated: Passport, ID, Photos...)</label>
                     <textarea id="pkg-req" rows="2" required></textarea>
                 </div>
-                <button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
+                    <button type="button" class="btn btn-danger" id="btn-cancel" style="display: none; padding: 10px 20px; font-size: 1rem;" onclick="cancelOverride()">ABORT EDIT</button>
+                </div>
             </form>
         </div>
 
@@ -81,7 +84,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // NEW: Imported updateDoc and getDoc
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
@@ -97,6 +101,9 @@
         const db = getFirestore(app);
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; 
 
+        // TACTICAL MEMORY: Stores the ID of the package currently being edited
+        let currentTargetId = null;
+
         // 1. SECURITY CHECK
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
@@ -107,27 +114,41 @@
             }
         });
 
-        // 2. DEPLOY NEW PACKAGE
+        // 2. DEPLOY OR UPDATE PACKAGE
         document.getElementById('deploy-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-deploy');
             btn.innerText = "TRANSMITTING..."; btn.disabled = true;
 
+            const payload = {
+                name: document.getElementById('pkg-name').value,
+                desc: document.getElementById('pkg-desc').value,
+                startDate: document.getElementById('pkg-start').value,
+                endDate: document.getElementById('pkg-end').value,
+                oldPrice: document.getElementById('pkg-old-price').value,
+                newPrice: document.getElementById('pkg-new-price').value,
+                reqs: document.getElementById('pkg-req').value
+            };
+
             try {
-                await addDoc(collection(db, "promotions"), {
-                    name: document.getElementById('pkg-name').value,
-                    desc: document.getElementById('pkg-desc').value,
-                    startDate: document.getElementById('pkg-start').value,
-                    endDate: document.getElementById('pkg-end').value,
-                    oldPrice: document.getElementById('pkg-old-price').value,
-                    newPrice: document.getElementById('pkg-new-price').value,
-                    reqs: document.getElementById('pkg-req').value,
-                    timestamp: new Date()
-                });
-                document.getElementById('deploy-form').reset();
+                if (currentTargetId) {
+                    // UPDATE EXISTING PACKAGE
+                    await updateDoc(doc(db, "promotions", currentTargetId), payload);
+                    alert("Operation parameters updated successfully.");
+                } else {
+                    // CREATE NEW PACKAGE
+                    payload.timestamp = new Date(); // Only add timestamp on creation so order doesn't change
+                    await addDoc(collection(db, "promotions"), payload);
+                }
+                
+                // Reset terminal
+                cancelOverride();
                 fetchPackages();
-            } catch (error) { alert("Error: " + error.message); }
-            btn.innerText = "AUTHORIZE DEPLOYMENT"; btn.disabled = false;
+            } catch (error) { 
+                alert("Error: " + error.message); 
+                btn.innerText = currentTargetId ? "UPDATE DEPLOYMENT" : "AUTHORIZE DEPLOYMENT";
+                btn.disabled = false;
+            }
         });
 
         // 3. FETCH AND RENDER PACKAGES
@@ -146,13 +167,60 @@
                         <h4>${data.name}</h4>
                         <p style="font-size:0.8rem; margin: 5px 0;">Offer: $${data.newPrice} (was <strike>$${data.oldPrice}</strike>)</p>
                         <p style="font-size:0.8rem; color:gray;">Valid: ${data.startDate} to ${data.endDate}</p>
-                        <button class="btn btn-danger" onclick="deletePackage('${docSnap.id}')">TERMINATE</button>
+                        
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn" style="width: auto; padding: 5px 10px; font-size: 0.8rem; border-color: #00ff88; color: #00ff88;" onclick="overridePackage('${docSnap.id}')">OVERRIDE</button>
+                            <button class="btn btn-danger" onclick="deletePackage('${docSnap.id}')">TERMINATE</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
-        // 4. DELETE PACKAGE (Attached to window so onclick works)
+        // 4. OVERRIDE (EDIT) PACKAGE LOGIC
+        window.overridePackage = async function(id) {
+            const docRef = doc(db, "promotions", id);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // Inject data back into the form
+                document.getElementById('pkg-name').value = data.name;
+                document.getElementById('pkg-desc').value = data.desc;
+                document.getElementById('pkg-start').value = data.startDate;
+                document.getElementById('pkg-end').value = data.endDate;
+                document.getElementById('pkg-old-price').value = data.oldPrice;
+                document.getElementById('pkg-new-price').value = data.newPrice;
+                document.getElementById('pkg-req').value = data.reqs;
+
+                // Lock the target ID and change UI
+                currentTargetId = id;
+                document.getElementById('btn-deploy').innerText = "UPDATE DEPLOYMENT";
+                document.getElementById('btn-deploy').style.borderColor = "#00ff88";
+                document.getElementById('btn-deploy').style.color = "#00ff88";
+                document.getElementById('btn-cancel').style.display = "block";
+                
+                // Smooth scroll to top of terminal
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // 5. CANCEL OVERRIDE LOGIC
+        window.cancelOverride = function() {
+            currentTargetId = null;
+            document.getElementById('deploy-form').reset();
+            
+            const btn = document.getElementById('btn-deploy');
+            btn.innerText = "AUTHORIZE DEPLOYMENT";
+            btn.disabled = false;
+            btn.style.borderColor = "#00f2ff";
+            btn.style.color = "#00f2ff";
+            
+            document.getElementById('btn-cancel').style.display = "none";
+        }
+
+        // 6. DELETE PACKAGE
         window.deletePackage = async function(id) {
             if(confirm("Are you sure you want to terminate this package? It will instantly vanish from the homepage.")) {
                 await deleteDoc(doc(db, "promotions", id));
