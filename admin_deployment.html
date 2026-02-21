@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEPLOYMENT COMMAND | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* TACTICAL TERMINAL STYLES */
+        body {
+            background-color: #050a15;
+            color: #00f2ff;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 20px;
+        }
+        .header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        
+        .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.03); padding: 20px; }
+        .panel h3 { margin-top: 0; color: #ff4b5c; border-bottom: 1px solid #ff4b5c; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; box-sizing: border-box; }
+        
+        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; transition: 0.3s; width: 100%; font-family: inherit; font-size: 1rem; }
+        .btn:hover { background: #00f2ff; color: #050a15; }
+        .btn-danger { border-color: #ff4b5c; color: #ff4b5c; width: auto; padding: 5px 10px; font-size: 0.8rem; }
+        .btn-danger:hover { background: #ff4b5c; color: white; }
+
+        .package-card { border: 1px dashed rgba(0, 242, 255, 0.4); padding: 15px; margin-bottom: 15px; background: rgba(0,0,0,0.4); }
+        .package-card h4 { margin: 0 0 10px 0; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2><i class="fas fa-rocket"></i> PACKAGE DEPLOYMENT TERMINAL</h2>
+        <div><button onclick="window.location.href='index.html'" class="btn" style="width: auto;">Return to Base</button></div>
+    </div>
+
+    <div class="grid-layout">
+        <div class="panel">
+            <h3><i class="fas fa-plus-square"></i> CONSTRUCT NEW PACKAGE</h3>
+            <form id="deploy-form">
+                <div class="form-group">
+                    <label>Operation Name (e.g., Travel to Germany)</label>
+                    <input type="text" id="pkg-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Mission Briefing (Description)</label>
+                    <textarea id="pkg-desc" rows="3" required></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group"><label>Start Date</label><input type="date" id="pkg-start" required></div>
+                    <div class="form-group"><label>End Date</label><input type="date" id="pkg-end" required></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group"><label>Original Price ($)</label><input type="number" id="pkg-old-price" required></div>
+                    <div class="form-group"><label>Offer Price ($)</label><input type="number" id="pkg-new-price" required></div>
+                </div>
+                <div class="form-group">
+                    <label>Requirements (Comma separated: Passport, ID, Photos...)</label>
+                    <textarea id="pkg-req" rows="2" required></textarea>
+                </div>
+                <button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3 style="color: #00ff88; border-color: #00ff88;"><i class="fas fa-satellite-dish"></i> ACTIVE DEPLOYMENTS</h3>
+            <div id="active-packages">
+                <p>Scanning frequencies...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; 
+
+        // 1. SECURITY CHECK
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.uid !== ADMIN_UID) {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
+                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            } else {
+                fetchPackages();
+            }
+        });
+
+        // 2. DEPLOY NEW PACKAGE
+        document.getElementById('deploy-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-deploy');
+            btn.innerText = "TRANSMITTING..."; btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "promotions"), {
+                    name: document.getElementById('pkg-name').value,
+                    desc: document.getElementById('pkg-desc').value,
+                    startDate: document.getElementById('pkg-start').value,
+                    endDate: document.getElementById('pkg-end').value,
+                    oldPrice: document.getElementById('pkg-old-price').value,
+                    newPrice: document.getElementById('pkg-new-price').value,
+                    reqs: document.getElementById('pkg-req').value,
+                    timestamp: new Date()
+                });
+                document.getElementById('deploy-form').reset();
+                fetchPackages();
+            } catch (error) { alert("Error: " + error.message); }
+            btn.innerText = "AUTHORIZE DEPLOYMENT"; btn.disabled = false;
+        });
+
+        // 3. FETCH AND RENDER PACKAGES
+        async function fetchPackages() {
+            const container = document.getElementById('active-packages');
+            container.innerHTML = "";
+            const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+
+            if(snapshot.empty) { container.innerHTML = "<p>No active promotions.</p>"; return; }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                container.innerHTML += `
+                    <div class="package-card">
+                        <h4>${data.name}</h4>
+                        <p style="font-size:0.8rem; margin: 5px 0;">Offer: $${data.newPrice} (was <strike>$${data.oldPrice}</strike>)</p>
+                        <p style="font-size:0.8rem; color:gray;">Valid: ${data.startDate} to ${data.endDate}</p>
+                        <button class="btn btn-danger" onclick="deletePackage('${docSnap.id}')">TERMINATE</button>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. DELETE PACKAGE (Attached to window so onclick works)
+        window.deletePackage = async function(id) {
+            if(confirm("Are you sure you want to terminate this package? It will instantly vanish from the homepage.")) {
+                await deleteDoc(doc(db, "promotions", id));
+                fetchPackages();
+            }
+        }
+    </script>
+</body>
+</html>
