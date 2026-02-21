@@ -606,57 +606,94 @@
         }
 		
 		/* ==========================================================================
-		   SERVICE MODAL ENGINE
+		   SERVICE MODAL ENGINE (MULTILINGUAL UPGRADE)
 		   ========================================================================== */
 		const serviceData = {
-			legal: {
-				title: "Legal Translation",
-				icon: "fas fa-gavel",
-				desc: "Certified translation for contracts, court documents, and powers of attorney. Recognized by the Ministry of Justice and all major embassies.",
-				steps: ["Document Assessment", "Certified Translation", "Legal Proofreading", "Official Stamping"]
+			en: {
+				workflowTitle: "Process Workflow",
+				bookBtn: "Book This Service",
+				services: {
+					legal: { title: "Legal Translation", desc: "Certified translation for contracts, court documents, and powers of attorney. Recognized by the Ministry of Justice and all major embassies.", steps: ["Document Assessment", "Certified Translation", "Legal Proofreading", "Official Stamping"] },
+					immigration: { title: "Immigration & Visas", desc: "Accurate translation of birth certificates, marriage licenses, and passports required for embassy appointments and residency applications.", steps: ["ID Verification", "Standardized Translation", "Consistency Check", "Embassy-Ready Delivery"] },
+					academic: { title: "Academic Translation", desc: "Translation of university transcripts, diplomas, and research papers for students applying to international universities.", steps: ["Grade Conversion", "Terminological Accuracy", "Formatting Sync", "Final Certification"] },
+					website: { title: "Website Localization", desc: "Adapt your digital content for new markets. We translate websites, apps, and software interfaces while maintaining UI integrity.", steps: ["String Extraction", "Cultural Adaptation", "UI/UX Review", "Linguistic Testing"] },
+					medical: { title: "Medical Translation", desc: "Precise translation of medical reports, prescriptions, and pharmaceutical documents handled by specialized medical linguists.", steps: ["Terminology Scan", "Expert Translation", "Confidentiality Audit", "Medical Review"] },
+					proofreading: { title: "Proofreading", desc: "Polishing your existing documents to ensure grammatical perfection, stylistic consistency, and natural-sounding language.", steps: ["Grammar Audit", "Style Adjustment", "Flow Optimization", "Final Polish"] }
+				}
 			},
-			immigration: {
-				title: "Immigration & Visas",
-				icon: "fas fa-passport",
-				desc: "Accurate translation of birth certificates, marriage licenses, and passports required for embassy appointments and residency applications.",
-				steps: ["ID Verification", "Standardized Translation", "Consistency Check", "Embassy-Ready Delivery"]
+			ar: {
+				workflowTitle: "خطوات العمل",
+				bookBtn: "احجز هذه الخدمة",
+				services: {
+					legal: { title: "الترجمة القانونية", desc: "ترجمة معتمدة للعقود، وثائق المحاكم، والوكالات. معترف بها من قبل وزارة العدل والسفارات.", steps: ["تقييم المستند", "ترجمة معتمدة", "تدقيق قانوني", "الختم الرسمي"] },
+					immigration: { title: "الهجرة والتأشيرات", desc: "ترجمة دقيقة لشهادات الميلاد وعقود الزواج وجوازات السفر المطلوبة لمواعيد السفارات.", steps: ["التحقق من الهوية", "ترجمة موحدة", "فحص التطابق", "تسليم جاهز للسفارة"] },
+					academic: { title: "الترجمة الأكاديمية", desc: "ترجمة كشوف الدرجات الجامعية والدبلومات والأبحاث للطلاب المتقدمين للجامعات الدولية.", steps: ["تحويل الدرجات", "دقة المصطلحات", "تنسيق متطابق", "الاعتماد النهائي"] },
+					website: { title: "تعريب المواقع", desc: "تكييف المحتوى الرقمي للأسواق الجديدة. نترجم المواقع والتطبيقات وواجهات البرامج.", steps: ["استخراج النصوص", "تكييف ثقافي", "مراجعة واجهة المستخدم", "اختبار لغوي"] },
+					medical: { title: "الترجمة الطبية", desc: "ترجمة دقيقة للتقارير الطبية والوصفات الطبية والوثائق الصيدلانية من قبل لغويين متخصصين.", steps: ["فحص المصطلحات", "ترجمة متخصصة", "مراجعة السرية", "تدقيق طبي"] },
+					proofreading: { title: "التدقيق اللغوي", desc: "صقل مستنداتك الحالية لضمان الكمال النحوي والاتساق الأسلوبي واللغة الطبيعية.", steps: ["تدقيق نحوي", "تعديل الأسلوب", "تحسين التدفق", "اللمسات النهائية"] }
+				}
 			},
-			academic: {
-				title: "Academic Translation",
-				icon: "fas fa-graduation-cap",
-				desc: "Translation of university transcripts, diplomas, and research papers for students applying to international universities.",
-				steps: ["Grade Conversion", "Terminological Accuracy", "Formatting Sync", "Final Certification"]
+			ru: {
+				workflowTitle: "Рабочий Процесс",
+				bookBtn: "Заказать услугу",
+				services: {
+					legal: { title: "Юридический перевод", desc: "Заверенный перевод договоров, судебных документов и доверенностей.", steps: ["Оценка документа", "Заверенный перевод", "Юридическая проверка", "Официальная печать"] },
+					immigration: { title: "Иммиграция и визы", desc: "Точный перевод свидетельств о рождении, браке и паспортов для посольств.", steps: ["Проверка ID", "Стандартный перевод", "Проверка соответствия", "Готовность для посольства"] },
+					academic: { title: "Академический перевод", desc: "Перевод выписок, дипломов и исследовательских работ для студентов.", steps: ["Конвертация оценок", "Точность терминов", "Синхронизация формата", "Финальная сертификация"] },
+					website: { title: "Локализация сайтов", desc: "Адаптация цифрового контента для новых рынков (сайты, приложения, ПО).", steps: ["Извлечение строк", "Культурная адаптация", "Обзор UI/UX", "Тестирование"] },
+					medical: { title: "Медицинский перевод", desc: "Точный перевод медицинских заключений и рецептов специалистами.", steps: ["Сканирование терминов", "Экспертный перевод", "Аудит конфиденциальности", "Мед. проверка"] },
+					proofreading: { title: "Вычитка", desc: "Доработка документов для обеспечения грамматического совершенства.", steps: ["Грамматический аудит", "Корректировка стиля", "Оптимизация потока", "Финальная правка"] }
+				}
 			},
-			website: {
-				title: "Website Localization",
-				icon: "fas fa-laptop-code",
-				desc: "Adapt your digital content for new markets. We translate websites, apps, and software interfaces while maintaining UI integrity.",
-				steps: ["String Extraction", "Cultural Adaptation", "UI/UX Review", "Linguistic Testing"]
-			},
-			medical: {
-				title: "Medical Translation",
-				icon: "fas fa-stethoscope",
-				desc: "Precise translation of medical reports, prescriptions, and pharmaceutical documents handled by specialized medical linguists.",
-				steps: ["Terminology Scan", "Expert Translation", "Confidentiality Audit", "Medical Review"]
-			},
-			proofreading: {
-				title: "Proofreading",
-				icon: "fas fa-file-signature",
-				desc: "Polishing your existing documents to ensure grammatical perfection, stylistic consistency, and natural-sounding language.",
-				steps: ["Grammar Audit", "Style Adjustment", "Flow Optimization", "Final Polish"]
+			du: { // Mapped to German logic based on your flag setup
+				workflowTitle: "Arbeitsablauf",
+				bookBtn: "Diesen Service buchen",
+				services: {
+					legal: { title: "Juristische Übersetzung", desc: "Beglaubigte Übersetzung von Verträgen, Gerichtsdokumenten und Vollmachten.", steps: ["Dokumentenprüfung", "Beglaubigte Übersetzung", "Juristisches Lektorat", "Offizielle Stempelung"] },
+					immigration: { title: "Einwanderung & Visa", desc: "Genaue Übersetzung von Geburtsurkunden, Heiratsurkunden und Pässen.", steps: ["ID-Überprüfung", "Standardisierte Übersetzung", "Konsistenzprüfung", "Botschaftsfertige Lieferung"] },
+					academic: { title: "Akademische Übersetzung", desc: "Übersetzung von Universitätszeugnissen, Diplomen und Forschungsarbeiten.", steps: ["Notenumrechnung", "Terminologische Genauigkeit", "Format-Synchronisierung", "Endgültige Zertifizierung"] },
+					website: { title: "Website-Lokalisierung", desc: "Passen Sie Ihre digitalen Inhalte an neue Märkte an.", steps: ["Textextraktion", "Kulturelle Anpassung", "UI/UX-Überprüfung", "Linguistisches Testen"] },
+					medical: { title: "Medizinische Übersetzung", desc: "Präzise Übersetzung von medizinischen Berichten und Rezepten.", steps: ["Terminologie-Scan", "Fachübersetzung", "Vertraulichkeitsprüfung", "Medizinische Überprüfung"] },
+					proofreading: { title: "Korrekturlesen", desc: "Aufpolieren Ihrer vorhandenen Dokumente für grammatikalische Perfektion.", steps: ["Grammatikprüfung", "Stilanpassung", "Flussoptimierung", "Letzter Feinschliff"] }
+				}
 			}
 		};
 
 		window.openServiceModal = function(serviceKey) {
-			const data = serviceData[serviceKey];
+			// 1. Detect Language
+			const currentLang = localStorage.getItem('site-lang') || 'en';
+			const langData = serviceData[currentLang] || serviceData['en'];
+			const data = langData.services[serviceKey];
 			if (!data) return;
 
-			// Inject Content
+			// 2. Map the icons independently of the language
+			const icons = {
+				legal: "fas fa-gavel", immigration: "fas fa-passport", academic: "fas fa-graduation-cap",
+				website: "fas fa-laptop-code", medical: "fas fa-stethoscope", proofreading: "fas fa-file-signature"
+			};
+
+			// 3. Inject Content
 			document.getElementById('modal-service-title').innerText = data.title;
 			document.getElementById('modal-service-desc').innerText = data.desc;
-			document.getElementById('modal-service-icon').innerHTML = `<i class="${data.icon}"></i>`;
+			document.getElementById('modal-service-icon').innerHTML = `<i class="${icons[serviceKey]}"></i>`;
 			
-			// Clear and Build Steps
+			// 4. Translate UI Headers & Buttons inside the modal
+			const workflowHeader = document.querySelector('#service-modal h4');
+			if(workflowHeader) workflowHeader.innerHTML = `<i class="fas fa-stream"></i> ${langData.workflowTitle}`;
+			const bookBtn = document.querySelector('#service-modal .btn-primary');
+			if(bookBtn) bookBtn.innerText = langData.bookBtn;
+
+			// 5. Flip Direction for Arabic
+			const modalBody = document.querySelector('#service-modal .modal-body');
+			if(currentLang === 'ar') {
+				modalBody.style.textAlign = 'right';
+				modalBody.style.direction = 'rtl';
+			} else {
+				modalBody.style.textAlign = 'left';
+				modalBody.style.direction = 'ltr';
+			}
+
+			// 6. Clear and Build Steps
 			const stepsContainer = document.getElementById('modal-service-steps');
 			stepsContainer.innerHTML = "";
 			data.steps.forEach((step, index) => {
