@@ -103,39 +103,39 @@
 <body class="dashboard-page">
 
     <header>
-			<div class="container">
-				<nav class="navbar">
-					<a href="index.html" class="logo-box" style="text-decoration: none;">
-						<div class="dna-logo">
-							<div class="dna-drop dna-magenta"></div>
-							<div class="dna-drop dna-cyan"></div>
-						</div>
-						<div class="brand-text">
-							<h3>Al-Khat Al-Mudi</h3>
-							<span id="header-brand_sub">TRANSLATION SERVICES</span>
-						</div>
-					</a>
-					
-					<div id="user-profile-section" class="user-status-hidden">
-						<a href="profile.html" class="user-orb">
-							<i class="fas fa-user-circle"></i>
-							<span id="user-display-name">Client</span>
-						</a>
-						<button onclick="handleLogout()" class="logout-link">Logout</button>
-					</div>
-					
-					<a href="#menu" class="menu-toggle" id="menuToggle">
-						<span class="text" id="header-menu_btn">MENU</span>
-						<div class="hamburger">
-							<span></span>
-							<span></span>
-							<span></span>
-						</div>
-					</a>
-					
-				</nav>
-			</div>
-	</header>
+            <div class="container">
+                <nav class="navbar">
+                    <a href="index.html" class="logo-box" style="text-decoration: none;">
+                        <div class="dna-logo">
+                            <div class="dna-drop dna-magenta"></div>
+                            <div class="dna-drop dna-cyan"></div>
+                        </div>
+                        <div class="brand-text">
+                            <h3>Al-Khat Al-Mudi</h3>
+                            <span id="header-brand_sub">TRANSLATION SERVICES</span>
+                        </div>
+                    </a>
+                    
+                    <div id="user-profile-section" class="user-status-hidden">
+                        <a href="profile.html" class="user-orb">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="user-display-name">Client</span>
+                        </a>
+                        <button onclick="handleLogout()" class="logout-link">Logout</button>
+                    </div>
+                    
+                    <a href="#menu" class="menu-toggle" id="menuToggle">
+                        <span class="text" id="header-menu_btn">MENU</span>
+                        <div class="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </a>
+                    
+                </nav>
+            </div>
+    </header>
 
     <main class="dashboard-container container">
         <div style="margin-bottom: 30px;">
@@ -152,6 +152,10 @@
                 <h3 class="profile-name" id="dash-name">Loading Agent Data...</h3>
                 <p class="profile-email" id="dash-email">awaiting link...</p>
                 <div class="profile-badge" id="dash-rank">CLEARANCE: CLIENT</div>
+                
+                <button id="btn-admin-deploy" class="btn btn-primary" style="display: none; width: 100%; margin-top: 20px; background: var(--brand-magenta); border-color: var(--brand-magenta);">
+                    <i class="fas fa-rocket"></i> Launch Deployment Terminal
+                </button>
                 
                 <hr style="border-color: rgba(255,255,255,0.1); margin: 25px 0;">
                 
@@ -276,9 +280,9 @@
             </div>
         </div>
     </div>
-	
-	<script src="assets/js/main.js"></script>
-	<script src="assets/js/lang-engine.js"></script>
+    
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/lang-engine.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -305,12 +309,19 @@
                 document.getElementById('dash-name').innerText = user.displayName || "Unknown Agent";
                 document.getElementById('dash-email').innerText = user.email;
                 
-                // Admin Override Visuals
+                // Admin Override Visuals & Logic
                 if(user.uid === "EOQEt04azKTTWcmNXVtpgSVsRxt2") {
                     document.getElementById('dash-rank').innerText = "CLEARANCE: ALPHA COMMANDER";
                     document.getElementById('dash-rank').style.background = "rgba(0, 242, 255, 0.2)";
                     document.getElementById('dash-rank').style.color = "var(--brand-cyan)";
                     document.getElementById('dash-rank').style.borderColor = "var(--brand-cyan)";
+                    
+                    // UNLOCK THE DEPLOYMENT BUTTON
+                    const deployBtn = document.getElementById('btn-admin-deploy');
+                    if(deployBtn) {
+                        deployBtn.style.display = 'block';
+                        deployBtn.onclick = () => { window.location.href = "admin_deployment.html"; };
+                    }
                 }
 
                 // Fetch User's Orders
@@ -381,7 +392,5 @@
             });
         }
     </script>
-
-    <script src="assets/js/main.js"></script>
 </body>
 </html>
