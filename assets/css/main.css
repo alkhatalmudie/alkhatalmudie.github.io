@@ -1880,15 +1880,52 @@ footer {
         padding: 0 15px; /* Prevent text from hitting screen edges */
     }
 
-    /* 2. HEADER & NAVIGATION */
+    /* 2. HEADER & NAVIGATION (TIDY MOBILE UPGRADE) */
     .navbar {
-        padding: 10px 0;
+        padding: 10px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important; /* Prevents items from dropping to the next line */
     }
+
+    /* Shrink the Logo Area */
     .brand-text h3 {
-        font-size: 1.2rem; /* Shrink logo text slightly */
+        font-size: 1.1rem !important; /* Slightly smaller logo text */
+        margin: 0 !important;
+    }
+    #header-brand_sub {
+        display: none !important; /* Hides "TRANSLATION SERVICES" to save space */
+    }
+
+    /* Organize the Right Side (User + Menu) */
+    .navbar > div, .navbar > a {
+        display: flex;
+        align-items: center;
+    }
+
+    /* The User Orb & Logout */
+    #user-profile-section {
+        gap: 10px !important;
+        margin-right: 15px !important; /* Pushes it slightly away from the hamburger menu */
     }
     .user-orb span {
-        display: none; /* Hide agent name, keep icon on small screens */
+        display: none !important; /* Hides the user's name */
+    }
+    .user-orb i {
+        font-size: 1.8rem !important; /* Make the user icon slightly larger since text is gone */
+    }
+    .logout-link {
+        font-size: 0.75rem !important;
+        padding: 4px 8px !important; /* Smaller, tidier logout button */
+    }
+
+    /* The Hamburger Menu */
+    #header-menu_btn {
+        display: none !important; /* Hides the word "MENU", keeps only the 3 lines */
+    }
+    .menu-toggle {
+        padding: 5px !important;
     }
 
     /* 3. HERO / CAROUSEL */
