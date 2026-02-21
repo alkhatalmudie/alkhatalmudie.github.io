@@ -1869,3 +1869,107 @@ footer {
     background: rgba(0, 242, 255, 0.1);
     border-color: var(--brand-cyan);
 }
+
+/* ==========================================================================
+   TACTICAL MOBILE OVERRIDE (Tecno / 721px Ceiling)
+   ========================================================================== */
+@media screen and (max-width: 721px) {
+    
+    /* 1. GLOBAL LAYOUTS */
+    .container {
+        padding: 0 15px; /* Prevent text from hitting screen edges */
+    }
+
+    /* 2. HEADER & NAVIGATION */
+    .navbar {
+        padding: 10px 0;
+    }
+    .brand-text h3 {
+        font-size: 1.2rem; /* Shrink logo text slightly */
+    }
+    .user-orb span {
+        display: none; /* Hide agent name, keep icon on small screens */
+    }
+
+    /* 3. HERO / CAROUSEL */
+    .slide-content h1 {
+        font-size: 2.2rem; /* Scale down massive hero text */
+    }
+    .slide-content p {
+        font-size: 1rem;
+    }
+
+    /* 4. DASHBOARDS & TERMINALS (Profile & Admin) */
+    .dashboard-grid, 
+    .grid-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px;
+    }
+    
+    .glass-panel, 
+    .panel {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* 5. RESERVATION GRID */
+    .reservation-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+    }
+    .map-stage {
+        height: 350px !important; /* Shorter map on mobile */
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+
+    /* 6. AUTHENTICATION CARDS (Login / Signup) */
+    .auth-container {
+        padding: 60px 15px !important;
+    }
+    .auth-card {
+        max-width: 100%;
+    }
+    .glass-form {
+        padding: 30px 20px !important; /* Tighter padding for mobile */
+    }
+
+    /* 7. FOOTER */
+    .footer-grid {
+        grid-template-columns: 1fr; /* Stack footer columns */
+        text-align: center;
+        gap: 30px;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+    .contact-info li {
+        justify-content: center;
+    }
+
+    /* 8. PROMO CARDS (Homepage Carousel) */
+    .promo-card {
+        min-width: 280px; /* Make cards slightly narrower to fit screens better */
+    }
+
+    /* 9. MODALS & OVERLAYS */
+    .modal-box {
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
+        max-height: 90vh;
+        overflow-y: auto; /* Allow scrolling inside popup */
+    }
+}
+
+/* Fix for horizontal keyboard squish on mobile */
+@media screen and (max-height: 600px) {
+    .auth-container {
+        padding: 20px 15px !important;
+    }
+    .dashboard-page {
+        padding-top: 80px;
+    }
+}
