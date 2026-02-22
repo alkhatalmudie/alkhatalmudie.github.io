@@ -209,13 +209,13 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        import { storage, ref, uploadBytes, getDownloadURL } from './assets/js/firebase-init.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
             authDomain: "al-khat-backend.firebaseapp.com",
             projectId: "al-khat-backend",
-            storageBucket: "al-khat-storage-doha",
+            storageBucket: "al-khat-backend.appspot.com", // <-- CHANGED THIS LINE
             messagingSenderId: "310033181926",
             appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
         };
@@ -224,7 +224,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
 
         // 2. INITIALIZE SECONDARY APP (Ghost App for creating users without logging out Admin)
