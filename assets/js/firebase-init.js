@@ -13,7 +13,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
     authDomain: "al-khat-backend.firebaseapp.com",
     projectId: "al-khat-backend",
-    storageBucket: "al-khat-backend.appspot.com", // <-- UPDATE THIS LINE EXACTLY LIKE THIS
+    storageBucket: "al-khat-storage-doha", // <-- REVERTED TO YOUR ACTUAL BUCKET
     messagingSenderId: "310033181926",
     appId: "1:310033181926:web:9a028807fa7c7ab31c5f27",
     measurementId: "G-ZSZJQ55488"

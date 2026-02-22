@@ -1,0 +1,350 @@
+.eleventy.js
+.firebase/hosting..cache
+.firebaserc
+.gitignore
+404.html
+about.html
+admin.html
+admin_deployment.html
+al-khat-backend
+alpha.html
+assets/css/main.css
+assets/js/firebase-init.js
+assets/js/global-auth.js
+assets/js/header.js
+assets/js/lang-engine.js
+assets/js/main.js
+assets/js/pricing-db.js
+assets/json/ar.json
+assets/json/du.json
+assets/json/en.json
+assets/json/ru.json
+assets/webfonts/Janna_LT_Regular.ttf
+assets/webfonts/Purista Bold.ttf
+assets/webfonts/Purista Light.ttf
+assets/webfonts/Purista SemiBold.ttf
+assets/webfonts/Purista Thin.ttf
+assets/webfonts/Purista.ttf
+assets/webfonts/generator_config (2).txt
+assets/webfonts/generator_config.txt
+assets/webfonts/janna_lt_regular-demo.html
+assets/webfonts/purista-demo.html
+assets/webfonts/purista_bold-demo.html
+assets/webfonts/purista_bold-webfont.woff
+assets/webfonts/purista_bold-webfont.woff2
+assets/webfonts/purista_light-demo.html
+assets/webfonts/purista_light-webfont.woff
+assets/webfonts/purista_light-webfont.woff2
+assets/webfonts/purista_semibold-demo.html
+assets/webfonts/purista_thin-demo.html
+assets/webfonts/purista_thin-webfont.woff
+assets/webfonts/purista_thin-webfont.woff2
+assets/webfonts/specimen_files/grid_12-825-55-15 (2).css
+assets/webfonts/specimen_files/grid_12-825-55-15.css
+assets/webfonts/specimen_files/specimen_stylesheet (2).css
+assets/webfonts/specimen_files/specimen_stylesheet.css
+assets/webfonts/stylesheet (2).css
+assets/webfonts/stylesheet.css
+assets/webfonts/webfontkit-20260215-173659.zip
+assets/webfonts/webfontkit-20260215-212307.zip
+checkout.html
+checkout_2.html
+contacts.html
+employee_reg.html
+firebase.json
+firestore.indexes.json
+firestore.rules
+images/1337527.png
+images/1358905.png
+images/2239730.jpg
+images/3635ff238b6e779c64281f7851cf146d.jpg
+images/3d9d050b26e74ee999740be749dfd22d.svg
+images/About_Us.png
+images/About_Us_Titled.png
+images/Android_Studio.png
+images/Ar.png
+images/Ar_1.png
+images/Audacity.png
+images/Audio_Editing.png
+images/BGEN.jpg
+images/COL.jpg
+images/CPL.jpg
+images/CPT.jpg
+images/Capcut.png
+images/CodeStalkers_1.png
+images/Codemasters_1.png
+images/Codemasters_2.png
+images/Coding.png
+images/Coding_2.jfif
+images/Coding_2.jpg
+images/Coding_2_Upscaled.jpeg
+images/Coding_3_Upscaled.jpeg
+images/Coding_4.jfif
+images/Coding_4_Upscaled.jpeg
+images/Coding_5.jpeg
+images/Coding_5_Upscaled.jpeg
+images/Copy.png
+images/Deployment.png
+images/Du.png
+images/Edit.png
+images/Flutter.png
+images/Frostbite_3.png
+images/Frostbite_3_1.png
+images/GB.png
+images/GEN.jpg
+images/GOA.jpg
+images/Game_Design.jpg
+images/Gemini_Generated_About_Us.png
+images/Gemini_Generated_About_Us_2.png
+images/Gemini_Generated_About_Us_3.png
+images/Gemini_Generated_About_Us_Titled.png
+images/Gemini_Generated_About_Us_Titled_2.png
+images/Gemini_Generated_App_Image.png
+images/Gemini_Generated_App_Image_Clear.png
+images/Gemini_Generated_App_Software_Image.png
+images/Gemini_Generated_App_Software_Image_Clear.png
+images/Gemini_Generated_Database_Image.png
+images/Gemini_Generated_Database_Image_Clear.png
+images/Gemini_Generated_Image_ccboppccboppccbo.png
+images/Gemini_Generated_Software_Image.png
+images/Gemini_Generated_Software_Image_Clear.png
+images/Gemini_Generated_Website_Image.png
+images/Gemini_Generated_Website_Image_Clear.png
+images/Graphic_Design.jpg
+images/Horsemen.png
+images/Inshot_Pro.png
+images/Inshot_Pro_2.png
+images/LT.jpg
+images/Logo_1.png
+images/Logo_1_202020.png
+images/Logo_1_Edited.png
+images/Logo_2.png
+images/Logo_2_0080FF.png
+images/Logo_2_202020.png
+images/Logo_3.png
+images/Logo_4.png
+images/Logo_5.png
+images/Logo_codemasters.png
+images/Logo_codemasters_2.png
+images/Logo_codemasters_BG.png
+images/MAJ.jpg
+images/MGEN.jpg
+images/M_Translate.png
+images/Music.png
+images/Organization.png
+images/PVT.jpg
+images/Power.png
+images/Pvt_Profile_Photo_1.jpg
+images/Pvt_Profile_Photo_1_Fit.jpg
+images/Pvt_Profile_Photo_2.jpg
+images/Pvt_Profile_Photo_2_Fit.jpg
+images/Pvt_Profile_Photo_3.jpg
+images/Pvt_Profile_Photo_3_Fit.jpg
+images/Pvt_Profile_Photo_4.jpg
+images/Pvt_Profile_Photo_4_Fit.jpg
+images/Ru.png
+images/SGT.jpg
+images/Translation.jpg
+images/US.png
+images/Unreal_BG.jpg
+images/Unreal_BG_Span.jpg
+images/Video_Editing.jpg
+images/accept.png
+images/add-button.png
+images/add.png
+images/add_button.png
+images/add_user.png
+images/after_effects.png
+images/ai.png
+images/artificial-intelligence (5).png
+images/audio-waves.png
+images/banner.jpg
+images/camera.png
+images/catalog.png
+images/chat.png
+images/chat_2.png
+images/check (1).png
+images/check (2).png
+images/check.png
+images/check_2.png
+images/circuit (4).png
+images/circuit (6).png
+images/circuit-print-for-electronic-products.png
+images/coding (2).png
+images/computer.png
+images/cplus.png
+images/css_3.png
+images/cube.png
+images/cubes.png
+images/dashboard.png
+images/dashboard_2.png
+images/data.png
+images/data_2.png
+images/data_transferring.png
+images/database.png
+images/database_1.png
+images/database_2.png
+images/database_configuration.png
+images/deadline2 (2).png
+images/deal.png
+images/down (1).png
+images/down.png
+images/download - Copy.png
+images/download.png
+images/editing.png
+images/exclamation-mark (2).png
+images/exclamation-mark.png
+images/facebook.png
+images/favicon.svg
+images/firebase.png
+images/firebase_2.png
+images/fog.jpg
+images/fog_2.jpg
+images/fog_2_upscaled.jpeg
+images/form.png
+images/game.png
+images/gears.png
+images/google.png
+images/gradient-top-view-laptop-background.zip
+images/gradient-top-view-laptop-background/2239728.ai
+images/gradient-top-view-laptop-background/2239729.eps
+images/gradient-top-view-laptop-background/2239730.jpg
+images/gradient-top-view-laptop-background/License free.txt
+images/gradient-top-view-laptop-background/License premium.txt
+images/green_circle_emoji.png
+images/grok-video-8f17508c-a9a5-497c-ac47-5e7c2cb065ff.mp4
+images/grok-video-f757df8b-5f6c-400d-a92d-f4acfc5ebdc1 (1).mp4
+images/grok-video-f757df8b-5f6c-400d-a92d-f4acfc5ebdc1.mp4
+images/hacker (1).png
+images/hacker (2).png
+images/hacker.png
+images/high-quality.png
+images/high_quality.png
+images/home (1).png
+images/home-button.png
+images/home.png
+images/html_5.png
+images/illustrator.png
+images/import.png
+images/indesign.png
+images/intelligence.png
+images/interview.png
+images/jigsaw.png
+images/js.png
+images/language.png
+images/law (1).png
+images/leaf (6).png
+images/leaf (7).png
+images/leaves (1).png
+images/licensed-image
+images/lightroom.png
+images/link.png
+images/linkedin (1).png
+images/linkedin.png
+images/log_in.png
+images/man (2).png
+images/man.png
+images/meta.png
+images/mp3.png
+images/multiple_devices.png
+images/music (2).png
+images/music (3).png
+images/musical_note.png
+images/notes_1.png
+images/objects.png
+images/office.png
+images/office_app.png
+images/oracle.png
+images/oracle_1.png
+images/paint-brush.png
+images/pexels-peaky-29445973.jpg
+images/photoshop.png
+images/photoshop_2.png
+images/pic01.jpg
+images/pic02.jpg
+images/pic03.jpg
+images/pic04.jpg
+images/pic05.jpg
+images/pic06.jpg
+images/pic07.jpg
+images/pic08.jpg
+images/pic09.jpg
+images/pic10.jpg
+images/pic11.jpg
+images/plus-symbol-button.png
+images/plus.png
+images/premiere_pro.png
+images/premiere_pro_colored.png
+images/premium_photo-1661877737564-3dfd7282efcb.avif
+images/premium_photo-1664297969735-71ce1580b10b.avif
+images/program-background-mxrzzainwco4rmgr.jpg
+images/programming.png
+images/programming_language.png
+images/programming_language_Edit.png
+images/protest (1).png
+images/pushing.png
+images/rectangle (1).png
+images/rectangle.png
+images/right (1).png
+images/right (2).png
+images/right (3).png
+images/right (4).png
+images/right (5).png
+images/right (6).png
+images/right (7).png
+images/right (8).png
+images/right (9).png
+images/right-chevron (1).png
+images/right-chevron (2).png
+images/right-chevron (3).png
+images/right-chevron.png
+images/right.png
+images/rounded-rectangle.png
+images/search-interface-symbol.png
+images/searching-bar.png
+images/settings.png
+images/speaker-filled-audio-tool.png
+images/square (1).png
+images/square (2).png
+images/square.png
+images/stop (1).png
+images/stop (2).png
+images/structure.png
+images/syntax_analysis.png
+images/thinking.png
+images/translate.png
+images/twitter (2).png
+images/twitter (3).png
+images/twitter.png
+images/ui.png
+images/ui_Upscaled.png
+images/unity.png
+images/unreal.svg
+images/user (1).png
+images/user (2).png
+images/user.png
+images/virtual.png
+images/visual_studio.png
+images/vlc.png
+images/voice-search.png
+images/volume.png
+images/wave_sound.png
+images/wavepad.png
+images/word.png
+images/wp7439201.jpg
+images/xd.png
+index.html
+invoice.html
+login.html
+login_emp.html
+packages.html
+product.html
+products_services_room.html
+profile.html
+recovery.html
+reservation.html
+services.html
+shop.html
+signup.html
+storage.rules
+translation.html
