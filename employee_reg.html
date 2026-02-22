@@ -206,27 +206,27 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { storage, ref, uploadBytes, getDownloadURL } from './assets/js/firebase-init.js';
+        // Import Firestore and Storage directly from your init file to prevent duplicates!
+        import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc, doc, updateDoc } from './assets/js/firebase-init.js';
+        import { getDocs, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
             authDomain: "al-khat-backend.firebaseapp.com",
             projectId: "al-khat-backend",
-            storageBucket: "al-khat-backend.appspot.com", // <-- CHANGED THIS LINE
+            storageBucket: "al-khat-backend.appspot.com",
             messagingSenderId: "310033181926",
             appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
         };
 
-        // 1. INITIALIZE PRIMARY APP (For Firestore & Storage)
-        const app = initializeApp(firebaseConfig);
+        // 1. GET PRIMARY APP (Already initialized by firebase-init.js)
+        const app = getApp(); 
         const auth = getAuth(app);
-        const db = getFirestore(app);
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
 
-        // 2. INITIALIZE SECONDARY APP (Ghost App for creating users without logging out Admin)
+        // 2. INITIALIZE SECONDARY APP (Ghost App for creating users)
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
@@ -270,15 +270,13 @@
             btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             try {
-                // 1. Gather Data
-                const email = document.getElementById('emp-user').value + "@alkhat.internal"; // Create fake email for auth
+                const email = document.getElementById('emp-user').value + "@alkhat.internal";
                 const password = document.getElementById('emp-pass').value;
                 
                 let photoUrl = "";
                 let cvUrl = "";
                 let certUrl = "";
 
-                // 2. Handle File Uploads (Only if new files selected)
                 const photoFile = document.getElementById('emp-photo').files[0];
                 const cvFile = document.getElementById('emp-cv').files[0];
                 const certFile = document.getElementById('emp-cert').files[0];
@@ -293,7 +291,7 @@
                     title: document.getElementById('emp-title').value,
                     salary: document.getElementById('emp-salary').value,
                     username: document.getElementById('emp-user').value,
-                    password: password, // Stored for Admin reference (Note: In high security, don't store plain text)
+                    password: password, 
                     regDate: document.getElementById('emp-reg-date').value,
                     permission: document.getElementById('emp-perm').value,
                     contractStart: document.getElementById('emp-start').value,
@@ -306,9 +304,6 @@
                 };
 
                 if (currentEditId) {
-                    // UPDATE MODE
-                    // Note: We don't update Auth credentials here to avoid complexity, only Firestore
-                    // If file urls are empty, delete them from payload so we don't overwrite existing links with empty strings
                     if(!photoUrl) delete payload.photo;
                     if(!cvUrl) delete payload.cv;
                     if(!certUrl) delete payload.cert;
@@ -316,10 +311,8 @@
                     await updateDoc(doc(db, "employees", currentEditId), payload);
                     alert("Dossier Updated Successfully.");
                 } else {
-                    // CREATE MODE
-                    // Create Auth User using Ghost App
                     const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-                    payload.uid = userCredential.user.uid; // Link Auth UID to Firestore Doc
+                    payload.uid = userCredential.user.uid; 
                     
                     await addDoc(collection(db, "employees"), payload);
                     alert("New Operative Registered & Credentials Generated.");
