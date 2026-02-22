@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPERATIVE DASHBOARD | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* TACTICAL TERMINAL STYLES */
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; }
+
+        /* --- DASHBOARD LAYOUT --- */
+        .dash-wrapper { display: flex; height: 100vh; overflow: hidden; }
+        
+        .dash-sidebar { width: 280px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .operative-card { text-align: center; border-bottom: 1px dashed rgba(0, 242, 255, 0.3); padding-bottom: 20px; margin-bottom: 20px; }
+        .op-photo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #00f2ff; margin: 0 auto 10px auto; background-size: cover; background-position: center; background-color: #333; }
+        .op-name { margin: 0; color: white; font-size: 1.2rem; text-transform: uppercase; }
+        .op-id { color: #ff4b5c; font-size: 0.9rem; font-weight: bold; margin-top: 5px; }
+        .op-role { color: #aaa; font-size: 0.8rem; margin-top: 5px; }
+
+        .dash-main { flex-grow: 1; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; overflow-y: auto; }
+        
+        /* --- PANELS --- */
+        .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); padding: 15px; display: flex; flex-direction: column; }
+        .panel h3 { margin-top: 0; color: #00ff88; border-bottom: 1px solid #00ff88; padding-bottom: 10px; font-size: 1rem; }
+        .panel.chat-panel h3 { color: #00f2ff; border-color: #00f2ff; }
+        .panel.log-panel h3 { color: #ff4b5c; border-color: #ff4b5c; }
+
+        /* --- COMMS CHANNEL (CHAT) --- */
+        .chat-box { flex-grow: 1; border: 1px inset rgba(0, 242, 255, 0.1); background: rgba(0,0,0,0.5); padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; min-height: 300px; }
+        .msg { padding: 8px 12px; border-radius: 5px; max-width: 80%; font-size: 0.9rem; }
+        .msg.op { background: rgba(0, 242, 255, 0.1); border-left: 3px solid #00f2ff; align-self: flex-start; color: white; }
+        .msg.admin { background: rgba(255, 75, 92, 0.1); border-right: 3px solid #ff4b5c; align-self: flex-end; color: #ff4b5c; text-align: right; }
+        .msg-time { font-size: 0.6rem; opacity: 0.5; margin-top: 5px; display: block; }
+
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { flex-grow: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #00f2ff; color: white; font-family: inherit; }
+        .chat-input-area input:focus { outline: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+
+        /* --- FILE DROP ZONE --- */
+        .file-drop { border: 1px dashed rgba(0, 255, 136, 0.4); padding: 20px; text-align: center; cursor: pointer; color: #aaa; transition: 0.3s; }
+        .file-drop:hover { background: rgba(0, 255, 136, 0.05); color: #00ff88; border-color: #00ff88; }
+        .file-drop i { font-size: 2rem; margin-bottom: 10px; color: #00ff88; }
+
+        /* --- AUDIT TRAIL LOGS --- */
+        .log-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 250px; }
+        .log-list li { border-bottom: 1px solid rgba(255, 75, 92, 0.2); padding: 8px 0; font-size: 0.8rem; color: #ccc; display: flex; justify-content: space-between; }
+        .log-list li span.event { color: #ff4b5c; }
+
+        /* --- BUTTONS --- */
+        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px; cursor: pointer; transition: 0.3s; font-family: inherit; font-weight: bold; width: 100%; text-transform: uppercase; }
+        .btn:hover { background: #00f2ff; color: #050a15; }
+        .btn-green { border-color: #00ff88; color: #00ff88; }
+        .btn-green:hover { background: #00ff88; color: #050a15; }
+        .btn-danger { border-color: #ff4b5c; color: #ff4b5c; margin-top: auto; }
+        .btn-danger:hover { background: #ff4b5c; color: white; }
+
+        @media (max-width: 900px) {
+            .dash-wrapper { flex-direction: column; height: auto; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
+            .dash-main { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dash-wrapper">
+        <aside class="dash-sidebar">
+            <div class="operative-card">
+                <div class="op-photo" id="ui-photo"></div>
+                <h3 class="op-name" id="ui-name">Scanning...</h3>
+                <div class="op-id" id="ui-id">ID: ---</div>
+                <div class="op-role" id="ui-role">Connecting to Alpha...</div>
+            </div>
+
+            <div style="font-size: 0.8rem; color: #aaa; text-align: center; margin-bottom: 20px;">
+                <p><i class="fas fa-lock" style="color:#00ff88;"></i> UPLINK SECURE</p>
+                <p><i class="fas fa-server"></i> SERVER: DOHA-01</p>
+            </div>
+
+            <button class="btn btn-danger" onclick="executeLogout()"><i class="fas fa-power-off"></i> TERMINATE SESSION</button>
+        </aside>
+
+        <main class="dash-main">
+            
+            <div class="panel chat-panel" style="grid-row: span 2;">
+                <h3><i class="fas fa-satellite-dish"></i> ALPHA COMMS CHANNEL</h3>
+                <div class="chat-box" id="chat-window">
+                    <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;">Establishing connection to Command...</p>
+                </div>
+                <form class="chat-input-area" id="chat-form">
+                    <input type="text" id="chat-input" placeholder="Transmit message to Admin..." required autocomplete="off">
+                    <button type="submit" class="btn" style="width:auto; padding: 0 20px;"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h3 style="color: #00ff88; border-color:#00ff88;"><i class="fas fa-file-export"></i> SECURE FILE DROP</h3>
+                <p style="font-size: 0.8rem; color: #aaa;">Upload completed translations or reports directly to the Alpha Command inbox.</p>
+                
+                <input type="file" id="op-file" style="display: none;" onchange="handleFileSelect(event)">
+                <div class="file-drop" id="drop-zone" onclick="document.getElementById('op-file').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div id="file-label">Click to select payload</div>
+                </div>
+                <button class="btn btn-green" id="btn-upload" style="margin-top: 15px; display: none;" onclick="executeUpload()">TRANSMIT PAYLOAD</button>
+            </div>
+
+            <div class="panel log-panel">
+                <h3><i class="fas fa-history"></i> ACCESS AUDIT TRAIL</h3>
+                <ul class="log-list" id="audit-logs">
+                    <li>Scanning logs...</li>
+                </ul>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc } from './assets/js/firebase-init.js';
+        import { query, where, orderBy, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const app = getApp();
+        const auth = getAuth(app);
+        
+        let currentUserUid = null;
+        let operativeData = null;
+
+        // 1. SECURITY BOOTUP SEQUENCE
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login_emp.html";
+            } else {
+                currentUserUid = user.uid;
+                await fetchOperativeIntel(user.uid);
+                fetchAuditTrail(user.uid);
+                initializeCommsChannel(user.uid);
+            }
+        });
+
+        // 2. FETCH IDENTITY
+        async function fetchOperativeIntel(uid) {
+            const q = query(collection(db, "employees"), where("uid", "==", uid));
+            const snapshot = await getDocs(q);
+            
+            if(!snapshot.empty) {
+                operativeData = snapshot.docs[0].data();
+                document.getElementById('ui-name').innerText = operativeData.name;
+                document.getElementById('ui-id').innerText = "ID: " + operativeData.empId;
+                document.getElementById('ui-role').innerText = operativeData.title + " | " + operativeData.permission;
+                if(operativeData.photo) {
+                    document.getElementById('ui-photo').style.backgroundImage = `url('${operativeData.photo}')`;
+                }
+            } else {
+                document.getElementById('ui-name').innerText = "UNREGISTERED AGENT";
+            }
+        }
+
+        // 3. SECURE FILE DROP LOGIC
+        let selectedFile = null;
+        window.handleFileSelect = function(e) {
+            selectedFile = e.target.files[0];
+            if(selectedFile) {
+                document.getElementById('file-label').innerText = "READY: " + selectedFile.name;
+                document.getElementById('drop-zone').style.borderColor = "#00f2ff";
+                document.getElementById('btn-upload').style.display = "block";
+            }
+        }
+
+        window.executeUpload = async function() {
+            if(!selectedFile) return;
+            const btn = document.getElementById('btn-upload');
+            btn.innerText = "TRANSMITTING..."; btn.disabled = true;
+
+            try {
+                const fileName = Date.now() + "_" + selectedFile.name;
+                const storageRef = ref(storage, `employee_uploads/${currentUserUid}/${fileName}`);
+                const snapshot = await uploadBytes(storageRef, selectedFile);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                // Send notification to Admin Inbox Database
+                await addDoc(collection(db, "admin_inbox"), {
+                    empUid: currentUserUid,
+                    empName: operativeData.name,
+                    fileName: selectedFile.name,
+                    fileUrl: downloadURL,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("PAYLOAD DELIVERED TO ALPHA COMMAND.");
+                selectedFile = null;
+                document.getElementById('file-label').innerText = "Click to select payload";
+                document.getElementById('drop-zone').style.borderColor = "rgba(0, 255, 136, 0.4)";
+                btn.style.display = "none";
+
+            } catch(error) {
+                alert("TRANSMISSION FAILED: " + error.message);
+            } finally {
+                btn.innerText = "TRANSMIT PAYLOAD"; btn.disabled = false;
+            }
+        }
+
+        // 4. AUDIT TRAIL (Login Logs)
+        async function fetchAuditTrail(uid) {
+            const logBox = document.getElementById('audit-logs');
+            const q = query(collection(db, "employee_logs"), where("uid", "==", uid), orderBy("timestamp", "desc"));
+            
+            // Real-time listener for logs
+            onSnapshot(q, (snapshot) => {
+                logBox.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const timeString = data.timestamp ? data.timestamp.toDate().toLocaleString() : "Syncing...";
+                    logBox.innerHTML += `<li><span class="event">${data.event}</span> <span>${timeString}</span></li>`;
+                });
+            });
+        }
+
+        // 5. COMMS CHANNEL (Live Chat)
+        function initializeCommsChannel(uid) {
+            const chatWindow = document.getElementById('chat-window');
+            const q = query(collection(db, "messages"), where("empUid", "==", uid), orderBy("timestamp", "asc"));
+
+            onSnapshot(q, (snapshot) => {
+                chatWindow.innerHTML = "";
+                if(snapshot.empty) {
+                    chatWindow.innerHTML = "<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>Comms channel open. Waiting for transmission...</p>";
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const isOp = data.sender === "Operative";
+                    const time = data.timestamp ? data.timestamp.toDate().toLocaleTimeString() : "Sending...";
+                    
+                    chatWindow.innerHTML += `
+                        <div class="msg ${isOp ? 'op' : 'admin'}">
+                            <strong>${isOp ? operativeData.name : 'ALPHA COMMAND'}</strong><br>
+                            ${data.text}
+                            <span class="msg-time">${time}</span>
+                        </div>
+                    `;
+                });
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to bottom
+            });
+        }
+
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            input.value = ""; // Clear input immediately for UX
+
+            try {
+                await addDoc(collection(db, "messages"), {
+                    empUid: currentUserUid,
+                    sender: "Operative",
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+            } catch(error) {
+                alert("COMMS FAILURE: " + error.message);
+            }
+        });
+
+        // 6. LOGOUT
+        window.executeLogout = function() {
+            signOut(auth).then(() => {
+                window.location.href = "login_emp.html";
+            });
+        }
+    </script>
+</body>
+</html>
