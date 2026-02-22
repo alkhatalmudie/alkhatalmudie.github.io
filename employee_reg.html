@@ -173,7 +173,10 @@
                 </div>
 
                 <div class="panel">
-                    <h3><i class="fas fa-users"></i> ACTIVE PERSONNEL</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ff4b5c; padding-bottom: 10px; margin-bottom: 15px;">
+                        <h3 style="border: none; margin: 0; padding: 0; color: #ff4b5c;"><i class="fas fa-users"></i> ACTIVE PERSONNEL</h3>
+                        <button class="btn btn-green" style="width: auto; padding: 5px 10px; font-size: 0.8rem;" onclick="exportRosterToCSV()"><i class="fas fa-file-csv"></i> EXPORT ROSTER</button>
+                    </div>
                     <div id="employee-list">
                         <p style="text-align: center; color: gray;">Scanning database...</p>
                     </div>
@@ -450,6 +453,31 @@
                 await deleteDoc(doc(db, "employees", id));
                 fetchEmployees();
             }
+        }
+		
+		// --- CSV EXPORT ENGINE (ROSTER) ---
+        window.exportRosterToCSV = function() {
+            // We use the globalEmployees object we already created!
+            const employeeIds = Object.keys(globalEmployees);
+            if(employeeIds.length === 0) { alert("No personnel data to export."); return; }
+
+            // Create CSV Headers
+            let csvContent = "Agent ID,Full Name,Title,Clearance,Username,Salary,Reg Date,Contract Start,Contract End\n";
+
+            // Loop through the data
+            employeeIds.forEach(id => {
+                const data = globalEmployees[id];
+                csvContent += `"${data.empId}","${data.name}","${data.title}","${data.permission}","${data.username}","${data.salary}","${data.regDate}","${data.contractStart || 'N/A'}","${data.contractEnd || 'N/A'}"\n`;
+            });
+
+            // Generate Download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Alpha_Roster_${new Date().toLocaleDateString()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>

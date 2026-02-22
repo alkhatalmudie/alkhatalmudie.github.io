@@ -100,8 +100,9 @@
             </div>
 
             <div class="panel" style="display: flex; flex-direction: column;">
-                <div class="panel-header">
-                    <h3 id="chat-title"><i class="fas fa-satellite-dish"></i> DIRECT CHANNEL: [STANDBY]</h3>
+                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 id="chat-title" style="margin: 0;"><i class="fas fa-satellite-dish"></i> DIRECT CHANNEL: [STANDBY]</h3>
+                    <button class="btn btn-green" id="btn-export-chat" style="width: auto; padding: 5px 10px; font-size: 0.8rem; display: none;" onclick="exportChatToCSV()"><i class="fas fa-file-csv"></i> EXPORT LOG</button>
                 </div>
                 <div class="panel-content chat-box" id="chat-window">
                     <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;">Select an operative to open frequency.</p>
@@ -136,6 +137,7 @@
         
         let activeChatUid = null;
         let chatUnsubscribe = null; // To kill old chat listeners when switching users
+		let activeChatLog = []; // <-- ADD THIS LINE
 
         // 1. SECURITY PERIMETER
         onAuthStateChanged(auth, (user) => {
@@ -199,6 +201,8 @@
             
             chatUnsubscribe = onSnapshot(q, (snapshot) => {
                 chatWindow.innerHTML = "";
+				activeChatLog = []; // <-- ADD THIS LINE TO CLEAR OLD LOGS
+				document.getElementById('btn-export-chat').style.display = "block"; // <-- ADD THIS TO SHOW BUTTON
                 if(snapshot.empty) {
                     chatWindow.innerHTML = "<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>Frequency clear. Begin transmission.</p>";
                 }
@@ -207,7 +211,12 @@
                     const data = doc.data();
                     const isAdmin = data.sender === "Admin";
                     const time = data.timestamp ? data.timestamp.toDate().toLocaleTimeString() : "Sending...";
-                    
+                    // Push to memory for CSV
+                    activeChatLog.push({
+                        sender: isAdmin ? 'ALPHA COMMAND' : name,
+                        time: time,
+                        message: data.text.replace(/"/g, '""') // Escape quotes to prevent CSV breaking
+                    });
                     chatWindow.innerHTML += `
                         <div class="msg ${isAdmin ? 'admin' : 'op'}">
                             <strong>${isAdmin ? 'ALPHA COMMAND' : name}</strong><br>
@@ -268,6 +277,25 @@
                     `;
                 });
             });
+        }
+		
+		// 6. CSV EXPORT ENGINE (CHAT)
+        window.exportChatToCSV = function() {
+            if(activeChatLog.length === 0) { alert("No transmission history to export."); return; }
+
+            let csvContent = "Timestamp,Sender,Transmission\n";
+
+            activeChatLog.forEach(row => {
+                csvContent += `"${row.time}","${row.sender}","${row.message}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Comms_Log_${activeChatUid}_${new Date().toLocaleDateString()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
