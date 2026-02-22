@@ -1,11 +1,19 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    
+    // 1. PUBLIC UPLOADS (For client translation requests)
     match /client_uploads/{allPaths=**} {
       // Anyone can upload their passport/docs
       allow write: if true;
       // ONLY the Admin can see or download them
       allow read: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
     }
+
+    // 2. EMPLOYEE REGISTRY (Admin Alpha Only)
+    match /employee_data/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
+    }
+    
   }
 }
