@@ -82,6 +82,7 @@
                 <p><i class="fas fa-server"></i> SERVER: DOHA-01</p>
             </div>
 
+            <button class="btn btn-green" id="btn-arrival" onclick="submitArrival()" style="margin-bottom: 10px;"><i class="fas fa-building"></i> LOG OFFICE ARRIVAL</button>
             <button class="btn btn-danger" onclick="executeLogout()"><i class="fas fa-power-off"></i> TERMINATE SESSION</button>
         </aside>
 
@@ -269,6 +270,25 @@
                 alert("COMMS FAILURE: " + error.message);
             }
         });
+		
+		// 5.5 LOG OFFICE ARRIVAL
+        window.submitArrival = async function() {
+            const btn = document.getElementById('btn-arrival');
+            btn.innerText = "LOGGING..."; btn.disabled = true;
+            try {
+                await addDoc(collection(db, "employee_logs"), {
+                    uid: currentUserUid,
+                    empName: operativeData.name, // Save their real name to the log
+                    timestamp: serverTimestamp(),
+                    event: "OFFICE_ARRIVAL"
+                });
+                btn.innerText = "ARRIVAL LOGGED";
+                btn.style.background = "#00ff88"; btn.style.color = "#000";
+            } catch(error) {
+                alert("COMMS FAILURE: " + error.message);
+                btn.innerText = "LOG OFFICE ARRIVAL"; btn.disabled = false;
+            }
+        }
 
         // 6. LOGOUT
         window.executeLogout = function() {
