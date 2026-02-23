@@ -77,6 +77,23 @@
         .log-line.danger { color: #ff4b5c; }
         
         @keyframes fadeIn { to { opacity: 1; } }
+		
+		/* --- SYSTEM TRANSITION EFFECTS --- */
+		body {
+			opacity: 0; /* Start invisible */
+			animation: systemBoot 0.4s ease-in forwards; /* Fade in automatically on load */
+		}
+
+		@keyframes systemBoot {
+			0% { opacity: 0; transform: scale(0.99); }
+			100% { opacity: 1; transform: scale(1); }
+		}
+
+		/* Class triggered by JS before leaving the page */
+		body.system-shutdown {
+			opacity: 0 !important;
+			transform: scale(0.99);
+		}
     </style>
 </head>
 <body>
@@ -230,9 +247,11 @@
                 }, step.delay);
             });
 
-            setTimeout(() => {
-                window.location.href = "employee_dashboard.html";
-            }, 10000);
+            // Inside your Firebase signInWithEmailAndPassword .then() block:
+			document.body.classList.add('system-shutdown'); // 1. Trigger the fade out
+			setTimeout(() => {
+				window.location.href = "employee_dashboard.html"; // 2. Redirect after fade
+			}, 300);
         }
     </script>
 </body>

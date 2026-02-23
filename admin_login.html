@@ -55,6 +55,23 @@
         .btn-exec:hover { background: #00f2ff; color: #050a15; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
 
         #error-msg { color: #ff4b5c; font-size: 0.85rem; text-align: center; margin-top: 15px; min-height: 20px; }
+		
+		/* --- SYSTEM TRANSITION EFFECTS --- */
+		body {
+			opacity: 0; /* Start invisible */
+			animation: systemBoot 0.4s ease-in forwards; /* Fade in automatically on load */
+		}
+
+		@keyframes systemBoot {
+			0% { opacity: 0; transform: scale(0.99); }
+			100% { opacity: 1; transform: scale(1); }
+		}
+
+		/* Class triggered by JS before leaving the page */
+		body.system-shutdown {
+			opacity: 0 !important;
+			transform: scale(0.99);
+		}
     </style>
 </head>
 <body>
@@ -130,5 +147,46 @@
             }
         });
     </script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			// --- 1. AUTOMATIC ACTIVE MENU HIGHLIGHTING ---
+			// Get the current file name from the URL (e.g., "sales.html")
+			let currentPath = window.location.pathname.split('/').pop(); 
+			
+			// Default to admin_dashboard.html if it's the root directory
+			if (currentPath === '') currentPath = 'admin_dashboard.html'; 
+
+			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a');
+			
+			menuLinks.forEach(link => {
+				const linkHref = link.getAttribute('href');
+				// If the link's href matches the current URL, make it active!
+				if (linkHref === currentPath) {
+					link.classList.add('active');
+				}
+			});
+
+			// --- 2. SMOOTH SYSTEM FADE TRANSITIONS ---
+			menuLinks.forEach(link => {
+				link.addEventListener('click', function(e) {
+					const targetUrl = this.getAttribute('href');
+					
+					// Ignore empty links or logout functions
+					if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
+
+					// Stop the immediate hard jump to the next page
+					e.preventDefault(); 
+					
+					// Trigger the fade-out effect
+					document.body.classList.add('system-shutdown'); 
+					
+					// Wait 300ms (matching the CSS transition) before actually navigating
+					setTimeout(() => {
+						window.location.href = targetUrl;
+					}, 300); 
+				});
+			});
+		});
+	</script>
 </body>
 </html>

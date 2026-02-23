@@ -67,6 +67,23 @@
             .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
             .dash-main { grid-template-columns: 1fr; }
         }
+		
+		/* --- SYSTEM TRANSITION EFFECTS --- */
+		body {
+			opacity: 0; /* Start invisible */
+			animation: systemBoot 0.4s ease-in forwards; /* Fade in automatically on load */
+		}
+
+		@keyframes systemBoot {
+			0% { opacity: 0; transform: scale(0.99); }
+			100% { opacity: 1; transform: scale(1); }
+		}
+
+		/* Class triggered by JS before leaving the page */
+		body.system-shutdown {
+			opacity: 0 !important;
+			transform: scale(0.99);
+		}
     </style>
 </head>
 <body>
@@ -379,5 +396,35 @@
             signOut(auth).then(() => { window.location.href = "login_emp.html"; });
         }
     </script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			let currentPath = window.location.pathname.split('/').pop(); 
+			if (currentPath === '') currentPath = 'employee_dashboard.html'; 
+
+			// UPDATED: Looks for links in BOTH the admin menu and employee sidebar
+			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a, .dash-sidebar a');
+			
+			menuLinks.forEach(link => {
+				const linkHref = link.getAttribute('href');
+				if (linkHref === currentPath) {
+					link.classList.add('active');
+				}
+			});
+
+			menuLinks.forEach(link => {
+				link.addEventListener('click', function(e) {
+					const targetUrl = this.getAttribute('href');
+					if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
+
+					e.preventDefault(); 
+					document.body.classList.add('system-shutdown'); 
+					
+					setTimeout(() => {
+						window.location.href = targetUrl;
+					}, 300); 
+				});
+			});
+		});
+	</script>
 </body>
 </html>
