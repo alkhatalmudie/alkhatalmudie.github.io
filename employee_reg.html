@@ -10,7 +10,8 @@
     
     <style>
         /* TACTICAL TERMINAL STYLES */
-        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
         /* --- SIDEBAR LAYOUT --- */
         .admin-wrapper { display: flex; min-height: 100vh; }
@@ -19,6 +20,8 @@
         .admin-sidebar-menu li { margin-bottom: 10px; }
         .admin-sidebar-menu a { display: block; padding: 12px 15px; color: #ccc; text-decoration: none; border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem; }
         .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff; }
+        body[dir="rtl"] .admin-sidebar-menu a { border-left: none; border-right: 3px solid transparent; }
+        body[dir="rtl"] .admin-sidebar-menu a:hover, body[dir="rtl"] .admin-sidebar-menu a.active { border-right-color: #00f2ff; }
         .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
         .admin-main-content { flex-grow: 1; padding: 20px 40px; overflow-y: auto; }
 
@@ -29,9 +32,9 @@
         
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; color: #00f2ff; }
+        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; color: #00f2ff; font-weight: bold;}
         input, select, textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; box-sizing: border-box; }
-        input:focus { border-color: #00f2ff; outline: none; }
+        input:focus, select:focus { border-color: #00f2ff; outline: none; }
 
         /* --- PHOTO UPLOAD CIRCLE --- */
         .photo-upload-container { text-align: center; margin-bottom: 20px; }
@@ -50,19 +53,22 @@
         .btn-green:hover { background: #00ff88; color: #000; }
         .btn-danger { border-color: #ff4b5c; color: #ff4b5c; width: auto; font-size: 0.8rem; padding: 5px 10px; }
         .btn-danger:hover { background: #ff4b5c; color: white; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; width: auto; padding: 5px 15px;}
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
 
         /* --- EMPLOYEE CARDS --- */
         .emp-card { border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; margin-bottom: 15px; background: rgba(0,0,0,0.3); display: flex; gap: 15px; align-items: center; }
-        .emp-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; background-size: cover; background-position: center; }
+        .emp-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; background-size: cover; background-position: center; flex-shrink: 0;}
         .emp-info h4 { margin: 0 0 5px 0; color: white; }
         .emp-info p { margin: 0; font-size: 0.8rem; color: #aaa; }
         .emp-actions { margin-left: auto; display: flex; gap: 5px; flex-direction: column; }
+        body[dir="rtl"] .emp-actions { margin-left: 0; margin-right: auto; }
 
         /* --- DOSSIER VIEW MODAL --- */
         #view-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .dossier-box { border: 1px solid #00f2ff; background: #050a15; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
         .dossier-header { display: flex; gap: 20px; border-bottom: 1px dashed rgba(0,242,255,0.3); padding-bottom: 20px; margin-bottom: 20px; align-items: center; }
-        .dossier-photo { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #00f2ff; background-size: cover; background-position: center; }
+        .dossier-photo { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #00f2ff; background-size: cover; background-position: center; flex-shrink: 0;}
         .dossier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .d-label { font-size: 0.7rem; color: #888; text-transform: uppercase; margin-bottom: 3px; }
         .d-val { font-size: 0.9rem; color: white; margin-bottom: 10px; }
@@ -89,21 +95,23 @@
                 <li><a href="employee_reg.html" class="active"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
                 <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
                 <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+                <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcast Comms</a></li>
             </ul>
 
             <div style="margin-top: auto; padding-top: 20px;">
-                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem;">RETURN TO BASE</button>
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width:100%;" id="ui-btn-return">RETURN TO BASE</button>
             </div>
         </aside>
 
         <main class="admin-main-content">
-            <div class="header" style="border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px;">
-                <h2 style="margin:0;"><i class="fas fa-id-card"></i> PERSONNEL REGISTRY COMMAND</h2>
+            <div class="header" style="border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin:0;" id="ui-header-title"><i class="fas fa-id-card"></i> PERSONNEL REGISTRY COMMAND</h2>
+                <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
             </div>
 
             <div class="grid-layout">
                 <div class="panel">
-                    <h3><i class="fas fa-user-edit"></i> NEW OPERATIVE DOSSIER</h3>
+                    <h3 id="ui-panel1-title"><i class="fas fa-user-edit"></i> NEW OPERATIVE DOSSIER</h3>
                     <form id="emp-form">
                         
                         <div class="photo-upload-container">
@@ -111,46 +119,46 @@
                             <div class="photo-preview" id="photo-preview-box" onclick="document.getElementById('emp-photo').click()">
                                 <i class="fas fa-camera"></i>
                             </div>
-                            <label style="font-size: 0.7rem; color: #aaa;">Click to Upload Photo</label>
+                            <label style="font-size: 0.7rem; color: #aaa;" id="ui-lbl-photo">Click to Upload Photo</label>
                         </div>
 
                         <div class="form-row">
-                            <div><label>Full Name</label><input type="text" id="emp-name" required></div>
-                            <div><label>Employee ID</label><input type="text" id="emp-id" required placeholder="e.g. AGENT-007"></div>
+                            <div><label id="ui-lbl-name">Full Name</label><input type="text" id="emp-name" required></div>
+                            <div><label id="ui-lbl-id">Employee ID</label><input type="text" id="emp-id" required placeholder="e.g. AGENT-007"></div>
                         </div>
 
                         <div class="form-row">
-                            <div><label>Position / Title</label><input type="text" id="emp-title" required></div>
-                            <div><label>Salary ($)</label><input type="number" id="emp-salary" required></div>
+                            <div><label id="ui-lbl-title">Position / Title</label><input type="text" id="emp-title" required></div>
+                            <div><label id="ui-lbl-salary">Salary ($)</label><input type="number" id="emp-salary" required></div>
                         </div>
 
-                        <div style="background: rgba(0,0,0,0.3); padding: 10px; margin-bottom: 15px; border-left: 2px solid #ff4b5c;">
-                            <label style="color: #ff4b5c;">ACCESS CREDENTIALS</label>
+                        <div style="background: rgba(0,0,0,0.3); padding: 10px; margin-bottom: 15px; border-left: 2px solid #ff4b5c;" id="auth-box-border">
+                            <label style="color: #ff4b5c;" id="ui-lbl-access">ACCESS CREDENTIALS</label>
                             <div class="form-row" style="margin-bottom:0;">
-                                <div><label>Username</label><input type="text" id="emp-user" required autocomplete="off"></div>
-                                <div><label>Password</label><input type="text" id="emp-pass" required autocomplete="off"></div>
+                                <div><label id="ui-lbl-user">Username</label><input type="text" id="emp-user" required autocomplete="off"></div>
+                                <div><label id="ui-lbl-pass">Password</label><input type="text" id="emp-pass" required autocomplete="off"></div>
                             </div>
                         </div>
 
                         <div class="form-row">
-                            <div><label>Reg. Date</label><input type="date" id="emp-reg-date" required></div>
+                            <div><label id="ui-lbl-reg">Reg. Date</label><input type="date" id="emp-reg-date" required></div>
                             <div>
-                                <label>Clearance Level</label>
+                                <label id="ui-lbl-perm">Clearance Level</label>
                                 <select id="emp-perm">
-                                    <option value="Standard">Standard Operative</option>
-                                    <option value="Manager">Field Manager</option>
-                                    <option value="Admin">Alpha Admin</option>
+                                    <option value="Standard" id="ui-opt-std">Standard Operative</option>
+                                    <option value="Manager" id="ui-opt-mgr">Field Manager</option>
+                                    <option value="Admin" id="ui-opt-admin">Alpha Admin</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-row">
-                            <div><label>Contract Start</label><input type="date" id="emp-start"></div>
-                            <div><label>Contract End</label><input type="date" id="emp-end"></div>
+                            <div><label id="ui-lbl-start">Contract Start</label><input type="date" id="emp-start"></div>
+                            <div><label id="ui-lbl-end">Contract End</label><input type="date" id="emp-end"></div>
                         </div>
 
                         <div class="form-group">
-                            <label>Home Address (Optional)</label>
+                            <label id="ui-lbl-address">Home Address (Optional)</label>
                             <input type="text" id="emp-address">
                         </div>
 
@@ -174,11 +182,11 @@
 
                 <div class="panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ff4b5c; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h3 style="border: none; margin: 0; padding: 0; color: #ff4b5c;"><i class="fas fa-users"></i> ACTIVE PERSONNEL</h3>
-                        <button class="btn btn-green" style="width: auto; padding: 5px 10px; font-size: 0.8rem;" onclick="exportRosterToCSV()"><i class="fas fa-file-csv"></i> EXPORT ROSTER</button>
+                        <h3 style="border: none; margin: 0; padding: 0; color: #ff4b5c;" id="ui-panel2-title"><i class="fas fa-users"></i> ACTIVE PERSONNEL</h3>
+                        <button class="btn btn-green" style="width: auto; padding: 5px 10px; font-size: 0.8rem;" onclick="exportRosterToCSV()" id="ui-btn-export"><i class="fas fa-file-csv"></i> EXPORT ROSTER</button>
                     </div>
                     <div id="employee-list">
-                        <p style="text-align: center; color: gray;">Scanning database...</p>
+                        <p style="text-align: center; color: gray;" id="ui-msg-scan">Scanning database...</p>
                     </div>
                 </div>
             </div>
@@ -191,31 +199,31 @@
                 <div class="dossier-photo" id="v-photo"></div>
                 <div>
                     <h2 style="margin: 0 0 5px 0; color: #00f2ff; letter-spacing: 1px;" id="v-name">NAME</h2>
-                    <div class="d-label" style="color: #ff4b5c; font-weight: bold;" id="v-id">ID</div>
+                    <div class="d-label" style="color: #ff4b5c; font-weight: bold;"><span id="ui-modal-id">ID</span>: <span id="v-id">---</span></div>
                     <div class="d-val" style="margin-bottom: 0;" id="v-title">TITLE</div>
                 </div>
             </div>
             
             <div class="dossier-grid">
-                <div><div class="d-label">Username</div><div class="d-val highlight" id="v-user"></div></div>
-                <div><div class="d-label">Clearance</div><div class="d-val" id="v-perm"></div></div>
+                <div><div class="d-label" id="ui-modal-user">Username</div><div class="d-val highlight" id="v-user"></div></div>
+                <div><div class="d-label" id="ui-modal-perm">Clearance</div><div class="d-val" id="v-perm"></div></div>
                 
-                <div><div class="d-label">Salary</div><div class="d-val" id="v-salary"></div></div>
-                <div><div class="d-label">Reg. Date</div><div class="d-val" id="v-reg"></div></div>
+                <div><div class="d-label" id="ui-modal-salary">Salary</div><div class="d-val" id="v-salary"></div></div>
+                <div><div class="d-label" id="ui-modal-reg">Reg. Date</div><div class="d-val" id="v-reg"></div></div>
                 
-                <div><div class="d-label">Contract Start</div><div class="d-val" id="v-start"></div></div>
-                <div><div class="d-label">Contract End</div><div class="d-val" id="v-end"></div></div>
+                <div><div class="d-label" id="ui-modal-start">Contract Start</div><div class="d-val" id="v-start"></div></div>
+                <div><div class="d-label" id="ui-modal-end">Contract End</div><div class="d-val" id="v-end"></div></div>
                 
-                <div style="grid-column: span 2;"><div class="d-label">Address</div><div class="d-val" id="v-address"></div></div>
+                <div style="grid-column: span 2;"><div class="d-label" id="ui-modal-address">Address</div><div class="d-val" id="v-address"></div></div>
             </div>
 
-            <div style="border-top: 1px dashed rgba(0,242,255,0.3); padding-top: 20px; display: flex; gap: 10px;">
-                <a href="#" id="v-cv" target="_blank" class="btn btn-green" style="text-align: center; text-decoration: none; display: none;"><i class="fas fa-file-pdf"></i> VIEW CV</a>
-                <a href="#" id="v-cert" target="_blank" class="btn btn-green" style="text-align: center; text-decoration: none; display: none;"><i class="fas fa-certificate"></i> VIEW CERT</a>
-				<a href="#" id="v-email" class="btn btn-green" style="text-align: center; text-decoration: none;"><i class="fas fa-envelope"></i> EMAIL OPERATIVE</a>
+            <div style="border-top: 1px dashed rgba(0,242,255,0.3); padding-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <a href="#" id="v-cv" target="_blank" class="btn btn-green" style="text-align: center; text-decoration: none; display: none; width:calc(50% - 5px); box-sizing:border-box;"><i class="fas fa-file-pdf"></i> <span id="ui-btn-cv">VIEW CV</span></a>
+                <a href="#" id="v-cert" target="_blank" class="btn btn-green" style="text-align: center; text-decoration: none; display: none; width:calc(50% - 5px); box-sizing:border-box;"><i class="fas fa-certificate"></i> <span id="ui-btn-cert">VIEW CERT</span></a>
+                <a href="#" id="v-email" class="btn btn-green" style="text-align: center; text-decoration: none; margin-top:5px;"><i class="fas fa-envelope"></i> <span id="ui-btn-email">EMAIL OPERATIVE</span></a>
             </div>
 
-            <button class="btn btn-danger" style="margin-top: 20px; width: 100%; padding: 10px; font-size: 1rem;" onclick="closeViewModal()">CLOSE DOSSIER</button>
+            <button class="btn btn-danger" style="margin-top: 20px; width: 100%; padding: 10px; font-size: 1rem;" onclick="closeViewModal()" id="ui-btn-close">CLOSE DOSSIER</button>
         </div>
     </div>
 
@@ -242,17 +250,180 @@
         const secondaryAuth = getAuth(secondaryApp);
 
         let currentEditId = null;
-        let globalEmployees = {}; // Stores intel for the View Modal
+        let globalEmployees = {}; 
 
+        /* ================= BILINGUAL DICTIONARY MATRIX ================= */
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                btnReturn: "RETURN TO BASE",
+                headerTitle: "<i class='fas fa-id-card'></i> PERSONNEL REGISTRY COMMAND",
+                panel1Title: "<i class='fas fa-user-edit'></i> NEW OPERATIVE DOSSIER",
+                lblPhoto: "Click to Upload Photo",
+                lblName: "Full Name",
+                lblId: "Employee ID (e.g. AGENT-007)",
+                lblTitle: "Position / Title",
+                lblSalary: "Salary ($)",
+                lblAccess: "ACCESS CREDENTIALS",
+                lblUser: "Username",
+                lblPass: "Password",
+                lblReg: "Reg. Date",
+                lblPerm: "Clearance Level",
+                optStd: "Standard Operative",
+                optMgr: "Field Manager",
+                optAdmin: "Alpha Admin",
+                lblStart: "Contract Start",
+                lblEnd: "Contract End",
+                lblAddress: "Home Address (Optional)",
+                lblCv: "Upload CV",
+                lblCert: "Upload Cert",
+                btnRegister: "REGISTER OPERATIVE",
+                btnUpdate: "UPDATE DOSSIER",
+                btnCancel: "CANCEL EDIT",
+                panel2Title: "<i class='fas fa-users'></i> ACTIVE PERSONNEL",
+                btnExport: "<i class='fas fa-file-csv'></i> EXPORT ROSTER",
+                msgScan: "Scanning database...",
+                msgEmpty: "No personnel found.",
+                btnView: "<i class='fas fa-eye'></i> VIEW",
+                btnEdit: "<i class='fas fa-edit'></i> EDIT",
+                modalId: "ID",
+                modUser: "Username",
+                modPerm: "Clearance",
+                modSalary: "Salary",
+                modReg: "Reg. Date",
+                modStart: "Contract Start",
+                modEnd: "Contract End",
+                modAddress: "Address",
+                btnModalCv: "VIEW CV",
+                btnModalCert: "VIEW CERT",
+                btnModalEmail: "EMAIL OPERATIVE",
+                btnModalClose: "CLOSE DOSSIER",
+                alertProcess: "PROCESSING...",
+                alertDel: "WARNING: You are about to terminate this personnel record. Proceed?",
+                alertUpdSuccess: "Dossier Updated Successfully.",
+                alertNewSuccess: "New Operative Registered & Credentials Generated."
+            },
+            ar: {
+                btnReturn: "العودة للقاعدة الرئيسية",
+                headerTitle: "<i class='fas fa-id-card'></i> وحدة قيادة سجل الموظفين",
+                panel1Title: "<i class='fas fa-user-edit'></i> ملف موظف جديد",
+                lblPhoto: "اضغط لرفع الصورة",
+                lblName: "الاسم الكامل",
+                lblId: "الرقم الوظيفي (مثال AGENT-007)",
+                lblTitle: "المنصب / المسمى الوظيفي",
+                lblSalary: "الراتب ($)",
+                lblAccess: "بيانات الدخول للنظام",
+                lblUser: "اسم المستخدم",
+                lblPass: "كلمة المرور",
+                lblReg: "تاريخ التسجيل",
+                lblPerm: "مستوى الصلاحيات",
+                optStd: "موظف قياسي",
+                optMgr: "مدير ميداني",
+                optAdmin: "مدير نظام",
+                lblStart: "بداية العقد",
+                lblEnd: "نهاية العقد",
+                lblAddress: "عنوان السكن (اختياري)",
+                lblCv: "رفع السيرة الذاتية",
+                lblCert: "رفع الشهادة",
+                btnRegister: "تسجيل الموظف",
+                btnUpdate: "تحديث بيانات الموظف",
+                btnCancel: "إلغاء التعديل",
+                panel2Title: "<i class='fas fa-users'></i> الموظفون الحاليون",
+                btnExport: "<i class='fas fa-file-csv'></i> استخراج السجل",
+                msgScan: "جاري فحص قاعدة البيانات...",
+                msgEmpty: "لا يوجد موظفين مسجلين.",
+                btnView: "<i class='fas fa-eye'></i> عرض",
+                btnEdit: "<i class='fas fa-edit'></i> تعديل",
+                modalId: "الرقم",
+                modUser: "اسم المستخدم",
+                modPerm: "الصلاحية",
+                modSalary: "الراتب",
+                modReg: "تاريخ التسجيل",
+                modStart: "بداية العقد",
+                modEnd: "نهاية العقد",
+                modAddress: "العنوان",
+                btnModalCv: "عرض السيرة الذاتية",
+                btnModalCert: "عرض الشهادة",
+                btnModalEmail: "مراسلة الموظف",
+                btnModalClose: "إغلاق الملف",
+                alertProcess: "جاري المعالجة...",
+                alertDel: "تحذير: أنت على وشك إنهاء وحذف ملف هذا الموظف. هل ترغب بالاستمرار؟",
+                alertUpdSuccess: "تم تحديث بيانات الموظف بنجاح.",
+                alertNewSuccess: "تم تسجيل الموظف وإنشاء بيانات الدخول بنجاح."
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            // Direction & Buttons
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+            
+            // Fix Border RTL Logic for Credentials Box
+            document.getElementById('auth-box-border').style.borderLeft = window.currentLang === 'ar' ? 'none' : '2px solid #ff4b5c';
+            document.getElementById('auth-box-border').style.borderRight = window.currentLang === 'ar' ? '2px solid #ff4b5c' : 'none';
+
+            // Base UI Labels
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-header-title').innerHTML = dict.headerTitle;
+            document.getElementById('ui-panel1-title').innerHTML = dict.panel1Title;
+            document.getElementById('ui-lbl-photo').innerText = dict.lblPhoto;
+            document.getElementById('ui-lbl-name').innerText = dict.lblName;
+            document.getElementById('ui-lbl-id').innerText = dict.lblId;
+            document.getElementById('ui-lbl-title').innerText = dict.lblTitle;
+            document.getElementById('ui-lbl-salary').innerText = dict.lblSalary;
+            document.getElementById('ui-lbl-access').innerText = dict.lblAccess;
+            document.getElementById('ui-lbl-user').innerText = dict.lblUser;
+            document.getElementById('ui-lbl-pass').innerText = dict.lblPass;
+            document.getElementById('ui-lbl-reg').innerText = dict.lblReg;
+            document.getElementById('ui-lbl-perm').innerText = dict.lblPerm;
+            document.getElementById('ui-opt-std').innerText = dict.optStd;
+            document.getElementById('ui-opt-mgr').innerText = dict.optMgr;
+            document.getElementById('ui-opt-admin').innerText = dict.optAdmin;
+            document.getElementById('ui-lbl-start').innerText = dict.lblStart;
+            document.getElementById('ui-lbl-end').innerText = dict.lblEnd;
+            document.getElementById('ui-lbl-address').innerText = dict.lblAddress;
+            
+            if(!document.getElementById('emp-cv').files.length) document.getElementById('lbl-cv').innerText = dict.lblCv;
+            if(!document.getElementById('emp-cert').files.length) document.getElementById('lbl-cert').innerText = dict.lblCert;
+
+            document.getElementById('btn-submit').innerText = currentEditId ? dict.btnUpdate : dict.btnRegister;
+            document.getElementById('btn-cancel').innerText = dict.btnCancel;
+            
+            document.getElementById('ui-panel2-title').innerHTML = dict.panel2Title;
+            document.getElementById('ui-btn-export').innerHTML = dict.btnExport;
+
+            // Modal UI Labels
+            document.getElementById('ui-modal-id').innerText = dict.modalId;
+            document.getElementById('ui-modal-user').innerText = dict.modUser;
+            document.getElementById('ui-modal-perm').innerText = dict.modPerm;
+            document.getElementById('ui-modal-salary').innerText = dict.modSalary;
+            document.getElementById('ui-modal-reg').innerText = dict.modReg;
+            document.getElementById('ui-modal-start').innerText = dict.modStart;
+            document.getElementById('ui-modal-end').innerText = dict.modEnd;
+            document.getElementById('ui-modal-address').innerText = dict.modAddress;
+            document.getElementById('ui-btn-cv').innerText = dict.btnModalCv;
+            document.getElementById('ui-btn-cert').innerText = dict.btnModalCert;
+            document.getElementById('ui-btn-email').innerText = dict.btnModalEmail;
+            document.getElementById('ui-btn-close').innerText = dict.btnModalClose;
+
+            fetchEmployees(); // Re-render list to translate action buttons
+        }
+
+        // --- AUTH & INITIALIZATION ---
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
-                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED. CLASS 4 RESTRICTION.</h1>";
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
                 setTimeout(() => { window.location.href = "login.html"; }, 2000);
             } else {
                 fetchEmployees();
             }
         });
 
+        // --- UI FILE HELPERS ---
         window.previewPhoto = function(e) {
             const file = e.target.files[0];
             if(file){
@@ -273,19 +444,18 @@
             }
         }
 
+        // --- SUBMIT / UPDATE DOSSIER ---
         document.getElementById('emp-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit');
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
+            const dict = dictionary[window.currentLang];
+            btn.innerText = dict.alertProcess; btn.disabled = true;
 
             try {
                 const email = document.getElementById('emp-user').value + "@alkhat.internal";
                 const password = document.getElementById('emp-pass').value;
                 
-                let photoUrl = "";
-                let cvUrl = "";
-                let certUrl = "";
-
+                let photoUrl = "", cvUrl = "", certUrl = "";
                 const photoFile = document.getElementById('emp-photo').files[0];
                 const cvFile = document.getElementById('emp-cv').files[0];
                 const certFile = document.getElementById('emp-cert').files[0];
@@ -306,9 +476,7 @@
                     contractStart: document.getElementById('emp-start').value,
                     contractEnd: document.getElementById('emp-end').value,
                     address: document.getElementById('emp-address').value,
-                    photo: photoUrl,
-                    cv: cvUrl,
-                    cert: certUrl,
+                    photo: photoUrl, cv: cvUrl, cert: certUrl,
                     timestamp: new Date()
                 };
 
@@ -318,13 +486,13 @@
                     if(!certUrl) delete payload.cert;
                     
                     await updateDoc(doc(db, "employees", currentEditId), payload);
-                    alert("Dossier Updated Successfully.");
+                    alert(dict.alertUpdSuccess);
                 } else {
                     const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
                     payload.uid = userCredential.user.uid; 
                     
                     await addDoc(collection(db, "employees"), payload);
-                    alert("New Operative Registered & Credentials Generated.");
+                    alert(dict.alertNewSuccess);
                 }
 
                 resetForm();
@@ -334,7 +502,7 @@
                 console.error(error);
                 alert("Operation Failed: " + error.message);
             } finally {
-                btn.innerText = currentEditId ? "UPDATE DOSSIER" : "REGISTER OPERATIVE";
+                btn.innerText = currentEditId ? dict.btnUpdate : dict.btnRegister;
                 btn.disabled = false;
             }
         });
@@ -346,32 +514,42 @@
             return await getDownloadURL(storageRef);
         }
 
+        // --- FETCH ROSTER ---
         async function fetchEmployees() {
             const container = document.getElementById('employee-list');
+            const dict = dictionary[window.currentLang];
             container.innerHTML = "";
-            globalEmployees = {}; // Reset global intel
+            globalEmployees = {}; 
             
             const q = query(collection(db, "employees"), orderBy("timestamp", "desc"));
             const snapshot = await getDocs(q);
 
-            if(snapshot.empty) { container.innerHTML = "<p>No personnel found.</p>"; return; }
+            if(snapshot.empty) { container.innerHTML = `<p style="text-align:center; color:gray;">${dict.msgEmpty}</p>`; return; }
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
-                globalEmployees[docSnap.id] = data; // Save to intel grid
+                globalEmployees[docSnap.id] = data; 
                 const photo = data.photo || "https://via.placeholder.com/50";
                 
+                // Permission translation mappings for the card display
+                let dispPerm = data.permission;
+                if(window.currentLang === 'ar') {
+                    if(dispPerm === "Standard") dispPerm = "موظف قياسي";
+                    if(dispPerm === "Manager") dispPerm = "مدير ميداني";
+                    if(dispPerm === "Admin") dispPerm = "مدير نظام";
+                }
+
                 container.innerHTML += `
                     <div class="emp-card">
                         <div class="emp-avatar" style="background-image: url('${photo}');"></div>
                         <div class="emp-info">
                             <h4>${data.name} <span style="font-size:0.7rem; color:#00f2ff;">[${data.empId}]</span></h4>
-                            <p>${data.title} | ${data.permission}</p>
+                            <p>${data.title} | ${dispPerm}</p>
                             <p style="color:#666;">User: ${data.username}</p>
                         </div>
                         <div class="emp-actions">
-                            <button class="btn" style="padding: 5px; font-size: 0.8rem;" onclick="viewEmployee('${docSnap.id}')"><i class="fas fa-eye"></i> VIEW</button>
-                            <button class="btn btn-green" style="padding: 5px; font-size: 0.8rem;" onclick="editEmployee('${docSnap.id}')"><i class="fas fa-edit"></i> EDIT</button>
+                            <button class="btn" style="padding: 5px; font-size: 0.8rem;" onclick="viewEmployee('${docSnap.id}')">${dict.btnView}</button>
+                            <button class="btn btn-green" style="padding: 5px; font-size: 0.8rem;" onclick="editEmployee('${docSnap.id}')">${dict.btnEdit}</button>
                             <button class="btn btn-danger" style="padding: 5px; font-size: 0.8rem;" onclick="deleteEmployee('${docSnap.id}')">X</button>
                         </div>
                     </div>
@@ -389,24 +567,28 @@
             document.getElementById('v-title').innerText = data.title;
             
             document.getElementById('v-user').innerText = data.username;
-            document.getElementById('v-perm').innerText = data.permission;
+            
+            // Translate Permission inside Modal
+            let dispPerm = data.permission;
+            if(window.currentLang === 'ar') {
+                if(dispPerm === "Standard") dispPerm = "موظف قياسي";
+                if(dispPerm === "Manager") dispPerm = "مدير ميداني";
+                if(dispPerm === "Admin") dispPerm = "مدير نظام";
+            }
+            document.getElementById('v-perm').innerText = dispPerm;
+            
             document.getElementById('v-salary').innerText = "$" + data.salary;
             document.getElementById('v-reg').innerText = data.regDate;
             document.getElementById('v-start').innerText = data.contractStart || "N/A";
             document.getElementById('v-end').innerText = data.contractEnd || "N/A";
-            document.getElementById('v-address').innerText = data.address || "No address on file.";
+            document.getElementById('v-address').innerText = data.address || (window.currentLang === 'en' ? "No address on file." : "لا يوجد عنوان مسجل.");
 
-            // Show CV link if exists
             const cvBtn = document.getElementById('v-cv');
-            if(data.cv) { cvBtn.style.display = "block"; cvBtn.href = data.cv; } 
-            else { cvBtn.style.display = "none"; }
+            if(data.cv) { cvBtn.style.display = "block"; cvBtn.href = data.cv; } else { cvBtn.style.display = "none"; }
 
-            // Show Cert link if exists
             const certBtn = document.getElementById('v-cert');
-            if(data.cert) { certBtn.style.display = "block"; certBtn.href = data.cert; } 
-            else { certBtn.style.display = "none"; }
-			
-			// Generate the secure Broadcast link with the operative's intel
+            if(data.cert) { certBtn.style.display = "block"; certBtn.href = data.cert; } else { certBtn.style.display = "none"; }
+            
             const emailBtn = document.getElementById('v-email');
             const operativeEmail = data.username + "@alkhat.internal"; 
             emailBtn.href = `admin_mail.html?name=${encodeURIComponent(data.name)}&email=${encodeURIComponent(operativeEmail)}`;
@@ -414,10 +596,9 @@
             document.getElementById('view-modal').style.display = "flex";
         }
 
-        window.closeViewModal = function() {
-            document.getElementById('view-modal').style.display = "none";
-        }
+        window.closeViewModal = function() { document.getElementById('view-modal').style.display = "none"; }
 
+        // --- EDITING / CANCEL / DELETE ---
         window.editEmployee = function(id) {
             const data = globalEmployees[id];
             currentEditId = id;
@@ -433,8 +614,9 @@
             document.getElementById('emp-end').value = data.contractEnd;
             document.getElementById('emp-address').value = data.address;
 
+            const dict = dictionary[window.currentLang];
             const btn = document.getElementById('btn-submit');
-            btn.innerText = "UPDATE DOSSIER";
+            btn.innerText = dict.btnUpdate;
             btn.classList.remove('btn-green');
             document.getElementById('btn-cancel').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -448,35 +630,35 @@
             document.getElementById('lbl-cv').parentElement.classList.remove('active');
             document.getElementById('lbl-cert').parentElement.classList.remove('active');
 
+            const dict = dictionary[window.currentLang];
             const btn = document.getElementById('btn-submit');
-            btn.innerText = "REGISTER OPERATIVE";
+            document.getElementById('lbl-cv').innerText = dict.lblCv;
+            document.getElementById('lbl-cert').innerText = dict.lblCert;
+            
+            btn.innerText = dict.btnRegister;
             btn.classList.add('btn-green');
             document.getElementById('btn-cancel').style.display = 'none';
         }
 
         window.deleteEmployee = async function(id) {
-            if(confirm("WARNING: You are about to terminate this personnel record. Proceed?")) {
+            const dict = dictionary[window.currentLang];
+            if(confirm(dict.alertDel)) {
                 await deleteDoc(doc(db, "employees", id));
                 fetchEmployees();
             }
         }
-		
-		// --- CSV EXPORT ENGINE (ROSTER) ---
+        
+        // --- CSV EXPORT ---
         window.exportRosterToCSV = function() {
-            // We use the globalEmployees object we already created!
             const employeeIds = Object.keys(globalEmployees);
-            if(employeeIds.length === 0) { alert("No personnel data to export."); return; }
+            if(employeeIds.length === 0) { alert(dictionary[window.currentLang].msgEmpty); return; }
 
-            // Create CSV Headers
             let csvContent = "Agent ID,Full Name,Title,Clearance,Username,Salary,Reg Date,Contract Start,Contract End\n";
-
-            // Loop through the data
             employeeIds.forEach(id => {
                 const data = globalEmployees[id];
                 csvContent += `"${data.empId}","${data.name}","${data.title}","${data.permission}","${data.username}","${data.salary}","${data.regDate}","${data.contractStart || 'N/A'}","${data.contractEnd || 'N/A'}"\n`;
             });
 
-            // Generate Download
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
