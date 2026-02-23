@@ -179,6 +179,16 @@
             <button type="submit" class="btn" id="btn-login">INITIATE HANDSHAKE</button>
         </form>
         <p style="font-size: 0.7rem; color: #555; margin-top: 20px;" id="ui-desc">Restricted Network. All access attempts are logged and monitored by Alpha Command.</p>
+		<div style="margin-top: auto; padding-top: 20px;">
+			<button onclick="handleReturnToBase()" class="btn" style="font-size: 0.8rem; width: 100%;" id="ui-btn-return">
+				RETURN TO BASE
+			</button>
+		</div>
+		<div style="margin-top: auto; padding-top: 20px;">
+            <button onclick="handleLogout()" class="btn" style="border-color: var(--term-red); color: var(--term-red); font-size: 0.8rem; padding: 10px;" id="btn-disconnect">
+                <i class="fas fa-power-off"></i> DISCONNECT UPLINK
+            </button>
+        </div>
     </div>
 
     <div id="terminal-overlay">
@@ -188,7 +198,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -321,6 +331,15 @@
 			setTimeout(() => {
 				window.location.href = "employee_dashboard.html";
 			}, 7500);
+		}
+		
+		// A "dummy" version just for the login page to keep the visual effect
+		window.handleLogout = function() {
+			const loader = document.getElementById('system-loader');
+			if (loader) loader.classList.add('active');
+			setTimeout(() => {
+				window.location.reload(); // Just refreshes the system
+			}, 800);
 		}
     </script>
 </body>

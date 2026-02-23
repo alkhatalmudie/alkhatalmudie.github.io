@@ -316,7 +316,7 @@
 
     <script type="module">
         import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc, doc } from './assets/js/firebase-init.js';
         import { getDocs, deleteDoc, query, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -769,6 +769,57 @@
             link.click();
             document.body.removeChild(link);
         }
+		
+        /* ============================================================
+		   ALPHA COMMAND: UNIVERSAL SYSTEM LOGIC
+		   Handles: Page Transitions, Return to Base, and Secure Logout
+		   ============================================================ */
+
+		// 1. DISCONNECT UPLINK (Secure Logout)
+		window.handleLogout = function() {
+			const loader = document.getElementById('system-loader');
+			const loaderText = loader ? loader.querySelector('.loader-text') : null;
+			
+			// Update text based on current language
+			if (loaderText) {
+				loaderText.innerHTML = (window.currentLang === 'ar') 
+					? "جاري قطع الاتصال المشفر<span class='dots'>...</span>" 
+					: "DISCONNECTING SECURE UPLINK<span class='dots'>...</span>";
+			}
+
+			// Trigger glowing overlay
+			if (loader) loader.classList.add('active');
+
+			// Execute Firebase Sign Out
+			setTimeout(() => {
+				signOut(auth).then(() => { 
+					window.location.href = "login_emp.html"; 
+				}).catch((err) => {
+					if (loader) loader.classList.remove('active');
+					console.error("UPLINK FAILURE:", err);
+					alert("DISCONNECT ERROR: " + err.message);
+				});
+			}, 800);
+		};
+
+		// 2. RETURN TO BASE (Home Navigation)
+		window.handleReturnToBase = function() {
+			const loader = document.getElementById('system-loader');
+			const loaderText = loader ? loader.querySelector('.loader-text') : null;
+
+			if (loaderText) {
+				loaderText.innerHTML = (window.currentLang === 'ar') 
+					? "جاري العودة للقاعدة الرئيسية<span class='dots'>...</span>" 
+					: "RETURNING TO COMMAND BASE<span class='dots'>...</span>";
+			}
+
+			if (loader) loader.classList.add('active');
+
+			// Smooth transition to public site
+			setTimeout(() => {
+				window.location.href = 'index.html';
+			}, 600);
+		};
     </script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
