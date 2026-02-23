@@ -126,32 +126,11 @@
             <p>Enhance your translation requests with our premium add-on services. Secure, fast, and globally recognized.</p>
         </div>
 
-        <div class="shop-grid">
-            
-            <div class="product-card">
-                <i class="fas fa-stamp product-icon"></i>
-                <h3 class="product-title">Apostille Legalization</h3>
-                <p class="product-desc">Official government authentication stamp applied to your translated documents, making them legally valid internationally.</p>
-                <div class="product-price">25.00 JOD</div>
-                <button class="btn-order" onclick="purchaseItem('Apostille Legalization Stamp', '25.00')">Order Now</button>
+        <div class="shop-grid" id="dynamic-product-grid">
+            <div style="text-align: center; color: rgba(255,255,255,0.6); grid-column: 1 / -1; padding: 50px;">
+                <i class="fas fa-circle-notch fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                <p>Loading premium services...</p>
             </div>
-
-            <div class="product-card">
-                <i class="fas fa-shipping-fast product-icon" style="color: var(--brand-cyan);"></i>
-                <h3 class="product-title">Certified Hard Copy</h3>
-                <p class="product-desc">We will print, physically stamp, and deliver the certified hard copy of your translation directly to your doorstep via secure courier.</p>
-                <div class="product-price">10.00 JOD</div>
-                <button class="btn-order" onclick="purchaseItem('Certified Hard Copy Delivery', '10.00')">Order Now</button>
-            </div>
-
-            <div class="product-card">
-                <i class="fas fa-bolt product-icon" style="color: #ffc107;"></i>
-                <h3 class="product-title">Flash Translation (1-Hour)</h3>
-                <p class="product-desc">Bump your document to the absolute front of the queue. Guaranteed translation delivery within 60 minutes for documents under 3 pages.</p>
-                <div class="product-price">15.00 JOD</div>
-                <button class="btn-order" onclick="purchaseItem('Flash Priority Processing (1-Hour)', '15.00')">Order Now</button>
-            </div>
-
         </div>
     </main>
 
@@ -260,8 +239,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
             authDomain: "al-khat-backend.firebaseapp.com",
@@ -273,26 +252,69 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app); // Initialize Firestore here
 
-        // Check if user is logged in for the Header UI
+        // 1. AUTH CHECK FOR HEADER
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('user-profile-section').classList.remove('user-status-hidden');
                 document.getElementById('user-display-name').innerText = user.displayName || "Client";
-                document.querySelector('.auth-buttons').style.display = 'none'; // Hide login/signup in mobile menu
+                document.querySelector('.auth-buttons').style.display = 'none'; 
             }
         });
 
-        // THE CHECKOUT PIPELINE HOOK
+        // 2. DYNAMICALLY LOAD PRODUCTS FROM FIREBASE
+        async function loadShopInventory() {
+            const grid = document.getElementById('dynamic-product-grid');
+            try {
+                const q = query(collection(db, "shop_inventory"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                
+                grid.innerHTML = ""; // Clear loader
+                
+                if(snapshot.empty) {
+                    grid.innerHTML = `<div style="text-align:center; color:#aaa; grid-column: 1/-1;">Check back soon for new services!</div>`;
+                    return;
+                }
+
+                // Alternate colors for a cool UI effect
+                const colors = ["var(--brand-magenta)", "var(--brand-cyan)", "#ffc107", "#00ff88"];
+                let colorIndex = 0;
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const iconColor = colors[colorIndex % colors.length];
+                    const priceFormatted = parseFloat(data.price).toFixed(2);
+                    
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <i class="${data.icon} product-icon" style="color: ${iconColor}; filter: drop-shadow(0 0 10px ${iconColor}40);"></i>
+                            <h3 class="product-title">${data.title}</h3>
+                            <p class="product-desc">${data.description}</p>
+                            <div class="product-price">${priceFormatted} JOD</div>
+                            <button class="btn-order" onclick="purchaseItem('${data.title.replace(/'/g, "\\'")}', '${priceFormatted}')">Order Now</button>
+                        </div>
+                    `;
+                    colorIndex++;
+                });
+
+            } catch (error) {
+                console.error("Store Error:", error);
+                grid.innerHTML = `<div style="color:#ff4b5c; text-align:center; grid-column:1/-1;">Error establishing secure link to inventory databanks.</div>`;
+            }
+        }
+
+        // Initialize Shop
+        loadShopInventory();
+
+        // 3. CHECKOUT PIPELINE HOOK
         window.purchaseItem = function(productName, price) {
-            // Check if user is logged in before allowing purchase
             if (!auth.currentUser) {
                 alert("Please log in or create an account to purchase shop items.");
                 window.location.href = "login.html";
                 return;
             }
 
-            // Construct the payload to send to checkout.html
             const params = new URLSearchParams({
                 loc: "Online Shop",
                 from: "N/A",
@@ -303,13 +325,10 @@
                 price: price + " JOD"
             });
 
-            // Redirect to the Secure Checkout Gateway
             window.location.href = 'checkout.html?' + params.toString();
         }
 
-        window.handleLogout = function() {
-            signOut(auth).then(() => { window.location.reload(); });
-        }
+        window.handleLogout = function() { signOut(auth).then(() => { window.location.reload(); }); }
     </script>
 </body>
 </html>
