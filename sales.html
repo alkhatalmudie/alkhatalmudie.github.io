@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA COMMAND | Sales & Dispatch</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ALPHA BACKEND STYLE */
+        :root {
+            --term-bg: #050a15;
+            --term-cyan: #00f2ff;
+            --term-red: #ff4b5c;
+            --term-green: #00ff88;
+            --term-magenta: #ff00ff;
+            --term-panel: rgba(0, 242, 255, 0.03);
+            --term-border: rgba(0, 242, 255, 0.2);
+        }
+
+        body { 
+            background-color: var(--term-bg); color: var(--term-cyan); 
+            font-family: 'Share Tech Mono', monospace, sans-serif; 
+            margin: 0; padding: 0; transition: all 0.3s ease; 
+            display: flex; height: 100vh; overflow: hidden;
+        }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+
+        /* SIDEBAR */
+        .admin-sidebar { 
+            width: 260px; background: rgba(0, 0, 0, 0.8); border-right: 1px solid var(--term-border); 
+            padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; 
+            box-shadow: 2px 0 15px rgba(0, 242, 255, 0.05);
+        }
+        body[dir="rtl"] .admin-sidebar { border-right: none; border-left: 1px solid var(--term-border); }
+        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
+        .admin-sidebar-menu li { margin-bottom: 5px; }
+        .admin-sidebar-menu a { 
+            display: block; padding: 12px 15px; color: #888; text-decoration: none; 
+            border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem; letter-spacing: 1px;
+        }
+        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: var(--term-cyan); border-left-color: var(--term-cyan); }
+        body[dir="rtl"] .admin-sidebar-menu a { border-left: none; border-right: 3px solid transparent; }
+        body[dir="rtl"] .admin-sidebar-menu a:hover, body[dir="rtl"] .admin-sidebar-menu a.active { border-right-color: var(--term-cyan); }
+        .admin-sidebar-menu i { margin-right: 15px; width: 20px; text-align: center; }
+
+        /* MAIN CONTENT */
+        .admin-main-content { 
+            flex-grow: 1; padding: 30px; display: flex; flex-direction: column; overflow-y: auto; 
+            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--term-border); padding-bottom: 20px; margin-bottom: 30px; }
+        .header-title { margin: 0; font-size: 1.8rem; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+
+        /* GRID LAYOUT */
+        .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        @media(max-width: 1200px) { .top-grid { grid-template-columns: 1fr; } }
+        
+        .panel { 
+            border: 1px solid var(--term-border); background: rgba(0,0,0,0.6); 
+            padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative; overflow: hidden;
+        }
+        .panel h3 { margin-top: 0; color: var(--term-green); border-bottom: 1px dashed var(--term-green); padding-bottom: 10px; font-size: 1.2rem; }
+        .panel.magenta-theme { border-color: rgba(255, 0, 255, 0.3); }
+        .panel.magenta-theme h3 { color: var(--term-magenta); border-bottom-color: var(--term-magenta); }
+
+        /* FORMS */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px; box-sizing: border-box; background: rgba(0, 242, 255, 0.05); 
+            border: 1px solid rgba(0, 242, 255, 0.2); color: white; font-family: 'Share Tech Mono', monospace;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--term-cyan); outline: none; }
+        .panel.magenta-theme input, .panel.magenta-theme select { background: rgba(255, 0, 255, 0.05); border-color: rgba(255, 0, 255, 0.2); }
+        .panel.magenta-theme input:focus, .panel.magenta-theme select:focus { border-color: var(--term-magenta); }
+
+        /* BUTTONS */
+        .btn { 
+            background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); 
+            padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; 
+            transition: 0.3s; width: 100%; text-transform: uppercase;
+        }
+        .btn:hover { background: var(--term-cyan); color: var(--term-bg); }
+        .btn-magenta { border-color: var(--term-magenta); color: var(--term-magenta); }
+        .btn-magenta:hover { background: var(--term-magenta); color: var(--term-bg); }
+        .btn-green { border-color: var(--term-green); color: var(--term-green); width: auto; padding: 5px 15px; font-size: 0.8rem; }
+        .btn-green:hover { background: var(--term-green); color: var(--term-bg); }
+
+        /* TABLE */
+        .data-table-container { overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { text-align: left; padding: 15px; border-bottom: 2px solid var(--term-border); color: var(--term-cyan); }
+        body[dir="rtl"] .data-table th { text-align: right; }
+        .data-table td { padding: 12px 15px; border-bottom: 1px solid rgba(0, 242, 255, 0.05); color: #ddd; }
+        .data-table tr:hover { background: rgba(0, 242, 255, 0.05); }
+        .badge { padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; }
+        .b-paid { background: rgba(0, 255, 136, 0.1); color: var(--term-green); border: 1px solid var(--term-green); }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--term-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--term-border); }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
+            <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #ff4b5c; margin-bottom: 10px;"></i>
+            <h3 style="margin:0; color:white; letter-spacing: 2px;">ALPHA <span style="color:var(--term-cyan);">COMMAND</span></h3>
+            <div style="font-size: 0.7rem; color: #888; margin-top: 5px;">SYS.VER 4.1 // SALES NODE</div>
+        </div>
+        
+        <ul class="admin-sidebar-menu">
+            <li><a href="alpha.html"><i class="fas fa-radar"></i> Main Dashboard</a></li>
+            <li><a href="sales.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Sales & Visas</a></li>
+            <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
+            <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
+            <li><a href="admin_pricing.html"><i class="fas fa-tags"></i> Pricing & Docs</a></li>
+            <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Comms & Inbox</a></li>
+            <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+            <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcasts</a></li>
+        </ul>
+
+        <div style="margin-top: auto; padding-top: 20px;">
+            <button onclick="handleLogout()" class="btn" style="border-color: #ff4b5c; color: #ff4b5c; font-size: 0.8rem; padding: 10px;">
+                <i class="fas fa-power-off"></i> DISCONNECT UPLINK
+            </button>
+        </div>
+    </aside>
+
+    <main class="admin-main-content">
+        <div class="header-top">
+            <h2 class="header-title" id="ui-header-title"><i class="fas fa-cash-register"></i> SALES & DISPATCH TERMINAL</h2>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.8rem; color: var(--term-green); border: 1px solid; padding: 6px 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 255, 136, 0.1);">
+                    <i class="fas fa-lock"></i> SECURE
+                </span>
+                <button class="btn" id="btn-lang" onclick="toggleLanguage()" style="width: auto; padding: 6px 15px; border-color: #ffc107; color: #ffc107;">عربي</button>
+            </div>
+        </div>
+
+        <div class="top-grid">
+            <div class="panel">
+                <h3 id="ui-visa-title"><i class="fas fa-passport"></i> GLOBAL VISA PROCESSING</h3>
+                <form id="form-visa">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-lbl-pax">Passenger Name (PAX)</label>
+                            <input type="text" id="v-name" required placeholder="Last/First">
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-pass">Passport Number</label>
+                            <input type="text" id="v-passport" required placeholder="Alphanumeric">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-lbl-nat">Nationality</label>
+                            <input type="text" id="v-nat" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-dest">Destination Code</label>
+                            <input type="text" id="v-dest" required placeholder="e.g. DXB, LHR">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-lbl-vtype">Visa Type</label>
+                            <select id="v-type">
+                                <option value="Tourist">Tourist (30 Days)</option>
+                                <option value="Business">Business (90 Days)</option>
+                                <option value="Transit">Transit (96 Hours)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-pnr">PNR / Booking Ref</label>
+                            <input type="text" id="v-pnr" required placeholder="6 Chars">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" id="btn-visa"><i class="fas fa-satellite-dish"></i> TRANSMIT VISA DATA</button>
+                </form>
+            </div>
+
+            <div class="panel magenta-theme">
+                <h3 id="ui-doc-title"><i class="fas fa-file-import"></i> INTERNAL DOCUMENT DISPATCH</h3>
+                <form id="form-dispatch">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-lbl-dtype">Document Type</label>
+                            <input type="text" id="d-type" required placeholder="e.g. Legal Contract">
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-pair">Language Pair</label>
+                            <input type="text" id="d-pair" required placeholder="e.g. AR > EN">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-lbl-pages">Page Count</label>
+                            <input type="number" id="d-pages" required min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-urg">Urgency Level</label>
+                            <select id="d-urg">
+                                <option value="Standard">Standard (48h)</option>
+                                <option value="Express">Express (24h)</option>
+                                <option value="Immediate">Immediate (Same Day)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label id="ui-lbl-assign">Assign To Operative</label>
+                        <select id="d-assignee" required>
+                            <option value="">Scanning registry...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-magenta" id="btn-dispatch"><i class="fas fa-paper-plane"></i> GENERATE & DISPATCH</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--term-cyan); padding-bottom: 10px; margin-bottom: 20px;">
+                <h3 style="border: none; margin: 0; padding: 0;" id="ui-log-title"><i class="fas fa-database"></i> GLOBAL SALES LEDGER</h3>
+                <button class="btn btn-green" onclick="exportSalesCSV()" id="btn-csv"><i class="fas fa-file-csv"></i> EXPORT LOGS</button>
+            </div>
+            
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="ui-th-inv">Invoice ID</th>
+                            <th id="ui-th-client">Client / Entity</th>
+                            <th id="ui-th-desc">Transaction Details</th>
+                            <th id="ui-th-amt">Amount (JOD)</th>
+                            <th id="ui-th-stat">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-log">
+                        <tr><td colspan="5" style="text-align: center; color:#888;">Synchronizing databanks...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, orderBy, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
+
+        let globalSalesData = [];
+
+        // --- BILINGUAL DICTIONARY ---
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                header: "<i class='fas fa-cash-register'></i> SALES & DISPATCH TERMINAL",
+                visaTitle: "<i class='fas fa-passport'></i> GLOBAL VISA PROCESSING",
+                lblPax: "Passenger Name (PAX)", lblPass: "Passport Number", lblNat: "Nationality", lblDest: "Destination Code", lblVtype: "Visa Type", lblPnr: "PNR / Booking Ref",
+                btnVisa: "<i class='fas fa-satellite-dish'></i> TRANSMIT VISA DATA",
+                docTitle: "<i class='fas fa-file-import'></i> INTERNAL DOCUMENT DISPATCH",
+                lblDtype: "Document Type", lblPair: "Language Pair", lblPages: "Page Count", lblUrg: "Urgency Level", lblAssign: "Assign To Operative",
+                btnDispatch: "<i class='fas fa-paper-plane'></i> GENERATE & DISPATCH",
+                logTitle: "<i class='fas fa-database'></i> GLOBAL SALES LEDGER", btnCsv: "<i class='fas fa-file-csv'></i> EXPORT LOGS",
+                thInv: "Invoice ID", thClient: "Client / Entity", thDesc: "Transaction Details", thAmt: "Amount (JOD)", thStat: "Status",
+                msgEmpty: "No sales records found.", msgSuccess: "Data transmitted successfully."
+            },
+            ar: {
+                header: "<i class='fas fa-cash-register'></i> منصة المبيعات والإرسال",
+                visaTitle: "<i class='fas fa-passport'></i> معالجة التأشيرات العالمية",
+                lblPax: "اسم المسافر", lblPass: "رقم الجواز", lblNat: "الجنسية", lblDest: "رمز الوجهة", lblVtype: "نوع التأشيرة", lblPnr: "رقم الحجز (PNR)",
+                btnVisa: "<i class='fas fa-satellite-dish'></i> إرسال بيانات التأشيرة",
+                docTitle: "<i class='fas fa-file-import'></i> إرسال المستندات الداخلي",
+                lblDtype: "نوع المستند", lblPair: "اللغات المترجمة", lblPages: "عدد الصفحات", lblUrg: "مستوى السرعة", lblAssign: "تعيين للموظف",
+                btnDispatch: "<i class='fas fa-paper-plane'></i> إنشاء وإرسال",
+                logTitle: "<i class='fas fa-database'></i> سجل المبيعات الشامل", btnCsv: "<i class='fas fa-file-csv'></i> تصدير السجل",
+                thInv: "رقم الفاتورة", thClient: "العميل", thDesc: "تفاصيل العملية", thAmt: "المبلغ (دينار)", thStat: "الحالة",
+                msgEmpty: "لا توجد سجلات مبيعات.", msgSuccess: "تم إرسال البيانات بنجاح."
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-header-title').innerHTML = dict.header;
+            document.getElementById('ui-visa-title').innerHTML = dict.visaTitle;
+            document.getElementById('ui-lbl-pax').innerText = dict.lblPax;
+            document.getElementById('ui-lbl-pass').innerText = dict.lblPass;
+            document.getElementById('ui-lbl-nat').innerText = dict.lblNat;
+            document.getElementById('ui-lbl-dest').innerText = dict.lblDest;
+            document.getElementById('ui-lbl-vtype').innerText = dict.lblVtype;
+            document.getElementById('ui-lbl-pnr').innerText = dict.lblPnr;
+            document.getElementById('btn-visa').innerHTML = dict.btnVisa;
+
+            document.getElementById('ui-doc-title').innerHTML = dict.docTitle;
+            document.getElementById('ui-lbl-dtype').innerText = dict.lblDtype;
+            document.getElementById('ui-lbl-pair').innerText = dict.lblPair;
+            document.getElementById('ui-lbl-pages').innerText = dict.lblPages;
+            document.getElementById('ui-lbl-urg').innerText = dict.lblUrg;
+            document.getElementById('ui-lbl-assign').innerText = dict.lblAssign;
+            document.getElementById('btn-dispatch').innerHTML = dict.btnDispatch;
+
+            document.getElementById('ui-log-title').innerHTML = dict.logTitle;
+            document.getElementById('btn-csv').innerHTML = dict.btnCsv;
+            document.getElementById('ui-th-inv').innerText = dict.thInv;
+            document.getElementById('ui-th-client').innerText = dict.thClient;
+            document.getElementById('ui-th-desc').innerText = dict.thDesc;
+            document.getElementById('ui-th-amt').innerText = dict.thAmt;
+            document.getElementById('ui-th-stat').innerText = dict.thStat;
+            
+            renderSalesTable();
+        }
+
+        // --- SECURITY PERIMETER ---
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.uid !== ADMIN_UID) {
+                document.body.innerHTML = "<h1 style='color:#ff4b5c; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
+                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            } else {
+                fetchEmployees();
+                fetchSalesLogs();
+            }
+        });
+
+        // --- FETCH EMPLOYEES FOR DISPATCH DROPDOWN ---
+        async function fetchEmployees() {
+            const select = document.getElementById('d-assignee');
+            try {
+                const snapshot = await getDocs(collection(db, "employees"));
+                select.innerHTML = `<option value="" disabled selected>Select Active Operative</option>`;
+                snapshot.forEach(docSnap => {
+                    const emp = docSnap.data();
+                    select.innerHTML += `<option value="${docSnap.id}">[${emp.empId}] ${emp.name} - ${emp.title}</option>`;
+                });
+            } catch(e) { select.innerHTML = `<option>Error loading registry</option>`; }
+        }
+
+        // --- FETCH SALES LOGS ---
+        async function fetchSalesLogs() {
+            const logBox = document.getElementById('sales-log');
+            globalSalesData = [];
+            try {
+                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                
+                if(snapshot.empty) { logBox.innerHTML = `<tr><td colspan='5'>No records.</td></tr>`; return; }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    // Only push items that look like checkouts/invoices or internal dispatches
+                    if(data.invoiceId || data.status) {
+                        globalSalesData.push({
+                            id: data.invoiceId || docSnap.id.substring(0,8).toUpperCase(),
+                            client: data.clientName || "INTERNAL",
+                            desc: data.docType || "Visa/Document",
+                            amt: parseFloat(data.price || data.totalPrice || 0).toFixed(2),
+                            status: data.status || "Completed",
+                            date: data.createdAt || new Date().toLocaleDateString()
+                        });
+                    }
+                });
+                renderSalesTable();
+            } catch(error) { logBox.innerHTML = `<tr><td colspan='5' style="color:red;">DB ERROR: ${error.message}</td></tr>`; }
+        }
+
+        function renderSalesTable() {
+            const logBox = document.getElementById('sales-log');
+            logBox.innerHTML = "";
+            if(globalSalesData.length === 0) { logBox.innerHTML = `<tr><td colspan='5'>${dictionary[window.currentLang].msgEmpty}</td></tr>`; return; }
+
+            globalSalesData.forEach(row => {
+                logBox.innerHTML += `
+                    <tr>
+                        <td style="color:var(--term-cyan); font-weight:bold;">#${row.id}<br><span style="font-size:0.7rem; color:#888; font-weight:normal;">${row.date}</span></td>
+                        <td>${row.client}</td>
+                        <td>${row.desc}</td>
+                        <td style="font-family:monospace; font-size:1.1rem;">${row.amt}</td>
+                        <td><span class="badge b-paid">${row.status.toUpperCase()}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- VISA SUBMIT ---
+        document.getElementById('form-visa').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await addDoc(collection(db, "visas"), {
+                    passenger: document.getElementById('v-name').value,
+                    passport: document.getElementById('v-passport').value,
+                    nationality: document.getElementById('v-nat').value,
+                    destination: document.getElementById('v-dest').value,
+                    type: document.getElementById('v-type').value,
+                    pnr: document.getElementById('v-pnr').value,
+                    issuedBy: "ALPHA COMMAND",
+                    timestamp: serverTimestamp()
+                });
+                alert(dictionary[window.currentLang].msgSuccess);
+                document.getElementById('form-visa').reset();
+            } catch(err) { alert("ERROR: " + err.message); }
+        });
+
+        // --- DISPATCH SUBMIT ---
+        document.getElementById('form-dispatch').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await addDoc(collection(db, "orders"), {
+                    clientName: "INTERNAL DISPATCH",
+                    docType: document.getElementById('d-type').value,
+                    langFrom: document.getElementById('d-pair').value.split('>')[0] || "AUTO",
+                    langTo: document.getElementById('d-pair').value.split('>')[1] || "AUTO",
+                    pages: document.getElementById('d-pages').value,
+                    urgency: document.getElementById('d-urg').value,
+                    assignedTo: document.getElementById('d-assignee').value,
+                    status: "Internal Processing",
+                    price: "0.00",
+                    createdAt: new Date().toLocaleDateString(),
+                    timestamp: serverTimestamp()
+                });
+                alert(dictionary[window.currentLang].msgSuccess);
+                document.getElementById('form-dispatch').reset();
+                fetchSalesLogs(); // Refresh table
+            } catch(err) { alert("ERROR: " + err.message); }
+        });
+
+        // --- BILINGUAL CSV EXPORT (WITH BOM) ---
+        window.exportSalesCSV = function() {
+            if(globalSalesData.length === 0) return;
+            
+            let csvContent = window.currentLang === 'en' ? 
+                "Invoice ID,Date,Client,Description,Amount (JOD),Status\n" : 
+                "رقم الفاتورة,التاريخ,العميل,التفاصيل,المبلغ (دينار),الحالة\n";
+                
+            globalSalesData.forEach(row => { csvContent += `"${row.id}","${row.date}","${row.client}","${row.desc}","${row.amt}","${row.status}"\n`; });
+            
+            // Inject UTF-8 BOM (\uFEFF) to fix Excel Arabic symbols
+            const BOM = "\uFEFF"; 
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Global_Sales_Ledger_${new Date().toLocaleDateString()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.handleLogout = function() { signOut(auth).then(() => { window.location.href = "login.html"; }); }
+    </script>
+</body>
+</html>
