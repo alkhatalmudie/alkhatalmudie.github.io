@@ -102,11 +102,69 @@
 			opacity: 0 !important;
 			transform: scale(0.99);
 		}
+		
+		/* --- SYSTEM LOADER OVERLAY --- */
+		.system-loader {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #050a15; /* Matches your terminal background */
+			z-index: 9999; /* Keeps it on top of everything */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			opacity: 0;
+			pointer-events: none; /* Lets clicks pass through when hidden */
+			transition: opacity 0.3s ease;
+		}
+
+		/* When the JS triggers this class, the screen goes black */
+		.system-loader.active {
+			opacity: 1;
+			pointer-events: all; /* Blocks clicks while loading */
+		}
+
+		/* The glowing text */
+		.loader-text {
+			color: #00f2ff;
+			font-size: 1.5rem;
+			font-family: 'Share Tech Mono', monospace;
+			letter-spacing: 5px;
+			text-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
+			animation: pulseGlow 1.2s infinite alternate;
+		}
+
+		/* The blinking dots */
+		.loader-text .dots {
+			display: inline-block;
+			width: 20px;
+			text-align: left;
+			animation: blinkDots 1.5s infinite steps(4, end);
+		}
+
+		/* Keyframes for the neon pulse */
+		@keyframes pulseGlow {
+			0% { text-shadow: 0 0 5px rgba(0, 242, 255, 0.5); transform: scale(0.98); }
+			100% { text-shadow: 0 0 20px rgba(0, 242, 255, 1), 0 0 40px rgba(0, 242, 255, 0.6); transform: scale(1); }
+		}
+
+		/* Keyframes for the typewriter dots */
+		@keyframes blinkDots {
+			0%, 20% { color: transparent; text-shadow: none; }
+			40% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
+			100% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
+		}
     </style>
 </head>
 <body>
 
-    <div class="admin-wrapper">
+    <div id="system-loader" class="system-loader">
+		<div class="loader-text">SYSTEM LOADING<span class="dots">...</span></div>
+	</div>
+	
+	<div class="admin-wrapper">
         <aside class="admin-sidebar">
             <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
             <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #ff4b5c; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 75, 92, 0.4);"></i>
@@ -410,40 +468,36 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
 			// --- 1. AUTOMATIC ACTIVE MENU HIGHLIGHTING ---
-			// Get the current file name from the URL (e.g., "sales.html")
 			let currentPath = window.location.pathname.split('/').pop(); 
-			
-			// Default to admin_dashboard.html if it's the root directory
-			if (currentPath === '') currentPath = 'admin_dashboard.html'; 
+			if (currentPath === '') currentPath = 'admin_dashboard.html'; // Or employee_dashboard.html depending on the page
 
-			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a');
+			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a, .dash-sidebar a');
 			
 			menuLinks.forEach(link => {
 				const linkHref = link.getAttribute('href');
-				// If the link's href matches the current URL, make it active!
 				if (linkHref === currentPath) {
 					link.classList.add('active');
 				}
 			});
 
-			// --- 2. SMOOTH SYSTEM FADE TRANSITIONS ---
+			// --- 2. SYSTEM LOADER TRANSITIONS ---
 			menuLinks.forEach(link => {
 				link.addEventListener('click', function(e) {
 					const targetUrl = this.getAttribute('href');
-					
-					// Ignore empty links or logout functions
 					if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
 
-					// Stop the immediate hard jump to the next page
-					e.preventDefault(); 
+					e.preventDefault(); // Stop the hard jump
 					
-					// Trigger the fade-out effect
-					document.body.classList.add('system-shutdown'); 
+					// Grab the loader and fade it in
+					const loader = document.getElementById('system-loader');
+					if (loader) {
+						loader.classList.add('active');
+					}
 					
-					// Wait 300ms (matching the CSS transition) before actually navigating
+					// Wait 500ms to show the cool animation, then load the next page
 					setTimeout(() => {
 						window.location.href = targetUrl;
-					}, 300); 
+					}, 500); 
 				});
 			});
 		});

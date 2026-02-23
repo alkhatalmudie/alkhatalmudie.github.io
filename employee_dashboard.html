@@ -84,10 +84,68 @@
 			opacity: 0 !important;
 			transform: scale(0.99);
 		}
+		
+		/* --- SYSTEM LOADER OVERLAY --- */
+		.system-loader {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #050a15; /* Matches your terminal background */
+			z-index: 9999; /* Keeps it on top of everything */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			opacity: 0;
+			pointer-events: none; /* Lets clicks pass through when hidden */
+			transition: opacity 0.3s ease;
+		}
+
+		/* When the JS triggers this class, the screen goes black */
+		.system-loader.active {
+			opacity: 1;
+			pointer-events: all; /* Blocks clicks while loading */
+		}
+
+		/* The glowing text */
+		.loader-text {
+			color: #00f2ff;
+			font-size: 1.5rem;
+			font-family: 'Share Tech Mono', monospace;
+			letter-spacing: 5px;
+			text-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
+			animation: pulseGlow 1.2s infinite alternate;
+		}
+
+		/* The blinking dots */
+		.loader-text .dots {
+			display: inline-block;
+			width: 20px;
+			text-align: left;
+			animation: blinkDots 1.5s infinite steps(4, end);
+		}
+
+		/* Keyframes for the neon pulse */
+		@keyframes pulseGlow {
+			0% { text-shadow: 0 0 5px rgba(0, 242, 255, 0.5); transform: scale(0.98); }
+			100% { text-shadow: 0 0 20px rgba(0, 242, 255, 1), 0 0 40px rgba(0, 242, 255, 0.6); transform: scale(1); }
+		}
+
+		/* Keyframes for the typewriter dots */
+		@keyframes blinkDots {
+			0%, 20% { color: transparent; text-shadow: none; }
+			40% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
+			100% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
+		}
     </style>
 </head>
 <body>
 
+    <div id="system-loader" class="system-loader">
+		<div class="loader-text">SYSTEM LOADING<span class="dots">...</span></div>
+	</div>
+	
     <div class="dash-wrapper">
         <aside class="dash-sidebar">
             <div class="operative-card">
@@ -393,15 +451,36 @@
         }
 
         window.executeLogout = function() {
-            signOut(auth).then(() => { window.location.href = "login_emp.html"; });
-        }
+			// 1. Grab the loader and change text to "Disconnecting"
+			const loader = document.getElementById('system-loader');
+			const loaderText = loader.querySelector('.loader-text');
+			
+			if (loaderText) {
+				loaderText.innerHTML = (window.currentLang === 'en') 
+					? "SYSTEM DISCONNECTING<span class='dots'>...</span>" 
+					: "جاري قطع الاتصال<span class='dots'>...</span>";
+			}
+
+			// 2. Show the black overlay
+			if (loader) loader.classList.add('active');
+
+			// 3. Sign out and redirect
+			setTimeout(() => {
+				signOut(auth).then(() => { 
+					window.location.href = "login_emp.html"; 
+				}).catch((err) => {
+					if (loader) loader.classList.remove('active');
+					alert("LOGOUT ERROR: " + err.message);
+				});
+			}, 800); // Dramatic pause
+		}
     </script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
+			// --- 1. AUTOMATIC ACTIVE MENU HIGHLIGHTING ---
 			let currentPath = window.location.pathname.split('/').pop(); 
-			if (currentPath === '') currentPath = 'employee_dashboard.html'; 
+			if (currentPath === '') currentPath = 'admin_dashboard.html'; // Or employee_dashboard.html depending on the page
 
-			// UPDATED: Looks for links in BOTH the admin menu and employee sidebar
 			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a, .dash-sidebar a');
 			
 			menuLinks.forEach(link => {
@@ -411,17 +490,24 @@
 				}
 			});
 
+			// --- 2. SYSTEM LOADER TRANSITIONS ---
 			menuLinks.forEach(link => {
 				link.addEventListener('click', function(e) {
 					const targetUrl = this.getAttribute('href');
 					if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
 
-					e.preventDefault(); 
-					document.body.classList.add('system-shutdown'); 
+					e.preventDefault(); // Stop the hard jump
 					
+					// Grab the loader and fade it in
+					const loader = document.getElementById('system-loader');
+					if (loader) {
+						loader.classList.add('active');
+					}
+					
+					// Wait 500ms to show the cool animation, then load the next page
 					setTimeout(() => {
 						window.location.href = targetUrl;
-					}, 300); 
+					}, 500); 
 				});
 			});
 		});
