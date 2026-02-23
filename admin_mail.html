@@ -137,5 +137,22 @@
 				});
         });
     </script>
+	
+	<script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Scan the URL for incoming parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetName = urlParams.get('name');
+            const targetEmail = urlParams.get('email');
+            
+            // If intel is found, auto-fill the target fields
+            if(targetName) {
+                document.getElementById('mail-name').value = targetName;
+            }
+            if(targetEmail) {
+                document.getElementById('mail-email').value = targetEmail;
+            }
+        });
+    </script>
 </body>
 </html>
