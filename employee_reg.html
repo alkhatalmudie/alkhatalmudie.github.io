@@ -653,13 +653,28 @@
             const employeeIds = Object.keys(globalEmployees);
             if(employeeIds.length === 0) { alert(dictionary[window.currentLang].msgEmpty); return; }
 
-            let csvContent = "Agent ID,Full Name,Title,Clearance,Username,Salary,Reg Date,Contract Start,Contract End\n";
+            // 1. Bilingual Headers
+            let csvContent = window.currentLang === 'en' ? 
+                "Agent ID,Full Name,Title,Clearance,Username,Salary,Reg Date,Contract Start,Contract End\n" : 
+                "الرقم الوظيفي,الاسم الكامل,المنصب,الصلاحية,اسم المستخدم,الراتب,تاريخ التسجيل,بداية العقد,نهاية العقد\n";
+                
             employeeIds.forEach(id => {
                 const data = globalEmployees[id];
-                csvContent += `"${data.empId}","${data.name}","${data.title}","${data.permission}","${data.username}","${data.salary}","${data.regDate}","${data.contractStart || 'N/A'}","${data.contractEnd || 'N/A'}"\n`;
+                // Translate clearance inside the CSV for Arabic
+                let dispPerm = data.permission;
+                if(window.currentLang === 'ar') {
+                    if(dispPerm === "Standard") dispPerm = "موظف قياسي";
+                    if(dispPerm === "Manager") dispPerm = "مدير ميداني";
+                    if(dispPerm === "Admin") dispPerm = "مدير نظام";
+                }
+                
+                csvContent += `"${data.empId}","${data.name}","${data.title}","${dispPerm}","${data.username}","${data.salary}","${data.regDate}","${data.contractStart || 'N/A'}","${data.contractEnd || 'N/A'}"\n`;
             });
 
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            // 2. Inject UTF-8 BOM (\uFEFF) to fix Excel Arabic symbols
+            const BOM = "\uFEFF";
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `Alpha_Roster_${new Date().toLocaleDateString()}.csv`;

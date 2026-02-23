@@ -323,9 +323,18 @@
         
         window.exportChatToCSV = function() {
             if(activeChatLog.length === 0) return;
-            let csvContent = "Timestamp,Sender,Transmission\n";
+            
+            // 1. Bilingual Headers
+            let csvContent = window.currentLang === 'en' ? 
+                "Timestamp,Sender,Transmission\n" : 
+                "الوقت,المرسل,محتوى الرسالة\n";
+                
             activeChatLog.forEach(row => { csvContent += `"${row.time}","${row.sender}","${row.message}"\n`; });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            
+            // 2. Inject UTF-8 BOM (\uFEFF) to fix Excel Arabic symbols
+            const BOM = "\uFEFF";
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `Comms_Log_${activeChatUid}_${new Date().toLocaleDateString()}.csv`;

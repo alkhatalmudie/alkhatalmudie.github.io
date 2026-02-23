@@ -338,146 +338,142 @@
         </div>
     </div>
 
-    <script src="assets/js/pricing-db.js"></script>
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/lang-engine.js"></script>
 	
-	<script>
-		// --- 1. MAP INITIALIZATION ---
-		// (Keep your existing Map logic here...)
-		const mapContainer = document.getElementById('worldMap');
-		if (mapContainer && SYSTEM_DB) {
-			SYSTEM_DB.locations.forEach(loc => {
-				const dot = document.createElement('div');
-				dot.className = `map-point`; 
-				dot.style.top = loc.top;
-				dot.style.left = loc.left;
-				dot.onclick = (e) => { e.stopPropagation(); selectLocation(loc.id, dot); };
-				dot.innerHTML = `
-					<div class="location-card">
-						<h4>${loc.name}</h4>
-						<p><i class="fas fa-phone"></i> ${loc.phone}</p>
-						<button class="btn-select-loc" onclick="selectLocation('${loc.id}', this.parentElement.parentElement)">Select Region</button>
-					</div>`;
-				mapContainer.appendChild(dot);
-			});
-		}
-		
-		// --- REVERTED MAP ZOOM & PAN ENGINE ---
-		const mapStage = document.getElementById('map-stage');
+	<script type="module">
+        import { db } from './assets/js/firebase-init.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-		let scale = 1;
-		let panning = false;
-		let pointX = 0;
-		let pointY = 0;
-		let startX = 0;
-		let startY = 0;
+        // We still keep locations static since they are tied to hardcoded CSS coordinates on the map
+        const STATIC_LOCATIONS = [
+            { id: "jo", name: "Amman Base", phone: "+962 78 077 0085" },
+            { id: "ru", name: "Moscow Node", phone: "+7 495 123-45-67" },
+            { id: "gb", name: "London HQ", phone: "+44 20 7946 0123" },
+            { id: "nl", name: "Amsterdam Link", phone: "+31 20 123 4567" },
+            { id: "ae", name: "Dubai Hub", phone: "+971 50 123 4567" }
+        ];
 
-		function setTransform() {
-			mapStage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-		}
+        let DYNAMIC_DB = { rates: { base_per_page: 10.00 }, documents: [] };
 
-		// 1. Zoom via Mouse Wheel
-		mapStage.addEventListener('wheel', (e) => {
-			e.preventDefault(); 
-			const zoomSensitivity = 0.15;
-			const delta = e.deltaY < 0 ? 1 : -1;
-			
-			scale += delta * zoomSensitivity;
-			scale = Math.min(Math.max(1, scale), 4); // Lock zoom between 1x and 4x
-			
-			// Auto-center the map if zoomed all the way out
-			if(scale === 1) { pointX = 0; pointY = 0; }
-			
-			setTransform();
-		}, { passive: false });
+        // 1. FETCH PRICING FROM FIREBASE
+        async function fetchPricingConfig() {
+            try {
+                const docSnap = await getDoc(doc(db, "system_config", "pricing"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    DYNAMIC_DB.rates.base_per_page = data.base_per_page;
+                    DYNAMIC_DB.documents = data.documents || [];
+                    populateDocumentDropdown();
+                }
+            } catch (error) {
+                console.error("Failed to fetch dynamic pricing. Defaulting to safe values.", error);
+            }
+        }
 
-		// 2. Pan via Click and Drag
-		mapStage.addEventListener('mousedown', (e) => {
-			if(scale > 1) { // Only allow dragging if zoomed in
-				e.preventDefault();
-				panning = true;
-				startX = e.clientX - pointX;
-				startY = e.clientY - pointY;
-			}
-		});
+        function populateDocumentDropdown() {
+            const docSelect = document.getElementById('docType');
+            docSelect.innerHTML = ""; 
+            DYNAMIC_DB.documents.forEach(docItem => {
+                const opt = document.createElement('option');
+                opt.value = docItem.id;
+                opt.innerText = docItem.label;
+                opt.dataset.price = docItem.price_mod;
+                docSelect.appendChild(opt);
+            });
+            window.calculatePrice(); // Trigger recalculation with new data
+        }
 
-		mapStage.addEventListener('mousemove', (e) => {
-			if (!panning) return;
-			e.preventDefault();
-			pointX = e.clientX - startX;
-			pointY = e.clientY - startY;
-			setTransform();
-		});
+        // Initialize Fetch
+        fetchPricingConfig();
 
-		mapStage.addEventListener('mouseup', () => { panning = false; });
-		mapStage.addEventListener('mouseleave', () => { panning = false; });
+        // 2. REVERTED MAP ZOOM & PAN ENGINE
+        const mapStage = document.getElementById('map-stage');
+        let scale = 1, panning = false, pointX = 0, pointY = 0, startX = 0, startY = 0;
 
-		let selectedLocName = "";
-		function selectLocation(id, element) {
-			document.querySelectorAll('.map-point').forEach(el => el.classList.remove('active'));
-			if(element.classList.contains('map-point')) element.classList.add('active');
-			const locData = SYSTEM_DB.locations.find(l => l.id === id);
-			selectedLocName = locData.name;
-			const summaryLoc = document.getElementById('summaryLocation');
-			summaryLoc.innerText = locData.name;
-			summaryLoc.style.color = "white";
-			setTimeout(() => { summaryLoc.style.color = "var(--brand-cyan)"; }, 300);
-		}
+        function setTransform() { mapStage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`; }
 
-		// --- 2. POPULATE DROPDOWNS ---
-		const docSelect = document.getElementById('docType');
-		if(docSelect && SYSTEM_DB) {
-			docSelect.innerHTML = ""; 
-			SYSTEM_DB.documents.forEach(doc => {
-				const opt = document.createElement('option');
-				opt.value = doc.id;
-				opt.innerText = doc.label;
-				opt.dataset.price = doc.price_mod;
-				docSelect.appendChild(opt);
-			});
-		}
+        mapStage.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            const zoomSensitivity = 0.15;
+            const delta = e.deltaY < 0 ? 1 : -1;
+            scale += delta * zoomSensitivity;
+            scale = Math.min(Math.max(1, scale), 4);
+            if(scale === 1) { pointX = 0; pointY = 0; }
+            setTransform();
+        }, { passive: false });
 
-		// --- 3. CALCULATOR LOGIC ---
-		function calculatePrice() {
-			const pages = parseInt(document.getElementById('pageCount').value) || 1;
-			const urgency = parseFloat(document.getElementById('urgency').value);
-			const docOption = docSelect.options[docSelect.selectedIndex];
-			
-			if(!docOption) return;
+        mapStage.addEventListener('mousedown', (e) => {
+            if(scale > 1) {
+                e.preventDefault();
+                panning = true;
+                startX = e.clientX - pointX;
+                startY = e.clientY - pointY;
+            }
+        });
 
-			const docFactor = parseFloat(docOption.dataset.price);
-			const baseRate = SYSTEM_DB.rates.base_per_page;
-			const total = (baseRate * docFactor * pages * urgency);
-			
-			document.getElementById('summaryDoc').innerText = docOption.text;
-			document.getElementById('summaryPages').innerText = pages;
-			document.getElementById('totalPrice').innerText = total.toFixed(2);
-		}
-		
-		setTimeout(calculatePrice, 100);
+        mapStage.addEventListener('mousemove', (e) => {
+            if (!panning) return;
+            e.preventDefault();
+            pointX = e.clientX - startX;
+            pointY = e.clientY - startY;
+            setTransform();
+        });
 
-		// --- 4. CHECKOUT LOGIC (THE FIX) ---
-		function proceedToCheckout() {
-			if(!selectedLocName) {
-				alert("Please select a region from the map first!");
-				return;
-			}
+        mapStage.addEventListener('mouseup', () => { panning = false; });
+        mapStage.addEventListener('mouseleave', () => { panning = false; });
 
-			// PACK THE BRIEFCASE (URL Parameters)
-			const params = new URLSearchParams({
-				loc: selectedLocName,
-				from: document.getElementById('langFrom').value,
-				to: document.getElementById('langTo').value,
-				doc: docSelect.options[docSelect.selectedIndex].text,
-				pages: document.getElementById('pageCount').value,
-				urgency: document.getElementById('urgency').options[document.getElementById('urgency').selectedIndex].text,
-				price: document.getElementById('totalPrice').innerText + " JOD"
-			});
+        // 3. LOCATION SELECTION
+        let selectedLocName = "";
+        window.selectLocation = function(name, countryCode, element) {
+            document.querySelectorAll('.map-point').forEach(el => el.classList.remove('active'));
+            if(element.classList.contains('map-point')) element.classList.add('active');
+            
+            selectedLocName = name;
+            const summaryLoc = document.getElementById('summaryLocation');
+            summaryLoc.innerText = name;
+            summaryLoc.style.color = "white";
+            setTimeout(() => { summaryLoc.style.color = "var(--brand-cyan)"; }, 300);
+        }
 
-			// GO TO CHECKOUT WITH DATA
-			window.location.href = 'checkout.html?' + params.toString();
-		}
-	</script>
+        // 4. CALCULATOR LOGIC (NOW USING DYNAMIC_DB)
+        window.calculatePrice = function() {
+            const pages = parseInt(document.getElementById('pageCount').value) || 1;
+            const urgency = parseFloat(document.getElementById('urgency').value);
+            const docSelect = document.getElementById('docType');
+            const docOption = docSelect.options[docSelect.selectedIndex];
+            
+            if(!docOption) return;
+
+            const docFactor = parseFloat(docOption.dataset.price);
+            const baseRate = DYNAMIC_DB.rates.base_per_page;
+            const total = (baseRate * docFactor * pages * urgency);
+            
+            document.getElementById('summaryDoc').innerText = docOption.text;
+            document.getElementById('summaryPages').innerText = pages;
+            document.getElementById('totalPrice').innerText = total.toFixed(2);
+        }
+
+        // 5. CHECKOUT LOGIC
+        window.proceedToCheckout = function() {
+            if(!selectedLocName) {
+                alert("Please select a region from the map first!");
+                return;
+            }
+
+            const docSelect = document.getElementById('docType');
+            const params = new URLSearchParams({
+                loc: selectedLocName,
+                from: document.getElementById('langFrom').value,
+                to: document.getElementById('langTo').value,
+                doc: docSelect.options[docSelect.selectedIndex].text,
+                pages: document.getElementById('pageCount').value,
+                urgency: document.getElementById('urgency').options[document.getElementById('urgency').selectedIndex].text,
+                price: document.getElementById('totalPrice').innerText + " JOD"
+            });
+
+            window.location.href = 'checkout.html?' + params.toString();
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRICING COMMAND | Al-Khat Al-Mudi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
+        .admin-wrapper { display: flex; height: 100vh; overflow: hidden; }
+        .admin-sidebar { width: 260px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
+        body[dir="rtl"] .admin-sidebar { border-right: none; border-left: 1px solid rgba(0, 242, 255, 0.2); }
+        
+        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
+        .admin-sidebar-menu li { margin-bottom: 10px; }
+        .admin-sidebar-menu a { display: block; padding: 12px 15px; color: #ccc; text-decoration: none; border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem; }
+        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff; }
+        body[dir="rtl"] .admin-sidebar-menu a { border-left: none; border-right: 3px solid transparent; }
+        body[dir="rtl"] .admin-sidebar-menu a:hover, body[dir="rtl"] .admin-sidebar-menu a.active { border-right-color: #00f2ff; }
+        
+        .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
+        
+        .admin-main-content { flex-grow: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        
+        .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); padding: 20px; display: flex; flex-direction: column; }
+        .panel h3 { margin-top: 0; color: #00ff88; border-bottom: 1px solid #00ff88; padding-bottom: 10px; font-size: 1.1rem; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; color: #00f2ff; text-transform: uppercase; font-weight: bold; }
+        input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; box-sizing: border-box; font-size: 1rem; }
+        input:focus { border-color: #00f2ff; outline: none; }
+        
+        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; width: 100%; text-transform: uppercase; }
+        .btn:hover { background: #00f2ff; color: #050a15; }
+        .btn-green { border-color: #00ff88; color: #00ff88; }
+        .btn-green:hover { background: #00ff88; color: #050a15; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; }
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
+        .btn-danger { border-color: #ff4b5c; color: #ff4b5c; width: auto; padding: 5px 10px; font-size: 0.8rem; }
+        .btn-danger:hover { background: #ff4b5c; color: white; }
+
+        .doc-list { list-style: none; padding: 0; margin: 0; }
+        .doc-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,242,255,0.2); padding: 10px 0; }
+        .doc-info { color: white; font-family: 'Cairo', sans-serif;}
+        .doc-mod { color: #00ff88; font-weight: bold; font-family: 'Share Tech Mono', monospace; }
+
+        @media (max-width: 900px) {
+            .admin-wrapper { flex-direction: column; height: auto; }
+            .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
+            .admin-main-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color: #ff4b5c; margin-bottom: 10px;"></i>
+                <h3 style="margin:0; color:white;">ALPHA <span style="color:#00f2ff;">COMMAND</span></h3>
+            </div>
+            
+            <ul class="admin-sidebar-menu">
+                <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
+                <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
+                <li><a href="admin_pricing.html" class="active"><i class="fas fa-tags"></i> Pricing & Docs</a></li>
+                <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
+                <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+                <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcast Comms</a></li>
+            </ul>
+
+            <div style="margin-top: auto; padding-top: 20px;">
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; padding: 10px;" id="ui-btn-return">RETURN TO BASE</button>
+            </div>
+        </aside>
+
+        <main class="admin-main-content">
+            
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin:0;" id="ui-panel1-title"><i class="fas fa-coins"></i> BASE RATE CONFIG</h3>
+                    <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()" style="width: auto; padding: 5px 15px; font-size: 0.8rem;">عربي</button>
+                </div>
+                
+                <form id="form-base-rate">
+                    <div class="form-group">
+                        <label id="ui-lbl-base">Standard Base Rate Per Page (JOD)</label>
+                        <input type="number" step="0.5" id="base-rate-input" required placeholder="e.g. 10.00">
+                    </div>
+                    <button type="submit" class="btn btn-green" id="btn-save-rate"><i class="fas fa-save"></i> SAVE BASE RATE</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h3 id="ui-panel2-title"><i class="fas fa-file-alt"></i> DOCUMENT TYPES & MULTIPLIERS</h3>
+                
+                <form id="form-add-doc" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div style="flex-grow: 2; min-width: 200px;">
+                        <input type="text" id="doc-label" required placeholder="Document Name (e.g. Medical Report)">
+                    </div>
+                    <div style="flex-grow: 1; min-width: 100px;">
+                        <input type="number" step="0.1" id="doc-mod" required placeholder="Multiplier (e.g. 1.8)">
+                    </div>
+                    <button type="submit" class="btn" style="width: auto;" id="btn-add-doc"><i class="fas fa-plus"></i> ADD</button>
+                </form>
+
+                <ul class="doc-list" id="document-list">
+                    <li style="text-align: center; color: gray;" id="ui-msg-load">Scanning database...</li>
+                </ul>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { db } from './assets/js/firebase-init.js';
+        import { doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const app = getApp();
+        const auth = getAuth(app);
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
+        
+        let pricingConfig = { base_per_page: 10.00, documents: [] };
+
+        // --- DICTIONARY ---
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                btnReturn: "RETURN TO BASE",
+                panel1: "<i class='fas fa-coins'></i> BASE RATE CONFIG",
+                lblBase: "Standard Base Rate Per Page (JOD)",
+                btnSaveRate: "<i class='fas fa-save'></i> SAVE BASE RATE",
+                panel2: "<i class='fas fa-file-alt'></i> DOCUMENT TYPES & MULTIPLIERS",
+                placeLabel: "Document Name (e.g. Medical Report)",
+                placeMod: "Multiplier (e.g. 1.8)",
+                btnAdd: "<i class='fas fa-plus'></i> ADD",
+                msgLoad: "Scanning database...",
+                msgEmpty: "No documents configured.",
+                alertSave: "Base rate updated successfully."
+            },
+            ar: {
+                btnReturn: "العودة للقاعدة الرئيسية",
+                panel1: "<i class='fas fa-coins'></i> إعدادات السعر الأساسي",
+                lblBase: "السعر الأساسي القياسي للصفحة (دينار أردني)",
+                btnSaveRate: "<i class='fas fa-save'></i> حفظ السعر الأساسي",
+                panel2: "<i class='fas fa-file-alt'></i> أنواع المستندات ومعامل السعر",
+                placeLabel: "اسم المستند (مثال: تقرير طبي)",
+                placeMod: "معامل السعر (مثال: 1.8)",
+                btnAdd: "<i class='fas fa-plus'></i> إضافة",
+                msgLoad: "جاري فحص قاعدة البيانات...",
+                msgEmpty: "لم يتم تكوين أي مستندات.",
+                alertSave: "تم تحديث السعر الأساسي بنجاح."
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-panel1-title').innerHTML = dict.panel1;
+            document.getElementById('ui-lbl-base').innerText = dict.lblBase;
+            document.getElementById('btn-save-rate').innerHTML = dict.btnSaveRate;
+            
+            document.getElementById('ui-panel2-title').innerHTML = dict.panel2;
+            document.getElementById('doc-label').placeholder = dict.placeLabel;
+            document.getElementById('doc-mod').placeholder = dict.placeMod;
+            document.getElementById('btn-add-doc').innerHTML = dict.btnAdd;
+            
+            renderDocuments(); // Re-render list
+        }
+
+        // --- AUTH & DB INIT ---
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.uid !== ADMIN_UID) {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
+                setTimeout(() => { window.location.href = "login.html"; }, 2000);
+            } else {
+                listenToPricing();
+            }
+        });
+
+        // --- REALTIME LISTENER ---
+        function listenToPricing() {
+            const docRef = doc(db, "system_config", "pricing");
+            onSnapshot(docRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    pricingConfig = snapshot.data();
+                    if(!pricingConfig.documents) pricingConfig.documents = [];
+                    document.getElementById('base-rate-input').value = pricingConfig.base_per_page;
+                } else {
+                    // Create default document if it doesn't exist yet
+                    setDoc(docRef, pricingConfig);
+                }
+                renderDocuments();
+            });
+        }
+
+        function renderDocuments() {
+            const list = document.getElementById('document-list');
+            const dict = dictionary[window.currentLang];
+            list.innerHTML = "";
+            
+            if(pricingConfig.documents.length === 0) {
+                list.innerHTML = `<li style="text-align: center; color: gray;">${dict.msgEmpty}</li>`;
+                return;
+            }
+
+            pricingConfig.documents.forEach((docItem, index) => {
+                list.innerHTML += `
+                    <li class="doc-item">
+                        <span class="doc-info">${docItem.label} <span class="doc-mod">[x${docItem.price_mod}]</span></span>
+                        <button class="btn-danger" onclick="removeDocument(${index})"><i class="fas fa-trash"></i></button>
+                    </li>
+                `;
+            });
+        }
+
+        // --- UPDATE BASE RATE ---
+        document.getElementById('form-base-rate').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newRate = parseFloat(document.getElementById('base-rate-input').value);
+            pricingConfig.base_per_page = newRate;
+            await setDoc(doc(db, "system_config", "pricing"), pricingConfig);
+            alert(dictionary[window.currentLang].alertSave);
+        });
+
+        // --- ADD DOCUMENT TYPE ---
+        document.getElementById('form-add-doc').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const label = document.getElementById('doc-label').value.trim();
+            const mod = parseFloat(document.getElementById('doc-mod').value);
+            
+            // Create a safe ID from the label
+            const id = label.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            
+            pricingConfig.documents.push({ id: id, label: label, price_mod: mod });
+            
+            await setDoc(doc(db, "system_config", "pricing"), pricingConfig);
+            document.getElementById('form-add-doc').reset();
+        });
+
+        // --- REMOVE DOCUMENT TYPE ---
+        window.removeDocument = async function(index) {
+            if(confirm("Delete this document type?")) {
+                pricingConfig.documents.splice(index, 1);
+                await setDoc(doc(db, "system_config", "pricing"), pricingConfig);
+            }
+        }
+    </script>
+</body>
+</html>

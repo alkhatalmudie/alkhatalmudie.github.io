@@ -15,9 +15,13 @@
             display: flex; align-items: center; justify-content: center;
             height: 100vh; margin: 0; overflow: hidden;
             background-image: radial-gradient(circle at center, #0a1429 0%, #050a15 100%);
+            transition: all 0.3s ease;
         }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
-        /* --- THE LOGIN TERMINAL --- */
+        .lang-switch { position: absolute; top: 20px; right: 20px; }
+        body[dir="rtl"] .lang-switch { right: auto; left: 20px; }
+
         .login-box {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(0, 242, 255, 0.3);
@@ -33,6 +37,8 @@
         }
 
         .form-group { margin-bottom: 20px; text-align: left; }
+        body[dir="rtl"] .form-group { text-align: right; }
+        
         label { display: block; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.8; }
         
         input {
@@ -50,8 +56,9 @@
             margin-top: 10px; letter-spacing: 1px;
         }
         .btn:hover { background: #00f2ff; color: #050a15; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; background: transparent; padding: 5px 15px; font-size: 0.9rem;}
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
 
-        /* --- 10-SECOND BOOT SEQUENCE OVERLAY --- */
         #terminal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #050a15; z-index: 1000; display: none;
@@ -60,6 +67,7 @@
         #terminal-overlay.active { display: flex; }
         
         .terminal-text { width: 80%; max-width: 600px; text-align: left; font-size: 1.2rem; line-height: 1.8; }
+        body[dir="rtl"] .terminal-text { text-align: right; }
         .log-line { opacity: 0; animation: fadeIn 0.1s forwards; margin-bottom: 10px; }
         .log-line.success { color: #00ff88; }
         .log-line.warning { color: #ffc107; }
@@ -70,26 +78,30 @@
 </head>
 <body>
 
+    <div class="lang-switch">
+        <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
+    </div>
+
     <div class="login-box">
         <i class="fas fa-fingerprint" style="font-size: 3.5rem; color: #00f2ff; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);"></i>
-        <h2>OPERATIVE PORTAL</h2>
+        <h2 id="ui-header">OPERATIVE PORTAL</h2>
         <form id="emp-login-form">
             <div class="form-group">
-                <label>Assigned Username</label>
+                <label id="ui-lbl-user">Assigned Username</label>
                 <input type="text" id="login-user" required autocomplete="off" placeholder="AGENT-ID">
             </div>
             <div class="form-group">
-                <label>Clearance Passcode</label>
+                <label id="ui-lbl-pass">Clearance Passcode</label>
                 <input type="password" id="login-pass" required autocomplete="off" placeholder="••••••••">
             </div>
             <button type="submit" class="btn" id="btn-login">INITIATE HANDSHAKE</button>
         </form>
-        <p style="font-size: 0.7rem; color: #555; margin-top: 20px;">Restricted Network. All access attempts are logged and monitored by Alpha Command.</p>
+        <p style="font-size: 0.7rem; color: #555; margin-top: 20px;" id="ui-desc">Restricted Network. All access attempts are logged and monitored by Alpha Command.</p>
     </div>
 
     <div id="terminal-overlay">
         <div class="terminal-text" id="terminal-log">
-            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -110,23 +122,71 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                header: "OPERATIVE PORTAL",
+                lblUser: "Assigned Username",
+                lblPass: "Clearance Passcode",
+                btnLogin: "INITIATE HANDSHAKE",
+                desc: "Restricted Network. All access attempts are logged and monitored by Alpha Command.",
+                alertError: "ACCESS DENIED: Invalid Signature.",
+                btnVerify: "VERIFYING SIGNATURE...",
+                term1: "> ESTABLISHING SECURE UPLINK...",
+                term2: "> NEGOTIATING FIREWALL PROTOCOLS...",
+                term3: "> CREDENTIALS VERIFIED. IDENTITY CONFIRMED.",
+                term4: "> GENERATING AES-256 ENCRYPTION KEYS...",
+                term5: "> SYNCING OPERATIVE DASHBOARD...",
+                term6: "> ROUTING INTERNAL COMMUNICATIONS...",
+                term7: "> ACCESS GRANTED. STANDBY FOR DEPLOYMENT."
+            },
+            ar: {
+                header: "بوابة الموظفين",
+                lblUser: "اسم المستخدم المخصص",
+                lblPass: "رمز المرور (كلمة السر)",
+                btnLogin: "بدء المصادقة",
+                desc: "شبكة مقيدة. جميع محاولات الوصول مسجلة ومراقبة من قبل القيادة.",
+                alertError: "الوصول مرفوض: بيانات غير صالحة.",
+                btnVerify: "جاري التحقق...",
+                term1: "> جاري إنشاء اتصال آمن...",
+                term2: "> جاري تخطي بروتوكولات جدار الحماية...",
+                term3: "> تم التحقق من البيانات. تأكيد الهوية.",
+                term4: "> جاري توليد مفاتيح تشفير AES-256...",
+                term5: "> جاري مزامنة لوحة تحكم الموظف...",
+                term6: "> جاري توجيه الاتصالات الداخلية...",
+                term7: "> تم منح الصلاحية. استعد للتحويل."
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-header').innerText = dict.header;
+            document.getElementById('ui-lbl-user').innerText = dict.lblUser;
+            document.getElementById('ui-lbl-pass').innerText = dict.lblPass;
+            document.getElementById('btn-login').innerText = dict.btnLogin;
+            document.getElementById('ui-desc').innerText = dict.desc;
+        }
+
         document.getElementById('emp-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const dict = dictionary[window.currentLang];
             const btn = document.getElementById('btn-login');
-            btn.innerText = "VERIFYING SIGNATURE..."; 
+            btn.innerText = dict.btnVerify; 
             btn.disabled = true;
 
             const username = document.getElementById('login-user').value.trim();
             const password = document.getElementById('login-pass').value;
-            
-            // The Ghost Email logic we built in the registry
             const email = username + "@alkhat.internal";
 
             try {
-                // 1. Authenticate
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // 2. Log the exact time they logged in for the Admin to see
                 await addDoc(collection(db, "employee_logs"), {
                     uid: userCredential.user.uid,
                     username: username,
@@ -134,30 +194,28 @@
                     event: "LOGIN_SUCCESS"
                 });
 
-                // 3. Trigger the 10-Second Hacker Boot Sequence
                 runTerminalSequence();
-
             } catch (error) {
-                btn.innerText = "INITIATE HANDSHAKE"; 
+                btn.innerText = dict.btnLogin; 
                 btn.disabled = false;
-                alert("ACCESS DENIED: Invalid Signature.");
+                alert(dict.alertError);
             }
         });
 
         function runTerminalSequence() {
             const overlay = document.getElementById('terminal-overlay');
             const logBox = document.getElementById('terminal-log');
+            const dict = dictionary[window.currentLang];
             overlay.classList.add('active');
 
-            // The Timeline of the 10-Second Sequence
             const sequence = [
-                { text: "> ESTABLISHING SECURE UPLINK...", delay: 500 },
-                { text: "> NEGOTIATING FIREWALL PROTOCOLS...", delay: 2000, type: "warning" },
-                { text: "> CREDENTIALS VERIFIED. IDENTITY CONFIRMED.", delay: 3500, type: "success" },
-                { text: "> GENERATING AES-256 ENCRYPTION KEYS...", delay: 5000 },
-                { text: "> SYNCING OPERATIVE DASHBOARD...", delay: 6500 },
-                { text: "> ROUTING INTERNAL COMMUNICATIONS...", delay: 8000 },
-                { text: "> ACCESS GRANTED. STANDBY FOR DEPLOYMENT.", delay: 9000, type: "success" }
+                { text: dict.term1, delay: 500 },
+                { text: dict.term2, delay: 2000, type: "warning" },
+                { text: dict.term3, delay: 3500, type: "success" },
+                { text: dict.term4, delay: 5000 },
+                { text: dict.term5, delay: 6500 },
+                { text: dict.term6, delay: 8000 },
+                { text: dict.term7, delay: 9000, type: "success" }
             ];
 
             sequence.forEach(step => {
@@ -169,7 +227,6 @@
                 }, step.delay);
             });
 
-            // Exactly 10 seconds later, redirect to Dashboard
             setTimeout(() => {
                 window.location.href = "employee_dashboard.html";
             }, 10000);

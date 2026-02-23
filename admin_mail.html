@@ -10,22 +10,29 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
         .admin-wrapper { display: flex; height: 100vh; overflow: hidden; }
         .admin-sidebar { width: 260px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
+        body[dir="rtl"] .admin-sidebar { border-right: none; border-left: 1px solid rgba(0, 242, 255, 0.2); }
+        
         .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
         .admin-sidebar-menu li { margin-bottom: 10px; }
         .admin-sidebar-menu a { display: block; padding: 12px 15px; color: #ccc; text-decoration: none; border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem; }
         .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff; }
+        body[dir="rtl"] .admin-sidebar-menu a { border-left: none; border-right: 3px solid transparent; }
+        body[dir="rtl"] .admin-sidebar-menu a:hover, body[dir="rtl"] .admin-sidebar-menu a.active { border-right-color: #00f2ff; }
+        
         .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
         
         .admin-main-content { flex-grow: 1; padding: 30px; display: flex; justify-content: center; overflow-y: auto; }
         
         .mail-panel { width: 100%; max-width: 800px; border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); padding: 30px; }
-        .mail-header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .mail-header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
         
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; color: #00f2ff; text-transform: uppercase; }
+        label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; color: #00f2ff; text-transform: uppercase; font-weight: bold; }
         input, textarea { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: 'Cairo', sans-serif; box-sizing: border-box; font-size: 1rem; }
         input:focus, textarea:focus { border-color: #00f2ff; outline: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.1); }
         
@@ -33,6 +40,8 @@
         .btn:hover { background: #00f2ff; color: #050a15; }
         .btn-green { border-color: #00ff88; color: #00ff88; }
         .btn-green:hover { background: #00ff88; color: #050a15; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; }
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
     </style>
 </head>
 <body>
@@ -53,36 +62,39 @@
             </ul>
 
             <div style="margin-top: auto; padding-top: 20px;">
-                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; padding: 10px;">RETURN TO BASE</button>
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; padding: 10px;" id="ui-btn-return">RETURN TO BASE</button>
             </div>
         </aside>
 
         <main class="admin-main-content">
             <div class="mail-panel">
                 <div class="mail-header">
-                    <h2 style="margin:0;"><i class="fas fa-paper-plane"></i> OFFICIAL BROADCAST TERMINAL</h2>
-                    <span style="color: #00ff88; font-size: 0.8rem; border: 1px solid; padding: 4px 8px; border-radius: 3px;">ENCRYPTED UPLINK</span>
+                    <h2 style="margin:0;" id="ui-header-title"><i class="fas fa-paper-plane"></i> OFFICIAL BROADCAST TERMINAL</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span style="color: #00ff88; font-size: 0.8rem; border: 1px solid; padding: 4px 8px; border-radius: 3px;" id="ui-badge">ENCRYPTED UPLINK</span>
+                        <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()" style="width: auto; padding: 5px 15px; font-size: 0.8rem;">عربي</button>
+                    </div>
                 </div>
 
                 <form id="email-form">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="form-group">
-                            <label>Recipient Name</label>
+                            <label id="ui-lbl-name">Recipient Name</label>
                             <input type="text" id="mail-name" placeholder="e.g. John Doe" required>
                         </div>
                         <div class="form-group">
-                            <label>Target Email Address</label>
+                            <label id="ui-lbl-email">Target Email Address</label>
                             <input type="email" id="mail-email" placeholder="client@domain.com" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Subject Line</label>
+                        <label id="ui-lbl-subject">Subject Line</label>
                         <input type="text" id="mail-subject" placeholder="Official Communication from Al-Khat Al-Mudi" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Message Body (HTML Allowed for formatting)</label>
+                        <label id="ui-lbl-body">Message Body (HTML Allowed for formatting)</label>
                         <textarea id="mail-body" rows="10" placeholder="Type your official message here..." required></textarea>
                     </div>
 
@@ -108,50 +120,105 @@
     </script>
 
     <script>
-        // INIT EMAILJS - REPLACE WITH YOUR PUBLIC KEY
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                btnReturn: "RETURN TO BASE",
+                headerTitle: "<i class='fas fa-paper-plane'></i> OFFICIAL BROADCAST TERMINAL",
+                badge: "ENCRYPTED UPLINK",
+                lblName: "Recipient Name",
+                lblEmail: "Target Email Address",
+                lblSubject: "Subject Line",
+                lblBody: "Message Body (HTML Allowed for formatting)",
+                placeName: "e.g. John Doe",
+                placeEmail: "client@domain.com",
+                placeSubj: "Official Communication from Al-Khat Al-Mudi",
+                placeBody: "Type your official message here...",
+                btnTransmit: "<i class='fas fa-broadcast-tower'></i> TRANSMIT OFFICIAL COMMUNICATION",
+                msgProcess: "<i class='fas fa-spinner fa-spin'></i> TRANSMITTING...",
+                msgSuccess: "OFFICIAL BROADCAST TRANSMITTED.",
+                msgError: "TRANSMISSION ERROR: "
+            },
+            ar: {
+                btnReturn: "العودة للقاعدة الرئيسية",
+                headerTitle: "<i class='fas fa-paper-plane'></i> منصة البث الرسمي",
+                badge: "اتصال مشفر",
+                lblName: "اسم المستلم",
+                lblEmail: "البريد الإلكتروني المستهدف",
+                lblSubject: "عنوان الرسالة",
+                lblBody: "نص الرسالة (يدعم تنسيق HTML)",
+                placeName: "مثال: أحمد محمد",
+                placeEmail: "client@domain.com",
+                placeSubj: "تعميم رسمي من الخط المضيء",
+                placeBody: "اكتب رسالتك الرسمية هنا...",
+                btnTransmit: "<i class='fas fa-broadcast-tower'></i> إرسال تعميم رسمي",
+                msgProcess: "<i class='fas fa-spinner fa-spin'></i> جاري الإرسال...",
+                msgSuccess: "تم إرسال التعميم الرسمي بنجاح.",
+                msgError: "خطأ في الإرسال: "
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-header-title').innerHTML = dict.headerTitle;
+            document.getElementById('ui-badge').innerText = dict.badge;
+            document.getElementById('ui-lbl-name').innerText = dict.lblName;
+            document.getElementById('ui-lbl-email').innerText = dict.lblEmail;
+            document.getElementById('ui-lbl-subject').innerText = dict.lblSubject;
+            document.getElementById('ui-lbl-body').innerText = dict.lblBody;
+
+            document.getElementById('mail-name').placeholder = dict.placeName;
+            document.getElementById('mail-email').placeholder = dict.placeEmail;
+            document.getElementById('mail-subject').placeholder = dict.placeSubj;
+            document.getElementById('mail-body').placeholder = dict.placeBody;
+
+            const btn = document.getElementById('btn-transmit');
+            if(!btn.disabled) { btn.innerHTML = dict.btnTransmit; }
+        }
+
         emailjs.init("YOUR_PUBLIC_KEY");
 
         document.getElementById('email-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-transmit');
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> TRANSMITTING...";
+            const dict = dictionary[window.currentLang];
+            
+            btn.innerHTML = dict.msgProcess;
             btn.disabled = true;
 
-            // Gather the data variables to send to your template
             const templateParams = {
                 to_name: document.getElementById('mail-name').value,
                 to_email: document.getElementById('mail-email').value,
                 subject: document.getElementById('mail-subject').value,
-                // Replace line breaks with HTML breaks so paragraphs render correctly in email
                 message: document.getElementById('mail-body').value.replace(/\n/g, "<br>")
             };
 
-            // This tells EmailJS: Use this Service, this Template, and fill it with this Data.
-			emailjs.send("service_alkhat000", "template_8vxpxsu", templateParams)
-				.then(function(response) {
-					console.log('SUCCESS!', response.status, response.text);
-					alert("OFFICIAL BROADCAST TRANSMITTED.");
-				}, function(error) {
-					console.log('FAILED...', error);
-					alert("TRANSMISSION ERROR: " + error.text);
-				});
+            emailjs.send("service_alkhat000", "template_8vxpxsu", templateParams)
+                .then(function(response) {
+                    alert(dict.msgSuccess);
+                    document.getElementById('email-form').reset();
+                }, function(error) {
+                    alert(dict.msgError + error.text);
+                }).finally(() => {
+                    btn.innerHTML = dict.btnTransmit;
+                    btn.disabled = false;
+                });
         });
-    </script>
-	
-	<script>
+
         window.addEventListener('DOMContentLoaded', () => {
-            // Scan the URL for incoming parameters
             const urlParams = new URLSearchParams(window.location.search);
             const targetName = urlParams.get('name');
             const targetEmail = urlParams.get('email');
             
-            // If intel is found, auto-fill the target fields
-            if(targetName) {
-                document.getElementById('mail-name').value = targetName;
-            }
-            if(targetEmail) {
-                document.getElementById('mail-email').value = targetEmail;
-            }
+            if(targetName) document.getElementById('mail-name').value = targetName;
+            if(targetEmail) document.getElementById('mail-email').value = targetEmail;
         });
     </script>
 </body>

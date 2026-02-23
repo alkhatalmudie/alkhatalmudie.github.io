@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* TACTICAL TERMINAL STYLES */
-        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; }
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
-        /* --- DASHBOARD LAYOUT --- */
         .dash-wrapper { display: flex; height: 100vh; overflow: hidden; }
         
         .dash-sidebar { width: 280px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        body[dir="rtl"] .dash-sidebar { border-right: none; border-left: 1px solid rgba(0, 242, 255, 0.2); }
+
         .operative-card { text-align: center; border-bottom: 1px dashed rgba(0, 242, 255, 0.3); padding-bottom: 20px; margin-bottom: 20px; }
         .op-photo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #00f2ff; margin: 0 auto 10px auto; background-size: cover; background-position: center; background-color: #333; }
         .op-name { margin: 0; color: white; font-size: 1.2rem; text-transform: uppercase; }
@@ -24,40 +25,39 @@
 
         .dash-main { flex-grow: 1; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; overflow-y: auto; }
         
-        /* --- PANELS --- */
         .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); padding: 15px; display: flex; flex-direction: column; }
         .panel h3 { margin-top: 0; color: #00ff88; border-bottom: 1px solid #00ff88; padding-bottom: 10px; font-size: 1rem; }
-        .panel.chat-panel h3 { color: #00f2ff; border-color: #00f2ff; }
+        .panel.chat-panel h3 { color: #00f2ff; border-color: #00f2ff; display: flex; justify-content: space-between; align-items: center;}
         .panel.log-panel h3 { color: #ff4b5c; border-color: #ff4b5c; }
 
-        /* --- COMMS CHANNEL (CHAT) --- */
         .chat-box { flex-grow: 1; border: 1px inset rgba(0, 242, 255, 0.1); background: rgba(0,0,0,0.5); padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; min-height: 300px; }
         .msg { padding: 8px 12px; border-radius: 5px; max-width: 80%; font-size: 0.9rem; }
         .msg.op { background: rgba(0, 242, 255, 0.1); border-left: 3px solid #00f2ff; align-self: flex-start; color: white; }
+        body[dir="rtl"] .msg.op { border-left: none; border-right: 3px solid #00f2ff; }
         .msg.admin { background: rgba(255, 75, 92, 0.1); border-right: 3px solid #ff4b5c; align-self: flex-end; color: #ff4b5c; text-align: right; }
+        body[dir="rtl"] .msg.admin { border-right: none; border-left: 3px solid #ff4b5c; text-align: left;}
         .msg-time { font-size: 0.6rem; opacity: 0.5; margin-top: 5px; display: block; }
 
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input-area input { flex-grow: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #00f2ff; color: white; font-family: inherit; }
         .chat-input-area input:focus { outline: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
 
-        /* --- FILE DROP ZONE --- */
         .file-drop { border: 1px dashed rgba(0, 255, 136, 0.4); padding: 20px; text-align: center; cursor: pointer; color: #aaa; transition: 0.3s; }
         .file-drop:hover { background: rgba(0, 255, 136, 0.05); color: #00ff88; border-color: #00ff88; }
         .file-drop i { font-size: 2rem; margin-bottom: 10px; color: #00ff88; }
 
-        /* --- AUDIT TRAIL LOGS --- */
         .log-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; max-height: 250px; }
         .log-list li { border-bottom: 1px solid rgba(255, 75, 92, 0.2); padding: 8px 0; font-size: 0.8rem; color: #ccc; display: flex; justify-content: space-between; }
         .log-list li span.event { color: #ff4b5c; }
 
-        /* --- BUTTONS --- */
         .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px; cursor: pointer; transition: 0.3s; font-family: inherit; font-weight: bold; width: 100%; text-transform: uppercase; }
         .btn:hover { background: #00f2ff; color: #050a15; }
         .btn-green { border-color: #00ff88; color: #00ff88; }
         .btn-green:hover { background: #00ff88; color: #050a15; }
         .btn-danger { border-color: #ff4b5c; color: #ff4b5c; margin-top: auto; }
         .btn-danger:hover { background: #ff4b5c; color: white; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; width: auto; padding: 5px 15px;}
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
 
         @media (max-width: 900px) {
             .dash-wrapper { flex-direction: column; height: auto; }
@@ -78,20 +78,23 @@
             </div>
 
             <div style="font-size: 0.8rem; color: #aaa; text-align: center; margin-bottom: 20px;">
-                <p><i class="fas fa-lock" style="color:#00ff88;"></i> UPLINK SECURE</p>
-                <p><i class="fas fa-server"></i> SERVER: DOHA-01</p>
+                <p><i class="fas fa-lock" style="color:#00ff88;"></i> <span id="ui-stat-secure">UPLINK SECURE</span></p>
+                <p><i class="fas fa-server"></i> <span id="ui-stat-server">SERVER: DOHA-01</span></p>
             </div>
 
-            <button class="btn btn-green" id="btn-arrival" onclick="submitArrival()" style="margin-bottom: 10px;"><i class="fas fa-building"></i> LOG OFFICE ARRIVAL</button>
-            <button class="btn btn-danger" onclick="executeLogout()"><i class="fas fa-power-off"></i> TERMINATE SESSION</button>
+            <button class="btn btn-green" id="btn-arrival" onclick="submitArrival()" style="margin-bottom: 10px;"><i class="fas fa-building"></i> <span>LOG OFFICE ARRIVAL</span></button>
+            <button class="btn btn-danger" onclick="executeLogout()" id="ui-btn-logout"><i class="fas fa-power-off"></i> TERMINATE SESSION</button>
         </aside>
 
         <main class="dash-main">
             
             <div class="panel chat-panel" style="grid-row: span 2;">
-                <h3><i class="fas fa-satellite-dish"></i> ALPHA COMMS CHANNEL</h3>
+                <h3>
+                    <span><i class="fas fa-satellite-dish"></i> <span id="ui-panel-chat">ALPHA COMMS CHANNEL</span></span>
+                    <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
+                </h3>
                 <div class="chat-box" id="chat-window">
-                    <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;">Establishing connection to Command...</p>
+                    <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;" id="ui-msg-conn">Establishing connection to Command...</p>
                 </div>
                 <form class="chat-input-area" id="chat-form">
                     <input type="text" id="chat-input" placeholder="Transmit message to Admin..." required autocomplete="off">
@@ -100,8 +103,8 @@
             </div>
 
             <div class="panel">
-                <h3 style="color: #00ff88; border-color:#00ff88;"><i class="fas fa-file-export"></i> SECURE FILE DROP</h3>
-                <p style="font-size: 0.8rem; color: #aaa;">Upload completed translations or reports directly to the Alpha Command inbox.</p>
+                <h3 style="color: #00ff88; border-color:#00ff88;" id="ui-panel-drop"><i class="fas fa-file-export"></i> SECURE FILE DROP</h3>
+                <p style="font-size: 0.8rem; color: #aaa;" id="ui-desc-drop">Upload completed translations or reports directly to the Alpha Command inbox.</p>
                 
                 <input type="file" id="op-file" style="display: none;" onchange="handleFileSelect(event)">
                 <div class="file-drop" id="drop-zone" onclick="document.getElementById('op-file').click()">
@@ -112,9 +115,9 @@
             </div>
 
             <div class="panel log-panel">
-                <h3><i class="fas fa-history"></i> ACCESS AUDIT TRAIL</h3>
+                <h3 id="ui-panel-log"><i class="fas fa-history"></i> ACCESS AUDIT TRAIL</h3>
                 <ul class="log-list" id="audit-logs">
-                    <li>Scanning logs...</li>
+                    <li id="ui-msg-log">Scanning logs...</li>
                 </ul>
             </div>
 
@@ -133,7 +136,79 @@
         let currentUserUid = null;
         let operativeData = null;
 
-        // 1. SECURITY BOOTUP SEQUENCE
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                statSecure: "UPLINK SECURE",
+                statServer: "SERVER: DOHA-01",
+                btnArrival: "LOG OFFICE ARRIVAL",
+                btnLogout: "TERMINATE SESSION",
+                panelChat: "ALPHA COMMS CHANNEL",
+                msgConn: "Comms channel open. Waiting for transmission...",
+                placeChat: "Transmit message to Admin...",
+                panelDrop: "<i class='fas fa-file-export'></i> SECURE FILE DROP",
+                descDrop: "Upload completed translations or reports directly to the Alpha Command inbox.",
+                lblDrop: "Click to select payload",
+                btnUpload: "TRANSMIT PAYLOAD",
+                panelLog: "<i class='fas fa-history'></i> ACCESS AUDIT TRAIL",
+                msgLog: "Scanning logs...",
+                txtAdmin: "ALPHA COMMAND"
+            },
+            ar: {
+                statSecure: "الاتصال آمن",
+                statServer: "الخادم: الدوحة-01",
+                btnArrival: "تسجيل حضور للمكتب",
+                btnLogout: "إنهاء الجلسة",
+                panelChat: "قناة اتصال القيادة",
+                msgConn: "القناة مفتوحة. بانتظار الإرسال...",
+                placeChat: "أرسل رسالة للقيادة...",
+                panelDrop: "<i class='fas fa-file-export'></i> النقل الآمن للملفات",
+                descDrop: "ارفع الترجمات أو التقارير المنجزة مباشرة لصندوق القيادة الرئيسية.",
+                lblDrop: "اضغط لاختيار الملف",
+                btnUpload: "إرسال الملف",
+                panelLog: "<i class='fas fa-history'></i> سجل عمليات الوصول",
+                msgLog: "جاري فحص السجلات...",
+                txtAdmin: "القيادة الرئيسية"
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-stat-secure').innerText = dict.statSecure;
+            document.getElementById('ui-stat-server').innerText = dict.statServer;
+            document.querySelector('#btn-arrival span').innerText = dict.btnArrival;
+            document.getElementById('ui-btn-logout').innerHTML = `<i class="fas fa-power-off"></i> ${dict.btnLogout}`;
+            
+            document.getElementById('ui-panel-chat').innerText = dict.panelChat;
+            document.getElementById('chat-input').placeholder = dict.placeChat;
+            
+            document.getElementById('ui-panel-drop').innerHTML = dict.panelDrop;
+            document.getElementById('ui-desc-drop').innerText = dict.descDrop;
+            
+            const fileInput = document.getElementById('op-file');
+            if(!fileInput.files.length) { document.getElementById('file-label').innerText = dict.lblDrop; }
+            
+            const btnUp = document.getElementById('btn-upload');
+            if(!btnUp.disabled && btnUp.innerText !== "TRANSMITTING..." && btnUp.innerText !== "جاري الإرسال...") {
+                btnUp.innerText = dict.btnUpload;
+            }
+
+            document.getElementById('ui-panel-log').innerHTML = dict.panelLog;
+
+            // Re-render UI elements that rely on translation
+            if(currentUserUid) {
+                fetchAuditTrail(currentUserUid);
+                initializeCommsChannel(currentUserUid);
+                fetchOperativeIntel(currentUserUid); // To refresh permission text
+            }
+        }
+
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "login_emp.html";
@@ -145,7 +220,6 @@
             }
         });
 
-        // 2. FETCH IDENTITY
         async function fetchOperativeIntel(uid) {
             const q = query(collection(db, "employees"), where("uid", "==", uid));
             const snapshot = await getDocs(q);
@@ -154,7 +228,15 @@
                 operativeData = snapshot.docs[0].data();
                 document.getElementById('ui-name').innerText = operativeData.name;
                 document.getElementById('ui-id').innerText = "ID: " + operativeData.empId;
-                document.getElementById('ui-role').innerText = operativeData.title + " | " + operativeData.permission;
+                
+                let dispPerm = operativeData.permission;
+                if(window.currentLang === 'ar') {
+                    if(dispPerm === "Standard") dispPerm = "موظف قياسي";
+                    if(dispPerm === "Manager") dispPerm = "مدير ميداني";
+                    if(dispPerm === "Admin") dispPerm = "مدير نظام";
+                }
+                
+                document.getElementById('ui-role').innerText = operativeData.title + " | " + dispPerm;
                 if(operativeData.photo) {
                     document.getElementById('ui-photo').style.backgroundImage = `url('${operativeData.photo}')`;
                 }
@@ -163,7 +245,6 @@
             }
         }
 
-        // 3. SECURE FILE DROP LOGIC
         let selectedFile = null;
         window.handleFileSelect = function(e) {
             selectedFile = e.target.files[0];
@@ -177,7 +258,9 @@
         window.executeUpload = async function() {
             if(!selectedFile) return;
             const btn = document.getElementById('btn-upload');
-            btn.innerText = "TRANSMITTING..."; btn.disabled = true;
+            const dict = dictionary[window.currentLang];
+            btn.innerText = window.currentLang === 'en' ? "TRANSMITTING..." : "جاري الإرسال..."; 
+            btn.disabled = true;
 
             try {
                 const fileName = Date.now() + "_" + selectedFile.name;
@@ -185,7 +268,6 @@
                 const snapshot = await uploadBytes(storageRef, selectedFile);
                 const downloadURL = await getDownloadURL(snapshot.ref);
 
-                // Send notification to Admin Inbox Database
                 await addDoc(collection(db, "admin_inbox"), {
                     empUid: currentUserUid,
                     empName: operativeData.name,
@@ -194,44 +276,53 @@
                     timestamp: serverTimestamp()
                 });
 
-                alert("PAYLOAD DELIVERED TO ALPHA COMMAND.");
+                alert(window.currentLang === 'en' ? "PAYLOAD DELIVERED TO ALPHA COMMAND." : "تم إرسال الملف للقيادة الرئيسية بنجاح.");
                 selectedFile = null;
-                document.getElementById('file-label').innerText = "Click to select payload";
+                document.getElementById('file-label').innerText = dict.lblDrop;
                 document.getElementById('drop-zone').style.borderColor = "rgba(0, 255, 136, 0.4)";
                 btn.style.display = "none";
 
             } catch(error) {
                 alert("TRANSMISSION FAILED: " + error.message);
             } finally {
-                btn.innerText = "TRANSMIT PAYLOAD"; btn.disabled = false;
+                btn.innerText = dict.btnUpload; 
+                btn.disabled = false;
             }
         }
 
-        // 4. AUDIT TRAIL (Login Logs)
         async function fetchAuditTrail(uid) {
             const logBox = document.getElementById('audit-logs');
             const q = query(collection(db, "employee_logs"), where("uid", "==", uid), orderBy("timestamp", "desc"));
             
-            // Real-time listener for logs
             onSnapshot(q, (snapshot) => {
                 logBox.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const timeString = data.timestamp ? data.timestamp.toDate().toLocaleString() : "Syncing...";
-                    logBox.innerHTML += `<li><span class="event">${data.event}</span> <span>${timeString}</span></li>`;
+                    
+                    let eventText = data.event;
+                    if(window.currentLang === 'ar') {
+                        if(eventText === "OFFICE_ARRIVAL") eventText = "تسجيل حضور للمكتب";
+                        if(eventText === "LOGIN_SUCCESS") eventText = "تسجيل دخول للنظام";
+                    } else {
+                        if(eventText === "OFFICE_ARRIVAL") eventText = "OFFICE ARRIVAL";
+                        if(eventText === "LOGIN_SUCCESS") eventText = "SYSTEM LOGIN";
+                    }
+
+                    logBox.innerHTML += `<li><span class="event">${eventText}</span> <span>${timeString}</span></li>`;
                 });
             });
         }
 
-        // 5. COMMS CHANNEL (Live Chat)
         function initializeCommsChannel(uid) {
             const chatWindow = document.getElementById('chat-window');
+            const dict = dictionary[window.currentLang];
             const q = query(collection(db, "messages"), where("empUid", "==", uid), orderBy("timestamp", "asc"));
 
             onSnapshot(q, (snapshot) => {
                 chatWindow.innerHTML = "";
                 if(snapshot.empty) {
-                    chatWindow.innerHTML = "<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>Comms channel open. Waiting for transmission...</p>";
+                    chatWindow.innerHTML = `<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>${dict.msgConn}</p>`;
                 }
 
                 snapshot.forEach(doc => {
@@ -241,13 +332,13 @@
                     
                     chatWindow.innerHTML += `
                         <div class="msg ${isOp ? 'op' : 'admin'}">
-                            <strong>${isOp ? operativeData.name : 'ALPHA COMMAND'}</strong><br>
+                            <strong>${isOp ? operativeData.name : dict.txtAdmin}</strong><br>
                             ${data.text}
                             <span class="msg-time">${time}</span>
                         </div>
                     `;
                 });
-                chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to bottom
+                chatWindow.scrollTop = chatWindow.scrollHeight; 
             });
         }
 
@@ -256,45 +347,33 @@
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
             if(!text) return;
-
-            input.value = ""; // Clear input immediately for UX
-
+            input.value = ""; 
             try {
                 await addDoc(collection(db, "messages"), {
-                    empUid: currentUserUid,
-                    sender: "Operative",
-                    text: text,
-                    timestamp: serverTimestamp()
+                    empUid: currentUserUid, sender: "Operative", text: text, timestamp: serverTimestamp()
                 });
-            } catch(error) {
-                alert("COMMS FAILURE: " + error.message);
-            }
+            } catch(error) { alert("COMMS FAILURE: " + error.message); }
         });
-		
-		// 5.5 LOG OFFICE ARRIVAL
+        
         window.submitArrival = async function() {
             const btn = document.getElementById('btn-arrival');
-            btn.innerText = "LOGGING..."; btn.disabled = true;
+            btn.querySelector('span').innerText = window.currentLang === 'en' ? "LOGGING..." : "جاري التسجيل..."; 
+            btn.disabled = true;
             try {
                 await addDoc(collection(db, "employee_logs"), {
-                    uid: currentUserUid,
-                    empName: operativeData.name, // Save their real name to the log
-                    timestamp: serverTimestamp(),
-                    event: "OFFICE_ARRIVAL"
+                    uid: currentUserUid, empName: operativeData.name, timestamp: serverTimestamp(), event: "OFFICE_ARRIVAL"
                 });
-                btn.innerText = "ARRIVAL LOGGED";
+                btn.querySelector('span').innerText = window.currentLang === 'en' ? "ARRIVAL LOGGED" : "تم التسجيل";
                 btn.style.background = "#00ff88"; btn.style.color = "#000";
             } catch(error) {
                 alert("COMMS FAILURE: " + error.message);
-                btn.innerText = "LOG OFFICE ARRIVAL"; btn.disabled = false;
+                btn.querySelector('span').innerText = dictionary[window.currentLang].btnArrival; 
+                btn.disabled = false;
             }
         }
 
-        // 6. LOGOUT
         window.executeLogout = function() {
-            signOut(auth).then(() => {
-                window.location.href = "login_emp.html";
-            });
+            signOut(auth).then(() => { window.location.href = "login_emp.html"; });
         }
     </script>
 </body>
