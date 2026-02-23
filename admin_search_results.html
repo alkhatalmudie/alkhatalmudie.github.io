@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM SCAN | Alpha Command</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    
+    <style>
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; transition: all 0.3s ease; opacity: 0; animation: systemBoot 0.4s ease-in forwards; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+
+        @keyframes systemBoot {
+            0% { opacity: 0; transform: scale(0.99); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .admin-wrapper { display: flex; height: 100vh; overflow: hidden; }
+        .admin-sidebar { width: 260px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
+        
+        .admin-main-content { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        
+        .panel { width: 100%; max-width: 900px; border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); display: flex; flex-direction: column; }
+        .panel-header { padding: 20px; border-bottom: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center; }
+        .panel-header h3 { margin: 0; font-size: 1.2rem; color: #00ff88; letter-spacing: 2px; }
+        
+        .panel-content { padding: 30px; min-height: 400px; }
+
+        /* Typewriter Cursor */
+        .typing { border-right: 2px solid #00f2ff; white-space: nowrap; overflow: hidden; display: inline-block; animation: blinkCursor 0.8s infinite; }
+        @keyframes blinkCursor { from, to { border-color: transparent; } 50% { border-color: #00f2ff; } }
+
+        /* Result Rows */
+        .search-result-row { margin-bottom: 15px; border-bottom: 1px solid rgba(0,242,255,0.1); padding: 15px; opacity: 0; transform: translateY(10px); animation: slideUpFade 0.3s forwards; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 242, 255, 0.01); }
+        .search-result-row:hover { background: rgba(0, 242, 255, 0.05); }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
+
+        .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; font-family: inherit; transition: 0.3s; text-transform: uppercase; font-size: 0.8rem; }
+        .btn:hover { background: #00f2ff; color: #050a15; }
+        .btn-red { border-color: #ff4b5c; color: #ff4b5c; }
+        .btn-red:hover { background: #ff4b5c; color: white; }
+
+        /* Loader Overlay */
+        .system-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #050a15; z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .system-loader.active { opacity: 1; pointer-events: all; }
+        .loader-text { color: #00f2ff; font-size: 1.5rem; letter-spacing: 5px; text-shadow: 0 0 10px #00f2ff; animation: pulseGlow 1.2s infinite alternate; }
+        @keyframes pulseGlow { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .log-line { font-size: 0.9rem; margin-bottom: 10px; color: #888; }
+        .log-line.danger { color: #ff4b5c; }
+		
+		.type-target {
+			display: inline-block;
+			max-width: 400px; /* Prevents long messages from pushing the button off-screen */
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			vertical-align: bottom;
+		}
+    </style>
+</head>
+<body>
+
+    <div id="system-loader" class="system-loader">
+        <div class="loader-text">SYSTEM SCANNING<span class="dots">...</span></div>
+    </div>
+
+    <div class="admin-wrapper">
+        <main class="admin-main-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-microchip"></i> DATABASE SCAN: <span id="search-term-display" style="color:white;"></span></h3>
+                    <button onclick="handleReturnToBase()" class="btn">CLOSE SCAN</button>
+                </div>
+                <div class="panel-content" id="search-results-list">
+                    <p class="log-line">INITIATING DEEP-QUERY PROTOCOL...</p>
+                    <p class="log-line">ACCESSING ENCRYPTED COLLECTIONS...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { db } from './assets/js/firebase-init.js';
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const app = getApp();
+        const auth = getAuth(app);
+
+        // --- THE SEARCH ENGINE ---
+        async function performSystemSearch(queryText) {
+			const resultsContainer = document.getElementById('search-results-list');
+			const term = queryText.toLowerCase();
+			
+			try {
+				// 1. Fetching multiple collections in parallel
+				const [empSnap, orderSnap, msgSnap] = await Promise.all([
+					getDocs(collection(db, "employees")),
+					getDocs(collection(db, "orders")),
+					getDocs(collection(db, "messages")) // New: Fetching the chat database
+				]);
+
+				const allResults = [];
+
+				// SCAN OPERATIVES
+				empSnap.forEach(doc => {
+					const data = doc.data();
+					if (data.name.toLowerCase().includes(term) || (data.empId && data.empId.includes(term))) {
+						allResults.push({ type: "OPERATIVE", title: data.name, sub: `ID: ${data.empId || 'N/A'}`, link: "employee_reg.html" });
+					}
+				});
+
+				// SCAN PAYLOADS (Orders)
+				orderSnap.forEach(doc => {
+					const data = doc.data();
+					if ((data.clientName && data.clientName.toLowerCase().includes(term)) || doc.id.includes(term)) {
+						allResults.push({ type: "PAYLOAD", title: data.clientName || "Unknown Client", sub: `REF: #${doc.id}`, link: "admin_inbox.html" });
+					}
+				});
+
+				// SCAN COMMS (Messages) - NEW!
+				msgSnap.forEach(doc => {
+					const data = doc.data();
+					if (data.text && data.text.toLowerCase().includes(term)) {
+						// Snippet: show a few words around the search term for context
+						const snippet = data.text.length > 30 ? data.text.substring(0, 30) + "..." : data.text;
+						allResults.push({ 
+							type: "COMMS", 
+							title: `Message: "${snippet}"`, 
+							sub: `Sender: ${data.sender}`, 
+							link: "admin_inbox.html" 
+						});
+					}
+				});
+
+				resultsContainer.innerHTML = ""; // Clear "Scanning..." text
+
+				if (allResults.length === 0) {
+					resultsContainer.innerHTML = "<p class='log-line danger'>ERROR: NO MATCHING SIGNATURES FOUND IN ALPHA DATABASE.</p>";
+					return;
+				}
+
+				// --- THE CINEMATIC TYPEWRITER LOOP ---
+				for (const item of allResults) {
+					await typeResult(item.type, item.title, item.sub, item.link);
+					await new Promise(r => setTimeout(r, 150)); 
+				}
+
+			} catch (err) {
+				resultsContainer.innerHTML = "<p class='log-line danger'>CRITICAL SCAN ERROR: ACCESS DENIED BY FIREWALL.</p>";
+				console.error(err);
+			}
+		}
+
+        async function typeResult(type, text, subtitle, link) {
+            const list = document.getElementById('search-results-list');
+            const row = document.createElement('div');
+            row.className = "search-result-row";
+            row.innerHTML = `
+                <div>
+                    <span style="color:#ff4b5c; font-size: 0.7rem;">[${type}]</span> 
+                    <strong class="type-target" style="margin-left: 10px; color:#00f2ff;"></strong>
+                    <span class="sub-target" style="color:#888; margin-left: 10px; font-size: 0.8rem;"></span>
+                </div>
+                <a href="${link}" class="btn" style="opacity:0; transition: 0.5s;">VIEW</a>
+            `;
+            list.appendChild(row);
+
+            const titleTarget = row.querySelector('.type-target');
+            const subTarget = row.querySelector('.sub-target');
+            const btnTarget = row.querySelector('.btn');
+
+            await typeText(titleTarget, text, 25);
+            await typeText(subTarget, subtitle, 15);
+            btnTarget.style.opacity = "1";
+        }
+
+        function typeText(element, text, speed) {
+            return new Promise((resolve) => {
+                let i = 0;
+                element.classList.add('typing');
+                function typing() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(typing, speed);
+                    } else {
+                        element.classList.remove('typing');
+                        resolve();
+                    }
+                }
+                typing();
+            });
+        }
+
+        // Initialize
+        const urlParams = new URLSearchParams(window.location.search);
+        const q = urlParams.get('q');
+        if (q) {
+            document.getElementById('search-term-display').innerText = `"${q}"`;
+            performSystemSearch(q);
+        }
+
+        // System Functions
+        window.handleReturnToBase = function() {
+            const loader = document.getElementById('system-loader');
+            if (loader) loader.classList.add('active');
+            setTimeout(() => { window.location.href = 'alpha.html'; }, 500);
+        };
+    </script>
+</body>
+</html>

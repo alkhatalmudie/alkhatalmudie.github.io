@@ -253,6 +253,13 @@
         <div class="header-top">
             <h2 class="header-title" id="ui-header-title"><i class="fas fa-satellite-dish"></i> OVERWATCH TERMINAL</h2>
             <div style="display: flex; gap: 15px; align-items: center;">
+				<div class="search-container" style="min-width: 200px;">
+					<div style="position: relative;">
+						<i class="fas fa-search" style="position: absolute; left: 10px; top: 12px; color: #00f2ff; font-size: 0.8rem;"></i>
+						<input type="text" id="global-search" placeholder="SEARCH SYSTEM..." 
+							   style="width: 100%; padding: 10px 10px 10px 30px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; font-size: 0.8rem; box-sizing: border-box;">
+					</div>
+				</div>
                 <span style="font-size: 0.8rem; color: var(--term-green); border: 1px solid; padding: 6px 12px; border-radius: 3px; font-weight: bold; background: rgba(0, 255, 136, 0.1);" id="ui-badge-secure">
                     <i class="fas fa-lock"></i> UPLINK SECURE
                 </span>
@@ -564,6 +571,30 @@
 				window.location.href = 'index.html';
 			}, 600);
 		};
+		
+		/* --- GLOBAL SEARCH ENGINE TRIGGER --- */
+		const searchInput = document.getElementById('global-search');
+		if (searchInput) {
+			searchInput.addEventListener('keypress', function (e) {
+				if (e.key === 'Enter') {
+					const query = this.value.trim();
+					if (query.length < 2) return; 
+
+					const loader = document.getElementById('system-loader');
+					if (loader) {
+						// Change text to show we are searching
+						const loaderText = loader.querySelector('.loader-text');
+						if(loaderText) loaderText.innerHTML = "INITIATING DATABASE SCAN<span class='dots'>...</span>";
+						loader.classList.add('active');
+					}
+
+					// Redirect to the results page
+					setTimeout(() => {
+						window.location.href = `admin_search_results.html?q=${encodeURIComponent(query)}`;
+					}, 600);
+				}
+			});
+		}
     </script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
