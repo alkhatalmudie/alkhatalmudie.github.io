@@ -154,8 +154,8 @@
                 <div class="profile-badge" id="dash-rank">CLEARANCE: CLIENT</div>
                 
                 <button id="btn-admin-deploy" class="btn btn-primary" style="display: none; width: 100%; margin-top: 20px; background: var(--brand-magenta); border-color: var(--brand-magenta);">
-                    <i class="fas fa-rocket"></i> Launch Deployment Terminal
-                </button>
+				<i class="fas fa-rocket"></i> Alpha Backend Dashboard
+				</button>
                 
                 <hr style="border-color: rgba(255,255,255,0.1); margin: 25px 0;">
                 
@@ -316,11 +316,11 @@
                     document.getElementById('dash-rank').style.color = "var(--brand-cyan)";
                     document.getElementById('dash-rank').style.borderColor = "var(--brand-cyan)";
                     
-                    // UNLOCK THE DEPLOYMENT BUTTON
+                    // UNLOCK THE DEPLOYMENT BUTTON AND ROUTE TO ALPHA
                     const deployBtn = document.getElementById('btn-admin-deploy');
                     if(deployBtn) {
                         deployBtn.style.display = 'block';
-                        deployBtn.onclick = () => { window.location.href = "admin_deployment.html"; };
+                        deployBtn.onclick = () => { window.location.href = "alpha.html"; };
                     }
                 }
 

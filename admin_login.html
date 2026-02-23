@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA COMMAND | Secure Uplink</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #050a15; color: #00f2ff;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; display: flex; align-items: center; justify-content: center;
+            height: 100vh; overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 60%);
+        }
+
+        .login-box {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            padding: 40px; width: 100%; max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+            position: relative;
+        }
+
+        .login-box::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: #ff4b5c; box-shadow: 0 0 10px #ff4b5c;
+        }
+
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header i { font-size: 3rem; color: #ff4b5c; margin-bottom: 15px; }
+        .login-header h2 { margin: 0; letter-spacing: 2px; }
+        .login-header p { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input {
+            width: 100%; padding: 12px; box-sizing: border-box;
+            background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2);
+            color: #00f2ff; font-family: 'Share Tech Mono', monospace; outline: none; transition: 0.3s;
+        }
+        .form-group input:focus { border-color: #00f2ff; background: rgba(0, 242, 255, 0.1); }
+
+        .btn-exec {
+            width: 100%; padding: 15px; background: transparent;
+            border: 1px solid #00f2ff; color: #00f2ff; font-family: inherit; font-weight: bold;
+            font-size: 1rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .btn-exec:hover { background: #00f2ff; color: #050a15; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
+
+        #error-msg { color: #ff4b5c; font-size: 0.85rem; text-align: center; margin-top: 15px; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="login-header">
+            <i class="fas fa-fingerprint"></i>
+            <h2>ALPHA COMMAND</h2>
+            <p>RESTRICTED ACCESS PORTAL</p>
+        </div>
+
+        <form id="admin-login-form">
+            <div class="form-group">
+                <label>Admin Identification</label>
+                <input type="email" id="admin-email" required placeholder="Enter commander email...">
+            </div>
+            <div class="form-group">
+                <label>Encryption Passkey</label>
+                <input type="password" id="admin-pass" required placeholder="Enter master password...">
+            </div>
+            <button type="submit" class="btn-exec" id="btn-submit">INITIATE UPLINK</button>
+        </form>
+        <div id="error-msg"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
+
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            const btn = document.getElementById('btn-submit');
+            const errorDiv = document.getElementById('error-msg');
+
+            btn.innerText = "VERIFYING CREDENTIALS...";
+            btn.disabled = true;
+            errorDiv.innerText = "";
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                if (user.uid === ADMIN_UID) {
+                    btn.style.backgroundColor = "#00ff88";
+                    btn.style.color = "#050a15";
+                    btn.style.borderColor = "#00ff88";
+                    btn.innerText = "ACCESS GRANTED. REROUTING...";
+                    setTimeout(() => { window.location.href = "alpha.html"; }, 1500);
+                } else {
+                    // Kick them out immediately if it's a normal user trying to use the Admin Portal
+                    await signOut(auth);
+                    throw new Error("UNAUTHORIZED IDENTITY. UPLINK SEVERED.");
+                }
+            } catch (error) {
+                errorDiv.innerText = "[ SECURITY BREACH ] " + error.message;
+                btn.innerText = "INITIATE UPLINK";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -184,6 +184,10 @@
                 <div class="stat-label" id="ui-stat-rev"><i class="fas fa-coins"></i> Total Revenue (JOD)</div>
                 <div class="stat-val" id="stat-revenue">0.00</div>
             </div>
+            <div class="stat-box" style="border-left-color: #ffc107;">
+                <div class="stat-label" style="color: #ffc107;" id="ui-stat-users"><i class="fas fa-users"></i> Registered Accounts</div>
+                <div class="stat-val" id="stat-users">0</div>
+            </div>
         </div>
 
         <div class="panel">
@@ -317,9 +321,14 @@
             let pendingCount = 0; let completedCount = 0; let revenue = 0;
 
             try {
+                // 1. Fetch Orders
                 const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
                 const snapshot = await getDocs(q);
                 logBox.innerHTML = "";
+
+                // 2. Fetch User Count (New addition!)
+                const userSnapshot = await getDocs(collection(db, "users"));
+                document.getElementById('stat-users').innerText = userSnapshot.size;
 
                 if(snapshot.empty) {
                     logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty}</td></tr>`;
