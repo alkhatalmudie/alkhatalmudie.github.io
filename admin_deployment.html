@@ -14,7 +14,7 @@
             background-color: #050a15;
             color: #00f2ff;
             font-family: 'Share Tech Mono', monospace, sans-serif;
-            margin: 0; padding: 20px;
+            margin: 0; padding: 0;
             transition: all 0.3s ease;
         }
 
@@ -23,7 +23,39 @@
             font-family: 'Cairo', sans-serif;
         }
 
-        .header { border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        /* --- ADMIN DASHBOARD LAYOUT --- */
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        
+        .admin-sidebar {
+            width: 260px;
+            background: rgba(0, 0, 0, 0.6);
+            border-right: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
+        .admin-sidebar-menu li { margin-bottom: 10px; }
+        .admin-sidebar-menu a {
+            display: block; padding: 12px 15px; color: #ccc; text-decoration: none;
+            border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem;
+        }
+        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active {
+            background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff;
+        }
+        .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
+
+        .admin-main-content {
+            flex-grow: 1; padding: 20px 40px; overflow-y: auto;
+        }
+
+        .header { 
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; 
+            margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; 
+        }
+        
         .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         
         .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.03); padding: 20px; }
@@ -32,6 +64,7 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.8rem; opacity: 0.8; margin-bottom: 5px; font-weight: bold; }
         input, textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); color: white; font-family: inherit; box-sizing: border-box; }
+        input:focus, textarea:focus { border-color: #00f2ff; outline: none; }
         
         .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; transition: 0.3s; width: 100%; font-family: inherit; font-size: 1rem; font-weight: bold; }
         .btn:hover { background: #00f2ff; color: #050a15; }
@@ -44,134 +77,84 @@
         .package-card h4 { margin: 0 0 10px 0; color: white; }
 
         @media (max-width: 900px) {
-            .grid-layout { grid-template-columns: 1fr; }
-            .header { flex-direction: column; gap: 15px; text-align: center; }
-        }
-		
-		/* --- ADMIN DASHBOARD LAYOUT --- */
-        .admin-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .admin-sidebar {
-            width: 260px;
-            background: rgba(0, 0, 0, 0.6);
-            border-right: 1px solid rgba(0, 242, 255, 0.2);
-            padding: 20px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .admin-sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 30px 0 0 0;
-        }
-
-        .admin-sidebar-menu li { margin-bottom: 10px; }
-
-        .admin-sidebar-menu a {
-            display: block;
-            padding: 12px 15px;
-            color: #ccc;
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active {
-            background: rgba(0, 242, 255, 0.1);
-            color: #00f2ff;
-            border-left-color: #00f2ff;
-        }
-
-        .admin-sidebar-menu i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .admin-main-content {
-            flex-grow: 1;
-            padding: 20px 40px;
-            overflow-y: auto;
-        }
-
-        @media (max-width: 900px) {
             .admin-wrapper { flex-direction: column; }
             .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
+            .grid-layout { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 15px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-		
-		
-		<div class="header">
-			<h2 id="ui-header-title"><i class="fas fa-rocket"></i> PACKAGE DEPLOYMENT TERMINAL</h2>
-			<div style="display: flex; gap: 15px;">
-				<button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
-				<button onclick="window.location.href='index.html'" class="btn" style="width: auto;" id="ui-btn-return">Return to Base</button>
-			</div>
-		</div>
-
     <div class="admin-wrapper">
-		<aside class="admin-sidebar">
-			<div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
-				<i class="fas fa-shield-alt" style="font-size: 2rem; color: #ff4b5c; margin-bottom: 10px;"></i>
-				<h3 style="margin:0; color:white;">ALPHA <span style="color:#00f2ff;">COMMAND</span></h3>
-			</div>
-				
-			<ul class="admin-sidebar-menu">
-				<li><a href="admin_deployment.html" class="active"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
-				<li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
-				<li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
-				<li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
-			</ul>
-		</aside>
-		<div class="grid-layout">
-			<div class="panel">
-				<h3 id="ui-panel1-title"><i class="fas fa-plus-square"></i> CONSTRUCT NEW PACKAGE</h3>
-				<form id="deploy-form">
-					<div class="form-group">
-						<label id="ui-lbl-name">Operation Name (e.g., Travel to Germany)</label>
-						<input type="text" id="pkg-name" required>
-					</div>
-					<div class="form-group">
-						<label id="ui-lbl-desc">Mission Briefing (Description)</label>
-						<textarea id="pkg-desc" rows="3" required></textarea>
-					</div>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-						<div class="form-group"><label id="ui-lbl-start">Start Date</label><input type="date" id="pkg-start" required></div>
-						<div class="form-group"><label id="ui-lbl-end">End Date</label><input type="date" id="pkg-end" required></div>
-					</div>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-						<div class="form-group"><label id="ui-lbl-old">Original Price ($)</label><input type="number" id="pkg-old-price" required></div>
-						<div class="form-group"><label id="ui-lbl-new">Offer Price ($)</label><input type="number" id="pkg-new-price" required></div>
-					</div>
-					<div class="form-group">
-						<label id="ui-lbl-req">Requirements (Comma separated: Passport, ID, Photos...)</label>
-						<textarea id="pkg-req" rows="2" required></textarea>
-					</div>
-					
-					<div style="display: flex; gap: 10px;">
-						<button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
-						<button type="button" class="btn btn-danger" id="btn-cancel" style="display: none; padding: 10px 20px; font-size: 1rem;" onclick="cancelOverride()">ABORT EDIT</button>
-					</div>
-				</form>
-			</div>
+        <aside class="admin-sidebar">
+            <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color: #ff4b5c; margin-bottom: 10px;"></i>
+                <h3 style="margin:0; color:white;">ALPHA <span style="color:#00f2ff;">COMMAND</span></h3>
+            </div>
+                
+            <ul class="admin-sidebar-menu">
+                <li><a href="admin_deployment.html" class="active"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
+                <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
+                <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
+                <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+                <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcast Comms</a></li>
+            </ul>
 
-			<div class="panel">
-				<h3 style="color: #00ff88; border-color: #00ff88;" id="ui-panel2-title"><i class="fas fa-satellite-dish"></i> ACTIVE DEPLOYMENTS</h3>
-				<div id="active-packages">
-					<p id="ui-loading">Scanning frequencies...</p>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div style="margin-top: auto; padding-top: 20px;">
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width: 100%;" id="ui-btn-return">RETURN TO BASE</button>
+            </div>
+        </aside>
+
+        <main class="admin-main-content">
+            <div class="header">
+                <h2 id="ui-header-title" style="margin:0;"><i class="fas fa-rocket"></i> PACKAGE DEPLOYMENT TERMINAL</h2>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <div class="panel">
+                    <h3 id="ui-panel1-title"><i class="fas fa-plus-square"></i> CONSTRUCT NEW PACKAGE</h3>
+                    <form id="deploy-form">
+                        <div class="form-group">
+                            <label id="ui-lbl-name">Operation Name (e.g., Travel to Germany)</label>
+                            <input type="text" id="pkg-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-desc">Mission Briefing (Description)</label>
+                            <textarea id="pkg-desc" rows="3" required></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group"><label id="ui-lbl-start">Start Date</label><input type="date" id="pkg-start" required></div>
+                            <div class="form-group"><label id="ui-lbl-end">End Date</label><input type="date" id="pkg-end" required></div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group"><label id="ui-lbl-old">Original Price ($)</label><input type="number" id="pkg-old-price" required></div>
+                            <div class="form-group"><label id="ui-lbl-new">Offer Price ($)</label><input type="number" id="pkg-new-price" required></div>
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-lbl-req">Requirements (Comma separated: Passport, ID, Photos...)</label>
+                            <textarea id="pkg-req" rows="2" required></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="btn" id="btn-deploy">AUTHORIZE DEPLOYMENT</button>
+                            <button type="button" class="btn btn-danger" id="btn-cancel" style="display: none; padding: 10px 20px; font-size: 1rem;" onclick="cancelOverride()">ABORT EDIT</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <h3 style="color: #00ff88; border-color: #00ff88;" id="ui-panel2-title"><i class="fas fa-satellite-dish"></i> ACTIVE DEPLOYMENTS</h3>
+                    <div id="active-packages">
+                        <p id="ui-loading">Scanning frequencies...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -202,7 +185,7 @@
         const dictionary = {
             en: {
                 header: "<i class='fas fa-rocket'></i> PACKAGE DEPLOYMENT TERMINAL",
-                btnReturn: "Return to Base",
+                btnReturn: "RETURN TO BASE",
                 panel1: "<i class='fas fa-plus-square'></i> CONSTRUCT NEW PACKAGE",
                 lblName: "Operation Name (e.g., Travel to Germany)",
                 lblDesc: "Mission Briefing (Description)",
