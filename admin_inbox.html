@@ -9,10 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* TACTICAL TERMINAL STYLES */
-        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; }
-
-        /* --- SIDEBAR LAYOUT --- */
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; transition: all 0.3s ease;}
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
         .admin-wrapper { display: flex; height: 100vh; overflow: hidden; }
         .admin-sidebar { width: 260px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
         .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
@@ -21,42 +19,37 @@
         .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff; }
         .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
         .admin-main-content { flex-grow: 1; padding: 20px; display: grid; grid-template-columns: 250px 1fr 300px; gap: 20px; overflow-y: hidden; }
-
-        /* --- PANELS --- */
         .panel { border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0, 242, 255, 0.02); display: flex; flex-direction: column; overflow: hidden; }
         .panel-header { padding: 15px; border-bottom: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0,0,0,0.5); }
         .panel-header h3 { margin: 0; font-size: 1rem; color: #00ff88; }
         .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
-
-        /* --- OPERATIVE ROSTER --- */
         .agent-list { list-style: none; padding: 0; margin: 0; }
         .agent-item { padding: 10px; border-bottom: 1px solid rgba(0,242,255,0.1); cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .agent-item:hover, .agent-item.active { background: rgba(0,242,255,0.1); border-left: 3px solid #00f2ff; }
+        body[dir="rtl"] .agent-item:hover, body[dir="rtl"] .agent-item.active { border-left: none; border-right: 3px solid #00f2ff; }
         .agent-avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; background-size: cover; background-position: center; }
         .agent-name { font-size: 0.8rem; color: white; }
         .agent-id { font-size: 0.6rem; color: #aaa; }
-
-        /* --- COMMS CHANNEL --- */
         .chat-box { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; margin-bottom: 15px; }
         .msg { padding: 8px 12px; border-radius: 5px; max-width: 80%; font-size: 0.9rem; }
         .msg.admin { background: rgba(255, 75, 92, 0.1); border-right: 3px solid #ff4b5c; align-self: flex-end; color: #ff4b5c; text-align: right; }
+        body[dir="rtl"] .msg.admin { border-right: none; border-left: 3px solid #ff4b5c; text-align: left; }
         .msg.op { background: rgba(0, 242, 255, 0.1); border-left: 3px solid #00f2ff; align-self: flex-start; color: white; }
+        body[dir="rtl"] .msg.op { border-left: none; border-right: 3px solid #00f2ff; }
         .msg-time { font-size: 0.6rem; opacity: 0.5; margin-top: 5px; display: block; }
-
         .chat-input-area { display: flex; gap: 10px; padding: 15px; border-top: 1px solid rgba(0,242,255,0.2); background: rgba(0,0,0,0.5); }
         .chat-input-area input { flex-grow: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #00f2ff; color: white; font-family: inherit; }
         .chat-input-area input:focus { outline: none; box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
-        
         .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; }
         .btn:hover { background: #00f2ff; color: #050a15; }
-
-        /* --- INBOX (FILES) --- */
+        .btn-green { border-color: #00ff88; color: #00ff88; }
+        .btn-green:hover { background: #00ff88; color: #050a15; }
+        .btn-warning { border-color: #ffc107; color: #ffc107; }
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
         .file-card { border: 1px dashed rgba(0, 255, 136, 0.3); padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.4); }
         .file-name { color: white; font-size: 0.8rem; margin-bottom: 5px; word-break: break-all; }
         .file-sender { color: #aaa; font-size: 0.7rem; margin-bottom: 10px; }
-        .btn-download { border-color: #00ff88; color: #00ff88; font-size: 0.7rem; padding: 5px 10px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
-        .btn-download:hover { background: #00ff88; color: #050a15; }
-
+        .btn-download { font-size: 0.7rem; padding: 5px 10px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
         @media (max-width: 900px) {
             .admin-wrapper { flex-direction: column; height: auto; }
             .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
@@ -73,39 +66,39 @@
                 <i class="fas fa-shield-alt" style="font-size: 2rem; color: #ff4b5c; margin-bottom: 10px;"></i>
                 <h3 style="margin:0; color:white;">ALPHA <span style="color:#00f2ff;">COMMAND</span></h3>
             </div>
-            
             <ul class="admin-sidebar-menu">
                 <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
                 <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
                 <li><a href="admin_inbox.html" class="active"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
                 <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+                <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcast Comms</a></li>
             </ul>
-
             <div style="margin-top: auto; padding-top: 20px;">
-                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width: 100%;">RETURN TO BASE</button>
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width: 100%;" id="ui-btn-return">RETURN TO BASE</button>
             </div>
         </aside>
 
         <main class="admin-main-content">
             
             <div class="panel">
-                <div class="panel-header">
-                    <h3 style="color:#00f2ff;"><i class="fas fa-users"></i> ACTIVE COMMS</h3>
+                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color:#00f2ff;" id="ui-panel1-title"><i class="fas fa-users"></i> ACTIVE COMMS</h3>
+                    <button class="btn btn-warning" style="padding: 5px 10px; font-size: 0.8rem;" id="btn-lang" onclick="toggleLanguage()">عربي</button>
                 </div>
                 <div class="panel-content" style="padding: 0;">
                     <ul class="agent-list" id="agent-roster">
-                        <li style="padding: 15px; color: gray; font-size: 0.8rem; text-align:center;">Scanning channels...</li>
+                        <li style="padding: 15px; color: gray; font-size: 0.8rem; text-align:center;" id="ui-msg-scan">Scanning channels...</li>
                     </ul>
                 </div>
             </div>
 
             <div class="panel" style="display: flex; flex-direction: column;">
                 <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 id="chat-title" style="margin: 0;"><i class="fas fa-satellite-dish"></i> DIRECT CHANNEL: [STANDBY]</h3>
+                    <h3 id="chat-title" style="margin: 0;"><i class="fas fa-satellite-dish"></i> <span id="ui-panel2-title">DIRECT CHANNEL: [STANDBY]</span></h3>
                     <button class="btn btn-green" id="btn-export-chat" style="width: auto; padding: 5px 10px; font-size: 0.8rem; display: none;" onclick="exportChatToCSV()"><i class="fas fa-file-csv"></i> EXPORT LOG</button>
                 </div>
                 <div class="panel-content chat-box" id="chat-window">
-                    <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;">Select an operative to open frequency.</p>
+                    <p style="text-align:center; color:gray; font-size:0.8rem; margin:auto;" id="ui-msg-select">Select an operative to open frequency.</p>
                 </div>
                 <form class="chat-input-area" id="chat-form">
                     <input type="text" id="chat-input" placeholder="Transmit to Operative..." required autocomplete="off" disabled>
@@ -115,10 +108,10 @@
 
             <div class="panel">
                 <div class="panel-header">
-                    <h3><i class="fas fa-file-download"></i> PAYLOAD INBOX</h3>
+                    <h3 id="ui-panel3-title"><i class="fas fa-file-download"></i> PAYLOAD INBOX</h3>
                 </div>
                 <div class="panel-content" id="file-inbox">
-                    <p style="text-align:center; color:gray; font-size:0.8rem;">Decrypting inbox...</p>
+                    <p style="text-align:center; color:gray; font-size:0.8rem;" id="ui-msg-decrypt">Decrypting inbox...</p>
                 </div>
             </div>
 
@@ -136,10 +129,75 @@
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
         
         let activeChatUid = null;
-        let chatUnsubscribe = null; // To kill old chat listeners when switching users
-		let activeChatLog = []; // <-- ADD THIS LINE
+        let activeChatName = null;
+        let chatUnsubscribe = null; 
+        let activeChatLog = []; 
 
-        // 1. SECURITY PERIMETER
+        /* ================= BILINGUAL DICTIONARY ================= */
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                btnReturn: "RETURN TO BASE",
+                panel1: "<i class='fas fa-users'></i> ACTIVE COMMS",
+                panel2: "DIRECT CHANNEL:",
+                panel3: "<i class='fas fa-file-download'></i> PAYLOAD INBOX",
+                msgScan: "Scanning channels...",
+                msgEmptyRoster: "No agents found.",
+                msgSelect: "Select an operative to open frequency.",
+                msgClear: "Frequency clear. Begin transmission.",
+                msgDecrypt: "Decrypting inbox...",
+                msgEmptyInbox: "Inbox empty. No payloads pending.",
+                placeholderInput: "Transmit to Operative...",
+                btnExport: "<i class='fas fa-file-csv'></i> EXPORT LOG",
+                btnDownload: "<i class='fas fa-download'></i> EXTRACT PAYLOAD",
+                txtFrom: "From:",
+                txtAdmin: "ALPHA COMMAND"
+            },
+            ar: {
+                btnReturn: "العودة للقاعدة الرئيسية",
+                panel1: "<i class='fas fa-users'></i> الاتصالات النشطة",
+                panel2: "قناة مباشرة:",
+                panel3: "<i class='fas fa-file-download'></i> صندوق الملفات",
+                msgScan: "جاري فحص القنوات...",
+                msgEmptyRoster: "لا يوجد موظفين.",
+                msgSelect: "اختر موظفاً لفتح قناة الاتصال.",
+                msgClear: "القناة جاهزة. ابدأ الإرسال.",
+                msgDecrypt: "جاري فك تشفير الصندوق...",
+                msgEmptyInbox: "الصندوق فارغ. لا توجد ملفات معلقة.",
+                placeholderInput: "أرسل رسالة للموظف...",
+                btnExport: "<i class='fas fa-file-csv'></i> استخراج السجل",
+                btnDownload: "<i class='fas fa-download'></i> تحميل الملف",
+                txtFrom: "من:",
+                txtAdmin: "القيادة الرئيسية"
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-panel1-title').innerHTML = dict.panel1;
+            document.getElementById('ui-panel3-title').innerHTML = dict.panel3;
+            document.getElementById('chat-input').placeholder = dict.placeholderInput;
+            document.getElementById('btn-export-chat').innerHTML = dict.btnExport;
+
+            if(!activeChatUid) {
+                document.getElementById('ui-panel2-title').innerText = `${dict.panel2} [STANDBY]`;
+                document.getElementById('ui-msg-select').innerText = dict.msgSelect;
+            } else {
+                document.getElementById('ui-panel2-title').innerText = `${dict.panel2} ${activeChatName.toUpperCase()}`;
+            }
+
+            fetchRoster();
+            listenToInbox();
+            if(activeChatUid) openComms(activeChatUid, activeChatName);
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
                 document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
@@ -150,24 +208,22 @@
             }
         });
 
-        // 2. FETCH AGENT ROSTER
         async function fetchRoster() {
             const rosterList = document.getElementById('agent-roster');
+            const dict = dictionary[window.currentLang];
             const q = query(collection(db, "employees"), orderBy("timestamp", "desc"));
             const snapshot = await getDocs(q);
 
             rosterList.innerHTML = "";
-            if(snapshot.empty) { rosterList.innerHTML = "<li style='padding: 15px; color: gray;'>No agents found.</li>"; return; }
+            if(snapshot.empty) { rosterList.innerHTML = `<li style='padding: 15px; color: gray;'>${dict.msgEmptyRoster}</li>`; return; }
 
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 const photo = data.photo || "https://via.placeholder.com/30";
-                
-                // Note: We use the 'uid' generated by Firebase Auth, which we saved in the operative's payload
                 const agentUid = data.uid; 
                 
                 rosterList.innerHTML += `
-                    <li class="agent-item" onclick="openComms('${agentUid}', '${data.name}')" id="agent-${agentUid}">
+                    <li class="agent-item ${activeChatUid === agentUid ? 'active' : ''}" onclick="openComms('${agentUid}', '${data.name}')" id="agent-${agentUid}">
                         <div class="agent-avatar" style="background-image: url('${photo}');"></div>
                         <div>
                             <div class="agent-name">${data.name}</div>
@@ -178,89 +234,75 @@
             });
         }
 
-        // 3. OPEN COMMS CHANNEL (CHAT)
         window.openComms = function(uid, name) {
-            // Highlight active agent
             document.querySelectorAll('.agent-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`agent-${uid}`).classList.add('active');
+            const activeEl = document.getElementById(`agent-${uid}`);
+            if(activeEl) activeEl.classList.add('active');
 
             activeChatUid = uid;
-            document.getElementById('chat-title').innerHTML = `<i class="fas fa-satellite-dish"></i> DIRECT CHANNEL: ${name.toUpperCase()}`;
-            
-            // Enable Inputs
+            activeChatName = name;
+            const dict = dictionary[window.currentLang];
+
+            document.getElementById('ui-panel2-title').innerText = `${dict.panel2} ${name.toUpperCase()}`;
             document.getElementById('chat-input').disabled = false;
             document.getElementById('btn-send').disabled = false;
 
             const chatWindow = document.getElementById('chat-window');
 
-            // Unsubscribe from previous chat to prevent overlap
-            if(chatUnsubscribe) { chatUnsubscribe(); }
+            if(chatUnsubscribe) chatUnsubscribe();
 
-            // Listen to messages for this specific Operative
             const q = query(collection(db, "messages"), where("empUid", "==", uid), orderBy("timestamp", "asc"));
             
             chatUnsubscribe = onSnapshot(q, (snapshot) => {
                 chatWindow.innerHTML = "";
-				activeChatLog = []; // <-- ADD THIS LINE TO CLEAR OLD LOGS
-				document.getElementById('btn-export-chat').style.display = "block"; // <-- ADD THIS TO SHOW BUTTON
+                activeChatLog = []; 
+                document.getElementById('btn-export-chat').style.display = "block"; 
+                
                 if(snapshot.empty) {
-                    chatWindow.innerHTML = "<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>Frequency clear. Begin transmission.</p>";
+                    chatWindow.innerHTML = `<p style='text-align:center; color:gray; font-size:0.8rem; margin:auto;'>${dict.msgClear}</p>`;
                 }
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const isAdmin = data.sender === "Admin";
                     const time = data.timestamp ? data.timestamp.toDate().toLocaleTimeString() : "Sending...";
-                    // Push to memory for CSV
-                    activeChatLog.push({
-                        sender: isAdmin ? 'ALPHA COMMAND' : name,
-                        time: time,
-                        message: data.text.replace(/"/g, '""') // Escape quotes to prevent CSV breaking
-                    });
+                    
+                    activeChatLog.push({ sender: isAdmin ? dict.txtAdmin : name, time: time, message: data.text.replace(/"/g, '""') });
+                    
                     chatWindow.innerHTML += `
                         <div class="msg ${isAdmin ? 'admin' : 'op'}">
-                            <strong>${isAdmin ? 'ALPHA COMMAND' : name}</strong><br>
+                            <strong>${isAdmin ? dict.txtAdmin : name}</strong><br>
                             ${data.text}
                             <span class="msg-time">${time}</span>
                         </div>
                     `;
                 });
-                chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll
+                chatWindow.scrollTop = chatWindow.scrollHeight;
             });
         }
 
-        // 4. SEND MESSAGE AS ADMIN
         document.getElementById('chat-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!activeChatUid) return;
-
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
             if(!text) return;
-
-            input.value = ""; // Clear input
+            input.value = ""; 
 
             try {
-                await addDoc(collection(db, "messages"), {
-                    empUid: activeChatUid,
-                    sender: "Admin",
-                    text: text,
-                    timestamp: serverTimestamp()
-                });
-            } catch(error) {
-                alert("TRANSMISSION FAILED: " + error.message);
-            }
+                await addDoc(collection(db, "messages"), { empUid: activeChatUid, sender: "Admin", text: text, timestamp: serverTimestamp() });
+            } catch(error) { alert("ERROR: " + error.message); }
         });
 
-        // 5. LISTEN TO PAYLOAD INBOX (FILE UPLOADS)
         function listenToInbox() {
             const inboxBox = document.getElementById('file-inbox');
+            const dict = dictionary[window.currentLang];
             const q = query(collection(db, "admin_inbox"), orderBy("timestamp", "desc"));
             
             onSnapshot(q, (snapshot) => {
                 inboxBox.innerHTML = "";
                 if(snapshot.empty) {
-                    inboxBox.innerHTML = "<p style='text-align:center; color:gray; font-size:0.8rem;'>Inbox empty. No payloads pending.</p>";
+                    inboxBox.innerHTML = `<p style='text-align:center; color:gray; font-size:0.8rem;'>${dict.msgEmptyInbox}</p>`;
                     return;
                 }
 
@@ -271,24 +313,18 @@
                     inboxBox.innerHTML += `
                         <div class="file-card">
                             <div class="file-name"><i class="fas fa-file"></i> ${data.fileName}</div>
-                            <div class="file-sender">From: ${data.empName}<br>${time}</div>
-                            <a href="${data.fileUrl}" target="_blank" class="btn btn-download"><i class="fas fa-download"></i> EXTRACT PAYLOAD</a>
+                            <div class="file-sender">${dict.txtFrom} ${data.empName}<br>${time}</div>
+                            <a href="${data.fileUrl}" target="_blank" class="btn btn-green btn-download">${dict.btnDownload}</a>
                         </div>
                     `;
                 });
             });
         }
-		
-		// 6. CSV EXPORT ENGINE (CHAT)
+        
         window.exportChatToCSV = function() {
-            if(activeChatLog.length === 0) { alert("No transmission history to export."); return; }
-
+            if(activeChatLog.length === 0) return;
             let csvContent = "Timestamp,Sender,Transmission\n";
-
-            activeChatLog.forEach(row => {
-                csvContent += `"${row.time}","${row.sender}","${row.message}"\n`;
-            });
-
+            activeChatLog.forEach(row => { csvContent += `"${row.time}","${row.sender}","${row.message}"\n`; });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);

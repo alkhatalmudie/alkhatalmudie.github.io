@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #050a15; color: #00f2ff; font-family: 'Share Tech Mono', monospace, sans-serif; margin: 0; padding: 0; transition: all 0.3s ease; }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
         .admin-wrapper { display: flex; height: 100vh; overflow: hidden; }
         .admin-sidebar { width: 260px; background: rgba(0, 0, 0, 0.6); border-right: 1px solid rgba(0, 242, 255, 0.2); padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
         .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
@@ -17,24 +18,23 @@
         .admin-sidebar-menu a { display: block; padding: 12px 15px; color: #ccc; text-decoration: none; border-left: 3px solid transparent; transition: all 0.3s ease; font-size: 0.9rem; }
         .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { background: rgba(0, 242, 255, 0.1); color: #00f2ff; border-left-color: #00f2ff; }
         .admin-sidebar-menu i { margin-right: 10px; width: 20px; text-align: center; }
-        
         .admin-main-content { flex-grow: 1; padding: 30px; display: flex; flex-direction: column; overflow: hidden; }
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 20px; margin-bottom: 20px; }
-        
         .btn { background: transparent; border: 1px solid #00f2ff; color: #00f2ff; padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; }
         .btn:hover { background: #00f2ff; color: #050a15; }
         .btn-green { border-color: #00ff88; color: #00ff88; }
         .btn-green:hover { background: #00ff88; color: #050a15; }
-
+        .btn-warning { border-color: #ffc107; color: #ffc107; }
+        .btn-warning:hover { background: #ffc107; color: #050a15; }
         .log-container { flex-grow: 1; border: 1px solid rgba(0, 242, 255, 0.2); background: rgba(0,0,0,0.5); overflow-y: auto; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .data-table th { text-align: left; padding: 15px; border-bottom: 2px solid rgba(0, 242, 255, 0.2); color: #00ff88; position: sticky; top: 0; background: #050a15; }
         .data-table td { padding: 12px 15px; border-bottom: 1px solid rgba(0, 242, 255, 0.1); color: white; }
         .data-table tr:hover { background: rgba(0, 242, 255, 0.05); }
-
         .badge { padding: 4px 8px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; border: 1px solid; }
         .badge.login { color: #00f2ff; border-color: #00f2ff; background: rgba(0, 242, 255, 0.1); }
         .badge.arrival { color: #00ff88; border-color: #00ff88; background: rgba(0, 255, 136, 0.1); }
+        body[dir="rtl"] .data-table th { text-align: right; }
     </style>
 </head>
 <body>
@@ -45,36 +45,38 @@
                 <i class="fas fa-shield-alt" style="font-size: 2rem; color: #ff4b5c; margin-bottom: 10px;"></i>
                 <h3 style="margin:0; color:white;">ALPHA <span style="color:#00f2ff;">COMMAND</span></h3>
             </div>
-            
             <ul class="admin-sidebar-menu">
                 <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
                 <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
                 <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Received Files & Chat</a></li>
                 <li><a href="admin_logs.html" class="active"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+                <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcast Comms</a></li>
             </ul>
-
             <div style="margin-top: auto; padding-top: 20px;">
-                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width:100%;">RETURN TO BASE</button>
+                <button onclick="window.location.href='index.html'" class="btn" style="font-size: 0.8rem; width:100%;" id="ui-btn-return">RETURN TO BASE</button>
             </div>
         </aside>
 
         <main class="admin-main-content">
             <div class="header">
-                <h2 style="margin:0;"><i class="fas fa-history"></i> SYSTEM ACTIVITY LOGS</h2>
-                <button class="btn btn-green" onclick="exportLogsToCSV()"><i class="fas fa-file-csv"></i> EXPORT TO CSV</button>
+                <h2 style="margin:0;" id="ui-header-title"><i class="fas fa-history"></i> SYSTEM ACTIVITY LOGS</h2>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-warning" id="btn-lang" onclick="toggleLanguage()">عربي</button>
+                    <button class="btn btn-green" onclick="exportLogsToCSV()" id="ui-btn-export"><i class="fas fa-file-csv"></i> EXPORT TO CSV</button>
+                </div>
             </div>
 
             <div class="log-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Date & Time</th>
-                            <th>Operative ID / Name</th>
-                            <th>Event Action</th>
+                            <th id="ui-th-date">Date & Time</th>
+                            <th id="ui-th-id">Operative ID / Name</th>
+                            <th id="ui-th-event">Event Action</th>
                         </tr>
                     </thead>
                     <tbody id="log-table-body">
-                        <tr><td colspan="3" style="text-align:center; color:gray;">Intercepting data streams...</td></tr>
+                        <tr><td colspan="3" style="text-align:center; color:gray;" id="ui-msg-scan">Intercepting data streams...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -90,10 +92,55 @@
         const app = getApp();
         const auth = getAuth(app);
         const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
-        
-        let globalLogData = []; // Array to store logs for the CSV export
+        let globalLogData = [];
 
-        // 1. SECURITY BOOTUP
+        /* ================= BILINGUAL DICTIONARY ================= */
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                header: "<i class='fas fa-history'></i> SYSTEM ACTIVITY LOGS",
+                btnReturn: "RETURN TO BASE",
+                btnExport: "<i class='fas fa-file-csv'></i> EXPORT TO CSV",
+                thDate: "Date & Time",
+                thId: "Operative ID / Name",
+                thEvent: "Event Action",
+                msgScan: "Intercepting data streams...",
+                msgEmpty: "No activity recorded.",
+                eventArrival: "OFFICE ARRIVAL",
+                eventLogin: "SYSTEM LOGIN"
+            },
+            ar: {
+                header: "<i class='fas fa-history'></i> سجلات نشاط النظام",
+                btnReturn: "العودة للقاعدة الرئيسية",
+                btnExport: "<i class='fas fa-file-csv'></i> استخراج إلى CSV",
+                thDate: "التاريخ والوقت",
+                thId: "معرف / اسم الموظف",
+                thEvent: "نوع الحدث",
+                msgScan: "جاري اعتراض تدفق البيانات...",
+                msgEmpty: "لم يتم تسجيل أي نشاط.",
+                eventArrival: "تسجيل حضور للمكتب",
+                eventLogin: "تسجيل دخول للنظام"
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-header-title').innerHTML = dict.header;
+            document.getElementById('ui-btn-return').innerText = dict.btnReturn;
+            document.getElementById('ui-btn-export').innerHTML = dict.btnExport;
+            document.getElementById('ui-th-date').innerText = dict.thDate;
+            document.getElementById('ui-th-id').innerText = dict.thId;
+            document.getElementById('ui-th-event').innerText = dict.thEvent;
+
+            listenToLogs(); // Re-render table dynamically
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
                 document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh;'>ACCESS DENIED.</h1>";
@@ -103,17 +150,17 @@
             }
         });
 
-        // 2. REAL-TIME LOG LISTENER
         function listenToLogs() {
             const tableBody = document.getElementById('log-table-body');
+            const dict = dictionary[window.currentLang];
             const q = query(collection(db, "employee_logs"), orderBy("timestamp", "desc"));
             
             onSnapshot(q, (snapshot) => {
                 tableBody.innerHTML = "";
-                globalLogData = []; // Reset array
+                globalLogData = [];
                 
                 if(snapshot.empty) {
-                    tableBody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:gray;'>No activity recorded.</td></tr>";
+                    tableBody.innerHTML = `<tr><td colspan='3' style='text-align:center; color:gray;'>${dict.msgEmpty}</td></tr>`;
                     return;
                 }
 
@@ -122,24 +169,17 @@
                     const dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
                     const timeString = dateObj.toLocaleString();
                     
-                    // Identify Event Type
                     let badgeClass = "login";
                     let eventText = data.event;
                     if(data.event === "OFFICE_ARRIVAL") {
                         badgeClass = "arrival";
-                        eventText = "OFFICE ARRIVAL";
+                        eventText = dict.eventArrival;
                     } else if (data.event === "LOGIN_SUCCESS") {
-                        eventText = "SYSTEM LOGIN";
+                        eventText = dict.eventLogin;
                     }
 
-                    // Store in memory for CSV
-                    globalLogData.push({
-                        time: timeString,
-                        identity: data.empName || data.username || "Unknown",
-                        action: eventText
-                    });
+                    globalLogData.push({ time: timeString, identity: data.empName || data.username || "Unknown", action: eventText });
 
-                    // Render HTML Row
                     tableBody.innerHTML += `
                         <tr>
                             <td>${timeString}</td>
@@ -151,31 +191,14 @@
             });
         }
 
-        // 3. THE CSV EXPORT ENGINE
         window.exportLogsToCSV = function() {
-            if(globalLogData.length === 0) {
-                alert("No data available to export.");
-                return;
-            }
-
-            // Create CSV Headers
+            if(globalLogData.length === 0) return;
             let csvContent = "Date & Time,Operative Identity,Event Action\n";
-
-            // Loop through stored data and format as CSV
-            globalLogData.forEach(row => {
-                // Wrap in quotes to prevent commas in dates/names from breaking columns
-                csvContent += `"${row.time}","${row.identity}","${row.action}"\n`;
-            });
-
-            // Create the downloadable Blob
+            globalLogData.forEach(row => { csvContent += `"${row.time}","${row.identity}","${row.action}"\n`; });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Alpha_Command_Logs_${new Date().toLocaleDateString()}.csv`);
-            link.style.visibility = 'hidden';
-            
+            link.href = URL.createObjectURL(blob);
+            link.download = `Alpha_Command_Logs_${new Date().toLocaleDateString()}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
