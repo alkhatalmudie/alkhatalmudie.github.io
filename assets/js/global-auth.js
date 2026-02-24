@@ -4,13 +4,13 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
-    authDomain: "al-khat-backend.firebaseapp.com",
-    projectId: "al-khat-backend",
-    storageBucket: "al-khat-storage-doha",
-    messagingSenderId: "310033181926",
-    appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
-};
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-backend.firebasestorage.app", // <--- THE CORRECT UPLINK
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
 
 // Tactical Check: Only initialize if it hasn't been initialized yet
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
