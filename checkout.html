@@ -56,6 +56,17 @@
             gap: 10px;
         }
 
+        /* NEW: PACKAGE IMAGE STYLING */
+        .checkout-pkg-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            display: none; /* Hidden by default until JS loads it */
+        }
+
         /* SUMMARY STYLES */
         .summary-row {
             display: flex;
@@ -108,46 +119,46 @@
 
         @media (max-width: 900px) {
             .checkout-grid { grid-template-columns: 1fr; }
-            .summary-col { order: -1; } /* Puts summary on top for mobile */
+            .summary-col { order: -1; }
         }
     </style>
 </head>
 <body class="checkout-page">
 
     <header>
-				<div class="container">
-					<nav class="navbar">
-						<a href="index.html" class="logo-box" style="text-decoration: none;">
-							<div class="dna-logo">
-								<div class="dna-drop dna-magenta"></div>
-								<div class="dna-drop dna-cyan"></div>
-							</div>
-							<div class="brand-text">
-								<h3>Al-Khat Al-Mudi</h3>
-								<span id="header-brand_sub">SECURE CHECKOUT</span>
-							</div>
-						</a>
+                <div class="container">
+                    <nav class="navbar">
+                        <a href="index.html" class="logo-box" style="text-decoration: none;">
+                            <div class="dna-logo">
+                                <div class="dna-drop dna-magenta"></div>
+                                <div class="dna-drop dna-cyan"></div>
+                            </div>
+                            <div class="brand-text">
+                                <h3>Al-Khat Al-Mudi</h3>
+                                <span id="header-brand_sub">SECURE CHECKOUT</span>
+                            </div>
+                        </a>
                 
-						<div style="color: var(--brand-cyan); font-weight: 600; display: flex; align-items: center; gap: 8px;">
-							<i class="fas fa-shield-alt"></i> 256-Bit SSL Encrypted
-						</div>
+                        <div style="color: var(--brand-cyan); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-shield-alt"></i> 256-Bit SSL Encrypted
+                        </div>
 
-						<a href="#menu" class="menu-toggle" id="menuToggle">
-							<span class="text" id="header-menu_btn">MENU</span>
-							<div class="hamburger">
-								<span></span><span></span><span></span>
-							</div>
-						</a>
-						
-						<div id="user-profile-section" class="user-status-hidden">
-							<a href="profile.html" class="user-orb">
-								<i class="fas fa-user-circle"></i>
-								<span id="user-display-name">Client</span>
-							</a>
-							<button onclick="handleLogout()" class="logout-link">Logout</button>
-						</div>
-					</nav>
-				</div>
+                        <a href="#menu" class="menu-toggle" id="menuToggle">
+                            <span class="text" id="header-menu_btn">MENU</span>
+                            <div class="hamburger">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </a>
+                        
+                        <div id="user-profile-section" class="user-status-hidden">
+                            <a href="profile.html" class="user-orb">
+                                <i class="fas fa-user-circle"></i>
+                                <span id="user-display-name">Client</span>
+                            </a>
+                            <button onclick="handleLogout()" class="logout-link">Logout</button>
+                        </div>
+                    </nav>
+                </div>
             </nav>
         </div>
     </header>
@@ -158,6 +169,8 @@
             <div class="summary-col">
                 <div class="glass-panel" style="position: sticky; top: 100px;">
                     <div class="panel-title"><i class="fas fa-clipboard-list"></i> Mission Briefing</div>
+                    
+                    <img id="sum_img" class="checkout-pkg-img" src="" alt="Package Visual">
                     
                     <div class="summary-row">
                         <span class="summary-label">Target Region</span>
@@ -282,8 +295,8 @@
             </div>
         </div>
     </div>
-	
-	<div id="side-menu" class="menu-panel">
+    
+    <div id="side-menu" class="menu-panel">
         <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
 
         <div class="menu-content">
@@ -319,8 +332,8 @@
             </div>
         </div>
     </div>
-	
-	<footer id="contact">
+    
+    <footer id="contact">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-about">
@@ -382,12 +395,12 @@
             <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
         </div>
     </footer>
-	
-	<script src="assets/js/main.js"></script>
-	<script src="assets/js/lang-engine.js"></script>
+    
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/lang-engine.js"></script>
 
     <script>
-        // 1. URL PAYLOAD INTERCEPT
+        // 1. URL PAYLOAD INTERCEPT (NEW: INCLUDES IMAGE)
         let orderDataObj = {};
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
@@ -399,9 +412,11 @@
                 docType: params.get('doc') || "General Document",
                 pages: params.get('pages') || "1",
                 urgency: params.get('urgency') || "Standard",
-                totalPrice: params.get('price') || "0.00 JOD"
+                totalPrice: params.get('price') || "0.00 JOD",
+                imageUrl: params.get('img') || "" // <--- NEW CATCHER
             };
 
+            // Inject the data into the summary UI
             document.getElementById('sum_loc').innerText = orderDataObj.location;
             document.getElementById('sum_doc').innerText = orderDataObj.docType;
             document.getElementById('sum_lang').innerText = `${orderDataObj.langFrom} → ${orderDataObj.langTo}`;
@@ -409,6 +424,13 @@
             document.getElementById('sum_urgency').innerText = orderDataObj.urgency;
             document.getElementById('sum_total').innerText = orderDataObj.totalPrice;
             document.getElementById('btn-amount').innerText = orderDataObj.totalPrice;
+
+            // NEW: Inject the image if it was sent over
+            if (orderDataObj.imageUrl) {
+                const imgBox = document.getElementById('sum_img');
+                imgBox.src = orderDataObj.imageUrl;
+                imgBox.style.display = 'block'; // Unhides the image
+            }
         });
 
         // 2. FILE DROP ZONE VISUALS
@@ -497,9 +519,9 @@
                 
                 logBox.innerHTML += `<div class="log-line">> Cargo secured. Authorizing payment gateway...</div>`;
 
-                // 2. Package all data
+                // 2. Package all data (Now includes Package Image URL)
                 const finalOrderData = {
-                    ...orderDataObj, // Inherits data from URL
+                    ...orderDataObj, // Inherits data from URL (including imageUrl)
                     userId: currentUid,
                     clientName: `${fname} ${lname}`,
                     clientEmail: email,

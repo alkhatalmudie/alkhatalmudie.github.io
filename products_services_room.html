@@ -410,24 +410,28 @@
             });
         }
 
-        // CHECKOUT ROUTING (UPGRADED)
+        // CHECKOUT ROUTING (UPGRADED WITH IMAGE TRANSFER)
         window.initiatePurchase = function() {
             const user = auth.currentUser;
             
-            // 1. If they are a civilian, route to login and pass the current URL as a tracker
+            // 1. If they are a civilian, route to login
             if (!user) {
                 alert("ACCESS RESTRICTED: You must be a registered agent to secure this package.");
-                // We encode the URL so it doesn't break when passed as a parameter
                 const currentUrl = encodeURIComponent(window.location.href);
                 window.location.href = `login.html?redirect=${currentUrl}`;
                 return;
             }
 
-            // 2. If they are logged in, proceed to checkout normally
+            // 2. Grab the data
             const pkgName = document.getElementById('ui-title').innerText;
-            const pkgPrice = document.getElementById('ui-new-price').innerText.replace('$', ''); // Strip the $ sign
+            const pkgPrice = document.getElementById('ui-new-price').innerText.replace('$', ''); 
             
-            const checkoutUrl = `checkout.html?doc=${encodeURIComponent(pkgName)}&from=NA&to=NA&pages=1&urgency=Priority&price=${pkgPrice} JOD&loc=Global Hub`;
+            // 3. Grab the image URL if it exists
+            const imgElement = document.querySelector('.pkg-visual img');
+            const imgUrl = imgElement ? imgElement.src : '';
+
+            // 4. Send everything to Checkout
+            const checkoutUrl = `checkout.html?doc=${encodeURIComponent(pkgName)}&from=NA&to=NA&pages=1&urgency=Priority&price=${pkgPrice} JOD&loc=Global Hub&img=${encodeURIComponent(imgUrl)}`;
             window.location.href = checkoutUrl;
         }
 
