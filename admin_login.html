@@ -190,6 +190,10 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, pass);
                 const user = userCredential.user;
+				
+				// --- TEMPORARY DIAGNOSTIC ---
+				console.log("Logged In UID:", user.uid); 
+				// If you see a different UID in the console (F12), copy it!
 
                 if (user.uid === ADMIN_UID) {
                     btn.style.backgroundColor = "#00ff88";
