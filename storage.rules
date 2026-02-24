@@ -2,17 +2,45 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     
-    // 1. PUBLIC UPLOADS (For client translation requests)
-    match /client_uploads/{allPaths=**} {
-      // Anyone can upload their passport/docs
-      allow write: if true;
-      // ONLY the Admin can see or download them
-      allow read: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
+    // =========================================================
+    // 0. ALPHA COMMANDER GOD-MODE
+    // Ensures MH Studios always has full access to delete, 
+    // move, or read any file across the entire storage bucket.
+    // =========================================================
+    match /{allPaths=**} {
+      allow read, write, delete: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
     }
 
-    // 2. EMPLOYEE REGISTRY (Admin Alpha Only)
+    // =========================================================
+    // 1. PUBLIC UPLOADS (Client translation source files)
+    // =========================================================
+    match /client_uploads/{allPaths=**} {
+      // Anyone can upload their passport/docs from the main site
+      allow write: if true; 
+    }
+
+    // =========================================================
+    // 2. COMPLETED TRANSLATIONS (Deliverables)
+    // =========================================================
+    match /completed_translations/{allPaths=**} {
+      // Allows clients to download their finished PDF when they click the button in profile.html
+      allow read: if true; 
+    }
+
+    // =========================================================
+    // 3. EMPLOYEE REGISTRY & AVATARS
+    // =========================================================
     match /employee_data/{allPaths=**} {
+      // Blocked from public. Admin access is covered by God-Mode above.
       allow read, write: if request.auth != null && request.auth.uid == 'EOQEt04azKTTWcmNXVtpgSVsRxt2';
+    }
+    
+    // =========================================================
+    // 4. EMPLOYEE FILE DROP ZONE
+    // =========================================================
+    match /employee_uploads/{allPaths=**} {
+      // Unlocks File Drop zone for operatives to upload drafts
+      allow read, write: if request.auth != null;
     }
     
   }

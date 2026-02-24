@@ -508,38 +508,39 @@
 		// Note: Ensure you have Realtime Database enabled in Firebase, 
 		// as .info/connected is an RTDB feature.
 
+		// --- UPGRADED FIRESTORE HEARTBEAT ---
 		function initSystemHeartbeat() {
 			const statusLight = document.getElementById('status-light');
 			const statusText = document.getElementById('status-text');
 			const latencyText = document.getElementById('status-latency');
-			const db = getDatabase(); // Initialize RTDB
-			const connectedRef = rtdbRef(db, ".info/connected");
-
-			onValue(connectedRef, (snap) => {
-				if (snap.val() === true) {
-					// SERVER ONLINE
+			
+			function pingServer() {
+				const start = Date.now();
+				
+				// Send a micro-ping to Firestore to check the connection
+				getDocs(query(collection(db, "orders"), limit(1))).then(() => {
 					statusLight.className = "status-light online";
 					statusText.innerText = "CORE: ONLINE";
 					statusText.style.color = "var(--term-green)";
 					
-					// Measure Latency (Simulated ping to Firestore)
-					const start = Date.now();
-					getDocs(collection(db, "settings")).then(() => {
-						const latency = Date.now() - start;
-						latencyText.innerText = `LATENCY: ${latency}ms`;
-					});
-				} else {
-					// SERVER OFFLINE
+					// Calculate how fast the database responded
+					const latency = Date.now() - start;
+					latencyText.innerText = `LATENCY: ${latency}ms`;
+				}).catch((err) => {
+					console.error("Heartbeat Dropped:", err);
 					statusLight.className = "status-light offline";
 					statusText.innerText = "CORE: DISCONNECTED";
 					statusText.style.color = "var(--term-red)";
 					latencyText.innerText = "LATENCY: N/A";
-				}
-			});
-		}
+				});
+			}
 
-		// Call this inside your onAuthStateChanged success block
-		initSystemHeartbeat();
+			// Ping immediately when called
+			pingServer();
+			
+			// Ping every 15 seconds to keep the live tracker moving
+			setInterval(pingServer, 15000);
+		}
 
         // --- BILINGUAL DICTIONARY ---
         window.currentLang = 'en';
@@ -600,14 +601,18 @@
         }
 
         // SECURITY CHECK
-        onAuthStateChanged(auth, (user) => {
-            if (!user || user.uid !== ADMIN_UID) {
-                document.body.innerHTML = "<h1 style='color:#ff4b5c; text-align:center; margin-top:20vh; font-family: monospace;'>[ SECURITY BREACH DETECTED ]<br>UNAUTHORIZED ACCESS ATTEMPT LOGGED.</h1>";
-                setTimeout(() => { window.location.href = "login.html"; }, 2500);
-            } else {
-                fetchRadarData();
-            }
-        });
+		onAuthStateChanged(auth, (user) => {
+			if (!user || user.uid !== ADMIN_UID) {
+				document.body.innerHTML = "<h1 style='color:#ff4b5c; text-align:center; margin-top:20vh; font-family: monospace;'>[ SECURITY BREACH DETECTED ]<br>UNAUTHORIZED ACCESS ATTEMPT LOGGED.</h1>";
+				setTimeout(() => { window.location.href = "admin_login.html"; }, 2500);
+			} else {
+				// User is fully verified as Admin! 
+				fetchRadarData(); 
+				
+				// START THE HEARTBEAT NOW (This is the correct spot!)
+				initSystemHeartbeat();
+			}
+		});
 
         // FETCH ORDERS & CALCULATE KPIs
         async function fetchRadarData() {
