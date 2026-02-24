@@ -178,8 +178,8 @@
 
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-pass').value;
+            const email = document.getElementById('admin-email').value.trim();
+            const pass = document.getElementById('admin-pass').value.trim();
             const btn = document.getElementById('btn-submit');
             const errorDiv = document.getElementById('error-msg');
 
@@ -207,10 +207,12 @@
                     throw new Error("UNAUTHORIZED IDENTITY. UPLINK SEVERED.");
                 }
             } catch (error) {
-                errorDiv.innerText = "[ SECURITY BREACH ] " + error.message;
-                btn.innerText = "INITIATE UPLINK";
-                btn.disabled = false;
-            }
+				// This tells us the EXACT reason for the 400 error
+				console.error("Firebase Auth Error:", error.code, error.message);
+				errorDiv.innerText = "[ SECURITY BREACH ] " + error.code; 
+				btn.innerText = "INITIATE UPLINK";
+				btn.disabled = false;
+			}
         });
 		
         /* ============================================================
