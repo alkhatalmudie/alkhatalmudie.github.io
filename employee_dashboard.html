@@ -180,7 +180,27 @@
         </aside>
 
         <main class="dash-main">
-            
+            <div class="panel" style="grid-column: span 2; margin-bottom: 20px;">
+                <h3 style="color: #ffc107; border-color: #ffc107;" id="ui-panel-missions">
+                    <i class="fas fa-crosshairs"></i> ACTIVE DEPLOYMENTS
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255, 193, 7, 0.3); color: #ffc107;">
+                                <th style="padding: 10px;">Mission ID</th>
+                                <th style="padding: 10px;">Intel (Doc Type)</th>
+                                <th style="padding: 10px;">Urgency</th>
+                                <th style="padding: 10px;">Status</th>
+                                <th style="padding: 10px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="active-missions-list">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: #888;">Scanning for assigned operations...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="panel chat-panel" style="grid-row: span 2;">
                 <h3>
                     <span><i class="fas fa-satellite-dish"></i> <span id="ui-panel-chat">ALPHA COMMS CHANNEL</span></span>
@@ -194,7 +214,14 @@
                     <button type="submit" class="btn" style="width:auto; padding: 0 20px;"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
-
+			<div class="panel">
+                <h3 style="color: #ff00ff; border-color: #ff00ff;"><i class="fas fa-wallet"></i> REQUISITION LEDGER</h3>
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 0.8rem; color: #aaa;">Pending Payout (JOD)</div>
+                    <div id="op-earnings" style="font-size: 3rem; color: white; font-weight: bold; margin: 10px 0;">0.00</div>
+                    <div style="font-size: 0.85rem; color: #ff00ff;"><span id="op-completed-count">0</span> Missions Cleared</div>
+                </div>
+            </div>
             <div class="panel">
                 <h3 style="color: #00ff88; border-color:#00ff88;" id="ui-panel-drop"><i class="fas fa-file-export"></i> SECURE FILE DROP</h3>
                 <p style="font-size: 0.8rem; color: #aaa;" id="ui-desc-drop">Upload completed translations or reports directly to the Alpha Command inbox.</p>
@@ -222,12 +249,15 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc } from './assets/js/firebase-init.js';
         import { query, where, orderBy, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const app = getApp();
         const auth = getAuth(app);
         
         let currentUserUid = null;
         let operativeData = null;
+		// 1. STATE TRACKER
+        let activeTargetMissionId = null;
 
         window.currentLang = 'en';
         const dictionary = {
@@ -301,6 +331,21 @@
                 fetchOperativeIntel(currentUserUid); // To refresh permission text
             }
         }
+		
+		// 2. TARGETED UPLOAD INITIALIZER
+        // This gets triggered when they click the "Upload" icon on the Active Deployments board
+        window.initiateTargetedUpload = function(missionId) {
+            activeTargetMissionId = missionId;
+            
+            // Re-style the Secure Drop box to show it is now locked onto a specific mission
+            document.getElementById('ui-panel-drop').innerHTML = `<i class='fas fa-crosshairs'></i> UPLOAD FOR: ${missionId.substring(0,8).toUpperCase()}`;
+            document.getElementById('ui-desc-drop').innerText = "Payload will be directly attached to this mission and marked as Completed.";
+            document.getElementById('drop-zone').style.borderColor = "#ffc107";
+            document.getElementById('drop-zone').style.color = "#ffc107";
+            
+            // Auto-scroll the operative to the upload box
+            document.getElementById('ui-panel-drop').scrollIntoView({ behavior: 'smooth' });
+        }
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
@@ -310,6 +355,7 @@
                 await fetchOperativeIntel(user.uid);
                 fetchAuditTrail(user.uid);
                 initializeCommsChannel(user.uid);
+				fetchAssignedMissions(currentUserUid);
             }
         });
 
@@ -549,6 +595,45 @@
 				window.location.href = 'index.html';
 			}, 600);
 		};
+		
+		// FETCH ASSIGNED MISSIONS
+        function fetchAssignedMissions(uid) {
+            const missionBoard = document.getElementById('active-missions-list');
+            const dict = dictionary[window.currentLang];
+            
+            // Query orders where this operative is assigned, and it's not yet completed
+            const q = query(
+                collection(db, "orders"), 
+                where("assignedTo", "==", uid),
+                where("status", "!=", "Completed")
+            );
+
+            onSnapshot(q, (snapshot) => {
+                missionBoard.innerHTML = "";
+                if (snapshot.empty) {
+                    missionBoard.innerHTML = `<tr><td colspan='5' style="text-align: center; padding: 20px; color: #888;">No active deployments. Standby.</td></tr>`;
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    
+                    missionBoard.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 10px; color: white; font-weight: bold;">${id.substring(0,8).toUpperCase()}</td>
+                            <td style="padding: 10px; color: #ccc;">${data.docType} <br><span style="font-size: 0.75rem; color: #888;">${data.langFrom} > ${data.langTo}</span></td>
+                            <td style="padding: 10px; color: ${data.urgency === 'Express' ? '#ff4b5c' : '#00f2ff'};">${data.urgency}</td>
+                            <td style="padding: 10px;"><span class="badge" style="background: rgba(255,193,7,0.1); color: #ffc107; border: 1px solid #ffc107;">${data.status}</span></td>
+                            <td style="padding: 10px; display: flex; gap: 5px;">
+                                <button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')" title="Download Intel"><i class="fas fa-download"></i></button>
+                                <button class="btn-cmd action" onclick="initiateTargetedUpload('${id}')" title="Upload Translation"><i class="fas fa-upload"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
     </script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
