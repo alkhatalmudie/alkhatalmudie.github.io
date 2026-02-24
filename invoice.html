@@ -91,6 +91,8 @@
 <body>
 
     <div class="action-bar" id="ui-actions">
+        <button class="btn-action" id="btn-lang" onclick="toggleInvoiceLanguage()" style="border-color: #ffc107; color: #ffc107;">عربي</button>
+        
         <button onclick="window.print()" class="btn-action"><i class="fas fa-print"></i> Print</button>
         <button onclick="downloadSecurePDF()" class="btn-action primary" id="btn-pdf"><i class="fas fa-file-pdf"></i> Download Secure PDF</button>
     </div>
@@ -106,21 +108,21 @@
                 <p style="margin:0; font-size: 0.8rem; color: #888;">Amman, Jordan - Global Dispatch</p>
             </div>
             <div style="text-align: right;">
-                <h1 class="invoice-title">INVOICE</h1>
-                <div class="invoice-status"><i class="fas fa-check"></i> PAID SECURELY</div>
+                <h1 class="invoice-title" id="ui-inv-title">INVOICE</h1>
+                <div class="invoice-status" id="ui-inv-status"><i class="fas fa-check"></i> PAID SECURELY</div>
             </div>
         </div>
 
         <div class="info-grid">
             <div class="info-box">
-                <h4>Invoice To</h4>
+                <h4 id="ui-lbl-to">Invoice To</h4>
                 <p id="client_name">Scanning Identity...</p>
                 <span id="client_email" style="font-size: 0.85rem; color: #666;">--</span>
             </div>
             <div class="info-box" style="text-align: right;">
-                <h4>Invoice Details</h4>
-                <p>REF: <span id="inv_ref">--</span></p>
-                <p>Date: <span id="inv_date">--</span></p>
+                <h4 id="ui-lbl-details">Invoice Details</h4>
+                <p><span id="ui-lbl-ref">REF:</span> <span id="inv_ref">--</span></p>
+				<p><span id="ui-lbl-date">Date:</span> <span id="inv_date">--</span></p>
                 <p>TXN ID: <span id="txn_id">--</span></p>
             </div>
         </div>
@@ -128,11 +130,11 @@
         <table class="invoice-table">
             <thead>
                 <tr>
-                    <th>Description</th>
-                    <th>Languages / Region</th>
-                    <th>Pages</th>
-                    <th style="text-align: right;">Total Amount</th>
-                </tr>
+					<th id="ui-th-desc">Description</th>
+					<th id="ui-th-lang">Languages / Region</th>
+					<th id="ui-th-pages">Pages</th>
+					<th style="text-align: right;" id="ui-th-total">Total Amount</th>
+				</tr>
             </thead>
             <tbody>
                 <tr>
@@ -158,10 +160,10 @@
             </div>
         </div>
         
-        <div style="margin-top: 50px; font-size: 0.75rem; color: #aaa; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
-            This is a computer-generated document. No signature is required.<br>
-            Encrypted by Alpha Command Security Matrix.
-        </div>
+        <div id="ui-inv-footer" style="margin-top: 50px; font-size: 0.75rem; color: #aaa; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+			This is a computer-generated document. No signature is required.<br>
+			Encrypted by Alpha Command Security Matrix.
+		</div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -236,7 +238,73 @@
 
         loadInvoice();
     </script>
+	<script>
+		window.currentInvoiceLang = 'en';
 
+		const invoiceDictionary = {
+			en: {
+				invTitle: "INVOICE",
+				invStatus: "<i class='fas fa-check'></i> PAID SECURELY",
+				lblTo: "Invoice To",
+				lblDetails: "Invoice Details",
+				lblRef: "REF:",
+				lblDate: "Date:",
+				thDesc: "Description",
+				thLang: "Languages / Region",
+				thPages: "Pages",
+				thTotal: "Total Amount",
+				totalPaid: "Total Paid",
+				footer: "This is a computer-generated document. No signature is required.<br>Encrypted by Alpha Command Security Matrix."
+			},
+			ar: {
+				invTitle: "فاتورة",
+				invStatus: "<i class='fas fa-check'></i> تم الدفع بأمان",
+				lblTo: "فاتورة إلى",
+				lblDetails: "تفاصيل الفاتورة",
+				lblRef: "المرجع:",
+				lblDate: "التاريخ:",
+				thDesc: "الوصف",
+				thLang: "اللغات / المنطقة",
+				thPages: "الصفحات",
+				thTotal: "المبلغ الإجمالي",
+				totalPaid: "إجمالي المدفوع",
+				footer: "هذه وثيقة تم إنشاؤها بواسطة الكمبيوتر. لا يتطلب توقيع.<br>مشفر بواسطة مصفوفة أمن القيادة الرئيسية."
+			}
+		};
+
+		window.toggleInvoiceLanguage = function() {
+			window.currentInvoiceLang = window.currentInvoiceLang === 'en' ? 'ar' : 'en';
+			const dict = invoiceDictionary[window.currentInvoiceLang];
+			const paper = document.getElementById('invoice-paper');
+
+			// Toggle Direction
+			paper.dir = window.currentInvoiceLang === 'ar' ? 'rtl' : 'ltr';
+			paper.style.fontFamily = window.currentInvoiceLang === 'ar' ? "'Cairo', sans-serif" : "'Poppins', sans-serif";
+			document.getElementById('btn-lang').innerText = window.currentInvoiceLang === 'en' ? 'عربي' : 'English';
+
+			// Update UI Text
+			document.getElementById('ui-inv-title').innerText = dict.invTitle;
+			document.getElementById('ui-inv-status').innerHTML = dict.invStatus;
+			document.getElementById('ui-lbl-to').innerText = dict.lblTo;
+			document.getElementById('ui-lbl-details').innerText = dict.lblDetails;
+			document.getElementById('ui-lbl-ref').innerText = dict.lblRef;
+			document.getElementById('ui-lbl-date').innerText = dict.lblDate;
+			document.getElementById('ui-th-desc').innerText = dict.thDesc;
+			document.getElementById('ui-th-lang').innerText = dict.thLang;
+			document.getElementById('ui-th-pages').innerText = dict.thPages;
+			document.getElementById('ui-th-total').innerText = dict.thTotal;
+			document.querySelector('.grand-total span:first-child').innerText = dict.totalPaid;
+			document.getElementById('ui-inv-footer').innerHTML = dict.footer;
+			
+			// Adjust text alignment for RTL
+			const alignment = window.currentInvoiceLang === 'ar' ? 'right' : 'left';
+			const reverseAlignment = window.currentInvoiceLang === 'ar' ? 'left' : 'right';
+			
+			document.getElementById('ui-th-total').style.textAlign = reverseAlignment;
+			document.getElementById('item_price').style.textAlign = reverseAlignment;
+			document.querySelector('.info-box[style*="text-align: right"]').style.textAlign = reverseAlignment;
+		};
+	</script>
     <script>
         // PDF DOWNLOAD ENGINE & CUSTOM FILE NAMING
         window.downloadSecurePDF = function() {
