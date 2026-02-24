@@ -404,7 +404,26 @@
 	<script src="assets/js/lang-engine.js"></script>
 
     <script>
-        // TACTICAL DOTS
+		// --- PASSWORD SHOW/HIDE LOGIC ---
+        window.togglePassword = function(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                // Switch icon to "eye-slash" (hidden state) and make it glow
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                icon.classList.add('active'); 
+            } else {
+                input.type = 'password';
+                // Switch back to normal eye and remove glow
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                icon.classList.remove('active');
+            }
+        };
+		// TACTICAL DOTS
         const page = document.querySelector('.auth-page');
         for (let i = 0; i < 15; i++) {
             const dot = document.createElement('div');
