@@ -56,6 +56,15 @@
     .btn-buy:hover { background: white; }
     .btn-inq { background: transparent; border: 1px solid white; color: white; }
     .btn-inq:hover { background: rgba(255,255,255,0.1); }
+	
+	.promo-img-box {
+        height: 160px;
+        background-color: #0b1426;
+        margin: -25px -25px 15px -25px; /* Pulls image to the edges of the card */
+        border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+        background-size: cover;
+        background-position: center;
+    }
 </style>
 
 <body>
@@ -773,36 +782,41 @@
 
 					// Determine alignment for Arabic RTL
 					const alignStyle = currentLang === 'ar' ? 'text-align: right; direction: rtl;' : 'text-align: left; direction: ltr;';
+					
+					// NEW: Determine if an image exists, otherwise show a cool default pattern
+                    const imgHtml = data.imageUrl 
+                        ? `<div class="promo-img-box" style="background-image: url('${data.imageUrl}')"></div>` 
+                        : `<div class="promo-img-box" style="display:flex; align-items:center; justify-content:center; background: linear-gradient(45deg, #0b1426, #1a2a4a);"><i class="fas fa-image" style="font-size: 3rem; opacity: 0.1;"></i></div>`;
 
 					track.innerHTML += `
-						<div class="promo-card" style="${alignStyle}">
-							<div class="promo-badge">${ui.badge}</div>
-							<h3 style="margin-top:0; color:white;">${data.name}</h3>
-							<p style="font-size:0.9rem; color:#ccc;">${data.desc}</p>
-							
-							<div class="promo-price">
-								<span class="price-old" style="margin: 0 10px;">${ui.was} <strike>$${data.oldPrice}</strike></span>
-								<span class="price-new">$${data.newPrice}</span>
-							</div>
+                        <div class="promo-card" style="${alignStyle}">
+                            ${imgHtml} <div class="promo-badge">${ui.badge}</div>
+                            <h3 style="margin-top:0; color:white;">${data.name}</h3>
+                            <p style="font-size:0.9rem; color:#ccc;">${data.desc}</p>
+                            
+                            <div class="promo-price">
+                                <span class="price-old" style="margin: 0 10px;">${ui.was} <strike>$${data.oldPrice}</strike></span>
+                                <span class="price-new">$${data.newPrice}</span>
+                            </div>
 
-							<div style="font-size: 0.75rem; color: #ff4b5c; margin-bottom: 15px;">
-								<i class="fas fa-clock"></i> ${ui.valid} ${data.startDate} ➝ ${data.endDate}
-							</div>
+                            <div style="font-size: 0.75rem; color: #ff4b5c; margin-bottom: 15px;">
+                                <i class="fas fa-clock"></i> ${ui.valid} ${data.startDate} ➝ ${data.endDate}
+                            </div>
 
-							<div class="promo-reqs" style="${alignStyle}">
-								<strong>${ui.reqs}</strong>
-								<ul style="list-style:none; padding:0; margin: 5px 0 0 0;">
-									${reqsList}
-								</ul>
-							</div>
+                            <div class="promo-reqs" style="${alignStyle}">
+                                <strong>${ui.reqs}</strong>
+                                <ul style="list-style:none; padding:0; margin: 5px 0 0 0;">
+                                    ${reqsList}
+                                </ul>
+                            </div>
 
-							<div class="promo-actions">
-								<button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">${ui.btnRes}</button>
-								<button class="btn-inq" onclick="window.location.href='contacts.html'">${ui.btnInq}</button>
-							</div>
-						</div>
-					`;
-				});
+                            <div class="promo-actions">
+                                <button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">${ui.btnRes}</button>
+                                <button class="btn-inq" onclick="window.location.href='contacts.html'">${ui.btnInq}</button>
+                            </div>
+                        </div>
+                    `;
+                });
 			} catch (error) {
 				console.error("Promo Engine Error:", error);
 				track.innerHTML = "<p style='color:red;'>Failed to load signals.</p>";

@@ -8,9 +8,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
 
     <style>
-        body { padding-top: 100px; background-color: #0b1426; color: white; min-height: 100vh; }
+        /* TACTICAL BACKGROUND (Inherited from profile.html) */
+        .dashboard-page {
+            background-color: #0b1426; 
+            background-image: 
+                linear-gradient(rgba(11, 20, 38, 0.9), rgba(11, 20, 38, 0.9)),
+                url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding-top: 100px; /* Clearance for header */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main.container {
+            flex: 1; /* Pushes the footer down naturally */
+        }
         
         .showroom-grid {
             display: grid;
@@ -38,6 +57,7 @@
             padding: 30px;
             border-radius: 15px;
             border-left: 4px solid var(--brand-cyan);
+            backdrop-filter: blur(10px);
         }
 
         /* RIGHT: DATA & CHECKOUT */
@@ -48,6 +68,8 @@
             padding: 30px;
             position: sticky;
             top: 100px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .sku-tag { font-family: 'Share Tech Mono'; color: var(--brand-cyan); font-size: 0.9rem; margin-bottom: 10px; display: inline-block; background: rgba(0, 242, 255, 0.1); padding: 5px 10px; border-radius: 5px; }
@@ -66,14 +88,16 @@
             border-radius: 15px;
             padding: 30px;
             margin-top: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .telemetry-row { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
         .t-metric { font-family: 'Share Tech Mono'; font-size: 1.1rem; color: #aaa; display: flex; align-items: center; gap: 8px; }
         
         .btn-like { background: transparent; border: 1px solid var(--brand-magenta); color: var(--brand-magenta); padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-        .btn-like:hover, .btn-like.active { background: var(--brand-magenta); color: white; }
+        .btn-like:hover, .btn-like.active { background: var(--brand-magenta); color: white; box-shadow: 0 0 15px rgba(233, 30, 99, 0.4); }
 
-        .comment-box { margin-bottom: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-left: 2px solid #555; border-radius: 0 8px 8px 0; }
+        .comment-box { margin-bottom: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-left: 2px solid #555; border-radius: 0 8px 8px 0; transition: 0.3s; }
+        .comment-box:hover { background: rgba(0, 242, 255, 0.05); border-left-color: var(--brand-cyan); }
         .comment-author { font-weight: bold; color: var(--brand-cyan); font-size: 0.85rem; margin-bottom: 5px; }
         .comment-text { font-size: 0.9rem; color: #ddd; }
 
@@ -82,19 +106,29 @@
         }
     </style>
 </head>
-<body>
+<body class="dashboard-page">
 
     <header>
         <div class="container">
             <nav class="navbar">
                 <a href="index.html" class="logo-box" style="text-decoration: none;">
                     <div class="dna-logo"><div class="dna-drop dna-magenta"></div><div class="dna-drop dna-cyan"></div></div>
-                    <div class="brand-text"><h3>Al-Khat Al-Mudi</h3><span>MISSION BRIEFING</span></div>
+                    <div class="brand-text"><h3>Al-Khat Al-Mudi</h3><span id="header-brand_sub">MISSION BRIEFING</span></div>
                 </a>
+                
                 <div id="user-profile-section" class="user-status-hidden">
                     <a href="profile.html" class="user-orb"><i class="fas fa-user-circle"></i><span id="user-display-name">Client</span></a>
                     <button onclick="handleLogout()" class="logout-link">Logout</button>
                 </div>
+
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" id="header-menu_btn">MENU</span>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
             </nav>
         </div>
     </header>
@@ -161,7 +195,110 @@
         </div>
     </main>
 
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
+                    </p>
+                     <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1Gtg7R2phb/" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/alkhatalmudi" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/message/BFW6NB4D4ZLLL1" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="menu-home-footer">Home</a></li>
+                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
+                        <li><a href="#services" id="menu-services-footer">Services</a></li>
+                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                        <li><a href="#">Confidentiality</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>078-077-0085</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>alkhatalmudi@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+
+        <div class="menu-content">
+            <h4 class="menu-label" id="menu-label_nav">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" id="menu-home">Home</a></li>
+                <li class="dropdown-trigger">
+                    <a href="javascript:void(0)"><span id="menu-pages">Pages</span> <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-list">
+                        <li><a href="about.html" id="menu-about">About Us</a></li>
+                        <li><a href="services.html" id="menu-services">Services</a></li>
+                        <li><a href="translation.html" id="menu-translation">Translation Info</a></li>
+                        <li><a href="packages.html" id="menu-packages">Packages & Pricing</a></li>
+                        <li><a href="shop.html" id="menu-shop">Shop / Products</a></li>
+                        <li><a href="reservation.html" id="menu-reservation">Book Reservation</a></li>
+                        <li><a href="contacts.html" id="menu-contact">Contact Us</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="menu-label" id="menu-label_member">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" id="menu-login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" id="menu-signup">Sign Up</a>
+            </div>
+
+            <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="javascript:void(0)" onclick="switchLanguage('en')" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ar')" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('du')" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ru')" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/lang-engine.js"></script>
     <script type="module" src="assets/js/global-auth.js"></script>
+
     <script type="module">
         import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -201,6 +338,14 @@
                 document.getElementById('ui-new-price').innerText = `$${data.newPrice}`;
                 document.getElementById('ui-views').innerText = (data.views || 0) + 1;
                 document.getElementById('ui-likes').innerText = data.likes || 0;
+				
+				// NEW: Inject the uploaded image into the visual box
+                if (data.imageUrl) {
+                    document.querySelector('.pkg-visual').innerHTML = `<img src="${data.imageUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">`;
+                } else {
+                    // Fallback to the globe icon if no image was uploaded
+                    document.querySelector('.pkg-visual').innerHTML = `<i class="fas fa-globe-americas"></i>`;
+                }
 
                 // Process Requirements
                 const reqsHtml = data.reqs.split(',').map(item => `<li><i class="fas fa-file-contract"></i> ${item.trim()}</li>`).join('');
