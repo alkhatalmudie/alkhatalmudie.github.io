@@ -178,8 +178,8 @@
 
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('admin-email').value.trim();
-            const pass = document.getElementById('admin-pass').value.trim();
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
             const btn = document.getElementById('btn-submit');
             const errorDiv = document.getElementById('error-msg');
 
@@ -190,10 +190,6 @@
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, pass);
                 const user = userCredential.user;
-				
-				// --- TEMPORARY DIAGNOSTIC ---
-				console.log("Logged In UID:", user.uid); 
-				// If you see a different UID in the console (F12), copy it!
 
                 if (user.uid === ADMIN_UID) {
                     btn.style.backgroundColor = "#00ff88";
@@ -207,16 +203,10 @@
                     throw new Error("UNAUTHORIZED IDENTITY. UPLINK SEVERED.");
                 }
             } catch (error) {
-				// This will print the exact reason to the console (F12)
-				console.error("UPLINK ERROR CODE:", error.code);
-				console.error("UPLINK ERROR MSG:", error.message);
-				
-				// Display a more helpful message to the UI
-				errorDiv.innerText = `[ SECURITY BREACH ] ${error.code.replace('auth/', '').toUpperCase()}`;
-				
-				btn.innerText = "INITIATE UPLINK";
-				btn.disabled = false;
-			}
+                errorDiv.innerText = "[ SECURITY BREACH ] " + error.message;
+                btn.innerText = "INITIATE UPLINK";
+                btn.disabled = false;
+            }
         });
 		
         /* ============================================================
