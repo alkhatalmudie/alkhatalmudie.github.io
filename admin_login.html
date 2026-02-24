@@ -207,9 +207,13 @@
                     throw new Error("UNAUTHORIZED IDENTITY. UPLINK SEVERED.");
                 }
             } catch (error) {
-				// This tells us the EXACT reason for the 400 error
-				console.error("Firebase Auth Error:", error.code, error.message);
-				errorDiv.innerText = "[ SECURITY BREACH ] " + error.code; 
+				// This will print the exact reason to the console (F12)
+				console.error("UPLINK ERROR CODE:", error.code);
+				console.error("UPLINK ERROR MSG:", error.message);
+				
+				// Display a more helpful message to the UI
+				errorDiv.innerText = `[ SECURITY BREACH ] ${error.code.replace('auth/', '').toUpperCase()}`;
+				
 				btn.innerText = "INITIATE UPLINK";
 				btn.disabled = false;
 			}
