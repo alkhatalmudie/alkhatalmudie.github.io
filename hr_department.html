@@ -128,7 +128,7 @@
                     <i class="fas fa-user-tie"></i>
                     <h3 id="hr-card2-title">Join Our Team</h3>
                     <p id="hr-card2-desc">We are always looking for certified linguists and administrative staff in Amman to join our growing dispatch matrix.</p>
-                    <a href="mailto:alkhatalmudi@gmail.com?subject=Career Application" class="btn btn-primary" style="background: transparent; border: 2px solid var(--brand-navy); color: var(--brand-navy); width: 100%;" id="hr-card2-btn">Submit CV</a>
+                    <button onclick="openApplicationModal()" class="btn btn-primary" style="background: transparent; border: 2px solid var(--brand-navy); color: var(--brand-navy); width: 100%; cursor: pointer;" id="hr-card2-btn">Submit CV</button>
                 </div>
 
                 <div class="hr-card">
@@ -156,7 +156,65 @@
             </div>
         </div>
     </section>
+	
+	<div id="application-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,13,26,0.85); z-index:2000; align-items:center; justify-content:center; backdrop-filter: blur(5px);">
+        <div style="background: white; padding: 40px; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position:relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-top: 4px solid var(--brand-cyan);">
+            <a href="javascript:void(0)" onclick="closeApplicationModal()" style="position:absolute; top:20px; right:25px; font-size:1.8rem; text-decoration:none; color:#888; transition:0.3s;">&times;</a>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <i class="fas fa-id-card" style="font-size: 3rem; color: var(--brand-navy); margin-bottom: 15px;"></i>
+                <h3 style="color:var(--brand-navy); font-size: 1.5rem; margin:0;">Career Application</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">Secure submission to Al-Khat HR</p>
+            </div>
 
+            <form id="career-form" onsubmit="submitApplication(event)">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" id="app-name" placeholder="Full Name" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; grid-column: 1 / -1;">
+                    
+                    <input type="date" id="app-birth" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; color:#555;" title="Birthdate">
+                    
+                    <input type="text" id="app-nat" placeholder="Nationality" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc;">
+                    
+                    <input type="text" id="app-id" placeholder="ID No." required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc;">
+                    
+                    <select id="app-gender" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; color:#555;">
+                        <option value="" disabled selected>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    
+                    <input type="email" id="app-email" placeholder="Email Address" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc;">
+                    
+                    <input type="tel" id="app-phone" placeholder="Phone Number" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc;">
+                    
+                    <input type="text" id="app-major" placeholder="Major / Field (e.g., Computer Science)" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; grid-column: 1 / -1;">
+                    
+                    <input type="text" id="app-address" placeholder="Address (Location of Residence)" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; grid-column: 1 / -1;">
+                    
+                    <select id="app-english" required style="padding:12px; border:1px solid #ddd; border-radius:5px; background:#f8fafc; grid-column: 1 / -1; color:#555;">
+                        <option value="" disabled selected>English Language Proficiency</option>
+                        <option value="Native">Native</option>
+                        <option value="Fluent">Fluent / Advanced</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Beginner">Beginner</option>
+                    </select>
+
+                    <div style="grid-column: 1 / -1; padding: 20px; border: 2px dashed var(--brand-cyan); background: rgba(0, 242, 255, 0.05); text-align:center; border-radius:8px;">
+                        <label for="app-cv" style="font-weight:bold; color:var(--brand-navy); display:block; margin-bottom:10px; cursor:pointer;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--brand-cyan); margin-bottom: 10px; display: block;"></i>
+                            Select CV Document (PDF)
+                        </label>
+                        <input type="file" id="app-cv" accept=".pdf" required style="width:100%; font-size: 0.9rem;">
+                    </div>
+                </div>
+                
+                <div id="app-status" style="margin-top: 15px; font-weight: bold; text-align: center; display: none;"></div>
+                
+                <button type="submit" id="app-submit-btn" class="btn btn-primary" style="width:100%; margin-top:20px; padding: 15px; font-size: 1.1rem;">Transmit Application</button>
+            </form>
+        </div>
+    </div>
+	
     <footer id="contact">
         <div class="container">
             <div class="footer-grid">
@@ -361,6 +419,93 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/lang-engine.js"></script>
     <script type="module" src="assets/js/global-auth.js"></script>
+	<script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-backend.firebasestorage.app", 
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // UI Controls
+        window.openApplicationModal = function() {
+            document.getElementById('application-modal').style.display = 'flex';
+        }
+        window.closeApplicationModal = function() {
+            document.getElementById('application-modal').style.display = 'none';
+            document.getElementById('career-form').reset();
+            document.getElementById('app-status').style.display = 'none';
+        }
+
+        // Processing Engine
+        window.submitApplication = async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('app-submit-btn');
+            const statusBox = document.getElementById('app-status');
+            const fileInput = document.getElementById('app-cv');
+            
+            if(fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+
+            btn.innerText = "Encrypting & Transmitting...";
+            btn.disabled = true;
+            statusBox.style.display = 'none';
+
+            try {
+                // 1. Upload CV to Firebase Storage
+                const fileName = `CVs/${Date.now()}_${document.getElementById('app-name').value.replace(/\s+/g, '_')}.pdf`;
+                const storageRef = ref(storage, fileName);
+                const snapshot = await uploadBytes(storageRef, file);
+                const cvUrl = await getDownloadURL(snapshot.ref);
+
+                // 2. Push Application Data to Firestore
+                await addDoc(collection(db, "job_applications"), {
+                    fullName: document.getElementById('app-name').value,
+                    birthdate: document.getElementById('app-birth').value,
+                    nationality: document.getElementById('app-nat').value,
+                    idNumber: document.getElementById('app-id').value,
+                    gender: document.getElementById('app-gender').value,
+                    email: document.getElementById('app-email').value,
+                    phone: document.getElementById('app-phone').value,
+                    major: document.getElementById('app-major').value,
+                    address: document.getElementById('app-address').value,
+                    englishProficiency: document.getElementById('app-english').value,
+                    cvDownloadUrl: cvUrl,
+                    status: "Pending Review",
+                    timestamp: serverTimestamp()
+                });
+
+                // 3. Display Success Protocol
+                statusBox.innerHTML = "Information Submitted Successfully!<br>We'll contact you shortly.";
+                statusBox.style.color = "var(--brand-cyan)";
+                statusBox.style.display = "block";
+                
+                setTimeout(() => {
+                    closeApplicationModal();
+                    btn.innerText = "Transmit Application";
+                    btn.disabled = false;
+                }, 3000);
+
+            } catch (error) {
+                console.error("Transmission Error:", error);
+                statusBox.innerText = "Error: " + error.message;
+                statusBox.style.color = "red";
+                statusBox.style.display = "block";
+                btn.innerText = "Retry Transmission";
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
