@@ -26,12 +26,39 @@
             font-family: 'Share Tech Mono', monospace, sans-serif; 
             margin: 0; padding: 0; 
             display: flex; height: 100vh; overflow: hidden;
+            opacity: 0; /* Start invisible for boot sequence */
             animation: systemBoot 0.4s ease-in forwards;
         }
 
         @keyframes systemBoot {
             0% { opacity: 0; transform: scale(0.99); }
             100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- SYSTEM LOADER OVERLAY (ADDED) --- */
+        .system-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #050a15; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .system-loader.active { opacity: 1; pointer-events: all; }
+        .loader-text {
+            color: #00f2ff; font-size: 1.5rem; letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
+            animation: pulseGlow 1.2s infinite alternate;
+        }
+        .loader-text .dots {
+            display: inline-block; width: 20px; text-align: left;
+            animation: blinkDots 1.5s infinite steps(4, end);
+        }
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 5px rgba(0, 242, 255, 0.5); transform: scale(0.98); }
+            100% { text-shadow: 0 0 20px rgba(0, 242, 255, 1), 0 0 40px rgba(0, 242, 255, 0.6); transform: scale(1); }
+        }
+        @keyframes blinkDots {
+            0%, 20% { color: transparent; text-shadow: none; }
+            40%, 100% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
         }
 
         /* SIDEBAR */
@@ -95,7 +122,7 @@
         .data-table tr:hover { background: rgba(0, 242, 255, 0.05); }
 
         /* BUTTONS */
-        .btn-cmd { background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); padding: 6px 12px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; border-radius: 3px; }
+        .btn-cmd { background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); padding: 6px 12px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; border-radius: 3px; font-family: 'Share Tech Mono', monospace;}
         .btn-cmd:hover { background: var(--term-cyan); color: var(--term-bg); }
         .badge { padding: 4px 10px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; }
         .b-pending { background: rgba(255, 75, 92, 0.1); color: var(--term-red); border: 1px solid var(--term-red); }
@@ -108,6 +135,10 @@
 </head>
 <body>
 
+    <div id="system-loader" class="system-loader">
+        <div class="loader-text">SYSTEM LOADING<span class="dots">...</span></div>
+    </div>
+
     <aside class="admin-sidebar">
         <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
             <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #ff4b5c; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 75, 92, 0.4);"></i>
@@ -117,12 +148,22 @@
         
         <ul class="admin-sidebar-menu">
             <li><a href="alpha.html"><i class="fas fa-radar"></i> Main Dashboard</a></li>
-            <li><a href="admin_employment_dashboard.html" class="active"><i class="fas fa-user-tie"></i> Recruitment Hub</a></li>
+            <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
             <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
-            </ul>
+            <li><a href="admin_pricing.html"><i class="fas fa-tags"></i> Pricing & Docs</a></li>
+            <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Comms & Inbox</a></li>
+            <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+            <li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcasts</a></li>
+            <li><a href="admin_create_products.html"><i class="fas fa-box"></i> Products Page Creator</a></li>
+            <li><a href="sales.html"><i class="fas fa-file-invoice-dollar"></i> Sales & Visas</a></li>
+            <li><a href="admin_employment_dashboard.html" class="active"><i class="fas fa-user-tie"></i> Employee Attendancy</a></li>
+        </ul>
         
         <div style="margin-top: auto; padding-top: 20px;">
-            <button onclick="window.location.href='index.html'" class="btn-cmd" style="width: 100%; border-color: var(--term-red); color: var(--term-red); padding: 10px;">
+            <button onclick="handleReturnToBase()" class="btn-cmd" style="width: 100%; border-color: var(--term-cyan); color: var(--term-cyan); padding: 10px; margin-bottom: 10px;">
+                RETURN TO BASE
+            </button>
+            <button onclick="handleLogout()" class="btn-cmd" style="width: 100%; border-color: var(--term-red); color: var(--term-red); padding: 10px;">
                 <i class="fas fa-power-off"></i> DISCONNECT
             </button>
         </div>
@@ -167,7 +208,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -182,7 +223,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; // God-Mode Security
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; 
 
         onAuthStateChanged(auth, (user) => {
             if (!user || user.uid !== ADMIN_UID) {
@@ -196,7 +237,6 @@
         function startRadarScanner() {
             const q = query(collection(db, "job_applications"), orderBy("timestamp", "desc"));
             
-            // onSnapshot gives us a live, real-time feed of applications as they arrive
             onSnapshot(q, (snapshot) => {
                 const logBox = document.getElementById('applicant-log');
                 let pendingCount = 0;
@@ -211,7 +251,7 @@
 
                 logBox.innerHTML = "";
                 
-snapshot.forEach(docSnap => {
+                snapshot.forEach(docSnap => {
                     const data = docSnap.data();
                     const id = docSnap.id;
                     const isPending = data.status === "Pending Review";
@@ -222,11 +262,9 @@ snapshot.forEach(docSnap => {
                         ? '<span class="badge b-pending">PENDING</span>' 
                         : '<span class="badge b-reviewed">REVIEWED</span>';
 
-                    // Format date
                     const dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
                     const dateStr = dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
 
-                    // Generate Actions HTML cleanly to fix editor syntax highlighting
                     let actionsHtml = '<button class="btn-cmd" onclick="window.open(\\'' + data.cvDownloadUrl + '\\', \\'_blank\\')" style="margin-bottom: 5px; width:100%;"><i class="fas fa-file-pdf"></i> EXTRACT CV</button><br>';
                     
                     if (isPending) {
@@ -273,6 +311,75 @@ snapshot.forEach(docSnap => {
             const ageDate = new Date(ageDifMs);
             return Math.abs(ageDate.getUTCFullYear() - 1970);
         }
+
+        /* --- ADDED SYSTEM LOGIC FOR LOGOUT/NAVIGATION --- */
+        window.handleLogout = function() {
+            const loader = document.getElementById('system-loader');
+            const loaderText = loader ? loader.querySelector('.loader-text') : null;
+            
+            if (loaderText) {
+                loaderText.innerHTML = "DISCONNECTING SECURE UPLINK<span class='dots'>...</span>";
+            }
+            if (loader) loader.classList.add('active');
+
+            setTimeout(() => {
+                signOut(auth).then(() => { 
+                    window.location.href = "admin_login.html"; 
+                }).catch((err) => {
+                    if (loader) loader.classList.remove('active');
+                    alert("DISCONNECT ERROR: " + err.message);
+                });
+            }, 800);
+        };
+
+        window.handleReturnToBase = function() {
+            const loader = document.getElementById('system-loader');
+            const loaderText = loader ? loader.querySelector('.loader-text') : null;
+
+            if (loaderText) {
+                loaderText.innerHTML = "RETURNING TO COMMAND BASE<span class='dots'>...</span>";
+            }
+            if (loader) loader.classList.add('active');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 600);
+        };
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Automatic active menu highlighting
+            let currentPath = window.location.pathname.split('/').pop(); 
+            if (currentPath === '') currentPath = 'admin_dashboard.html';
+
+            const menuLinks = document.querySelectorAll('.admin-sidebar-menu a');
+            menuLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+
+            // System loader transitions on click
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetUrl = this.getAttribute('href');
+                    if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
+
+                    e.preventDefault(); 
+                    
+                    const loader = document.getElementById('system-loader');
+                    if (loader) {
+                        loader.classList.add('active');
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500); 
+                });
+            });
+        });
     </script>
 </body>
 </html>
