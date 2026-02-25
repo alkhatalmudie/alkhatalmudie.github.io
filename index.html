@@ -428,6 +428,7 @@
                         <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
                         <li><a href="#" id="footer-terms">Terms of Service</a></li>
                         <li><a href="#">Confidentiality</a></li>
+						<li><a href="https://alkhatalmudie.github.io/login_emp.html">HR Department & Employees Affairs</a></li>
                     </ul>
                 </div>
 
@@ -451,7 +452,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p id="footer-copyright">&copy; <li><a href="https://alkhatalmudie.github.io/login_emp.html">2026</a></li> Al-Khat Al-Mudi Translation. All rights reserved.</p>
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
         </div>
     </footer>
 
@@ -728,161 +729,140 @@
     </script>
 	
 	<script type="module">
-		// 1. IMPORT FIREBASE-INIT FIRST
-        // This forces firebase-init.js to run before anything else, 
-        // ensuring the App is initialized exactly once.
-        import './assets/js/firebase-init.js'; 
+			// --- 1. UNIFIED FIREBASE IMPORTS (Directly from CDN) ---
+			import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+			import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+			import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-
-		// 2. REMOVE THE MANUAL CONFIG & INITIALIZATION
-        // Instead of defining firebaseConfig here again, we just grab the app 
-        // that firebase-init.js already created.
-        const app = getApp(); 
-        const db = getFirestore(app);
-
-		async function loadPromotions() {
-			const track = document.getElementById('promo-track');
-			const section = document.getElementById('special-ops-section');
-			
-			// 1. Detect active language (defaults to English)
-			const currentLang = localStorage.getItem('site-lang') || 'en';
-			
-			// 2. Multilingual Matrix for Ad Cards ('du' maps to your German/Dutch switch)
-			const adDict = {
-				en: { badge: "LIMITED", offer: "Offer:", was: "was", valid: "Valid:", reqs: "Requirements:", btnRes: "Reserve", btnInq: "Inquiry" },
-				ar: { badge: "حصري", offer: "العرض:", was: "بدلاً من", valid: "صالح:", reqs: "المتطلبات:", btnRes: "حجز", btnInq: "استفسار" },
-				ru: { badge: "ОГРАНИЧЕНО", offer: "Предложение:", was: "было", valid: "Действителен:", reqs: "Требования:", btnRes: "Забронировать", btnInq: "Запрос" },
-				du: { badge: "BEGRENZT", offer: "Angebot:", was: "war", valid: "Gültig:", reqs: "Anforderungen:", btnRes: "Reservieren", btnInq: "Anfrage" }
+			const firebaseConfig = {
+				apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+				authDomain: "al-khat-backend.firebaseapp.com",
+				projectId: "al-khat-backend",
+				storageBucket: "al-khat-backend.firebasestorage.app", 
+				messagingSenderId: "310033181926",
+				appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
 			};
-			const ui = adDict[currentLang] || adDict['en'];
 
-			try {
-				const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
-				const snapshot = await getDocs(q);
+			// --- 2. ANTI-RACE CONDITION ARMOR ---
+			// If an app exists (from global-auth), grab it. If not, build it. NO CRASHES.
+			const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+			const db = getFirestore(app);
+			const storage = getStorage(app);
+
+			// --- 3. PROMOTIONS ENGINE ---
+			async function loadPromotions() {
+				const track = document.getElementById('promo-track');
+				const section = document.getElementById('special-ops-section');
 				
-				if(snapshot.empty) {
-					section.style.display = 'none'; 
+				const currentLang = localStorage.getItem('site-lang') || 'en';
+				const adDict = {
+					en: { badge: "LIMITED", offer: "Offer:", was: "was", valid: "Valid:", reqs: "Requirements:", btnRes: "Reserve", btnInq: "Inquiry" },
+					ar: { badge: "حصري", offer: "العرض:", was: "بدلاً من", valid: "صالح:", reqs: "المتطلبات:", btnRes: "حجز", btnInq: "استفسار" },
+					ru: { badge: "ОГРАНИЧЕНО", offer: "Предложение:", was: "было", valid: "Действителен:", reqs: "Требования:", btnRes: "Забронировать", btnInq: "Запрос" },
+					du: { badge: "BEGRENZT", offer: "Angebot:", was: "war", valid: "Gültig:", reqs: "Anforderungen:", btnRes: "Reservieren", btnInq: "Anfrage" }
+				};
+				const ui = adDict[currentLang] || adDict['en'];
+
+				try {
+					const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
+					const snapshot = await getDocs(q);
+					
+					if(snapshot.empty) { section.style.display = 'none'; return; }
+					track.innerHTML = ""; 
+
+					snapshot.forEach(docSnap => {
+						const data = docSnap.data();
+						const reqsList = data.reqs.split(',').map(item => `<li><i class="fas fa-check" style="color:#00ff88; margin-right:5px;"></i> ${item.trim()}</li>`).join('');
+						const alignStyle = currentLang === 'ar' ? 'text-align: right; direction: rtl;' : 'text-align: left; direction: ltr;';
+						
+						const imgHtml = data.imageUrl 
+							? `<div class="promo-img-box" style="background-image: url('${data.imageUrl}')"></div>` 
+							: `<div class="promo-img-box" style="display:flex; align-items:center; justify-content:center; background: linear-gradient(45deg, #0b1426, #1a2a4a);"><i class="fas fa-image" style="font-size: 3rem; opacity: 0.1;"></i></div>`;
+
+						track.innerHTML += `
+							<div class="promo-card" style="${alignStyle}">
+								${imgHtml} <div class="promo-badge">${ui.badge}</div>
+								<h3 style="margin-top:0; color:white;">${data.name}</h3>
+								<p style="font-size:0.9rem; color:#ccc;">${data.desc}</p>
+								
+								<div class="promo-price">
+									<span class="price-old" style="margin: 0 10px;">${ui.was} <strike>$${data.oldPrice}</strike></span>
+									<span class="price-new">$${data.newPrice}</span>
+								</div>
+
+								<div style="font-size: 0.75rem; color: #ff4b5c; margin-bottom: 15px;">
+									<i class="fas fa-clock"></i> ${ui.valid} ${data.startDate} ➝ ${data.endDate}
+								</div>
+
+								<div class="promo-reqs" style="${alignStyle}">
+									<strong>${ui.reqs}</strong>
+									<ul style="list-style:none; padding:0; margin: 5px 0 0 0;">${reqsList}</ul>
+								</div>
+
+								<div class="promo-actions">
+									<button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">${ui.btnRes}</button>
+									<button class="btn-inq" onclick="window.location.href='contacts.html'">${ui.btnInq}</button>
+								</div>
+							</div>
+						`;
+					});
+				} catch (error) {
+					console.error("Promo Engine Error:", error);
+					track.innerHTML = "<p style='color:red;'>Failed to load signals.</p>";
+				}
+			}
+
+			document.addEventListener('DOMContentLoaded', loadPromotions);
+
+			// --- 4. UPLOAD ENGINE ---
+			window.updateFileLabel = function() {
+				const input = document.getElementById('real-file-input');
+				const label = document.getElementById('drop-label-text');
+				if(input.files.length > 0) {
+					label.innerText = "READY: " + input.files[0].name;
+					label.style.color = "#00f2ff"; 
+					label.style.fontWeight = "bold";
+				}
+			}
+
+			window.processUploadAndSubmit = async function(e) {
+				e.preventDefault(); 
+
+				const fileInput = document.getElementById('real-file-input');
+				const googleInput = document.getElementById('google-entry-link'); 
+				const submitBtn = document.getElementById('reservation-btn_submit');
+				const form = document.getElementById('main-request-form');
+				
+				if(fileInput.files.length === 0) {
+					alert("Please select a document for translation.");
 					return;
 				}
 
-				track.innerHTML = ""; // Clear loader
+				submitBtn.innerText = "SECURING CONNECTION...";
+				submitBtn.disabled = true;
 
-				snapshot.forEach(docSnap => {
-					const data = docSnap.data();
+				try {
+					const file = fileInput.files[0];
+					const fileName = Date.now() + '_' + file.name; 
+					const storageRef = ref(storage, 'client_uploads/' + fileName);
+
+					if (typeof startServerSequence === "function") {
+						startServerSequence();
+					}
+
+					const snapshot = await uploadBytes(storageRef, file);
+					const downloadURL = await getDownloadURL(snapshot.ref);
 					
-					// Format requirements into a list
-					const reqsList = data.reqs.split(',').map(item => `<li><i class="fas fa-check" style="color:#00ff88; margin-right:5px;"></i> ${item.trim()}</li>`).join('');
+					googleInput.value = downloadURL;
+					form.submit();
 
-					// Determine alignment for Arabic RTL
-					const alignStyle = currentLang === 'ar' ? 'text-align: right; direction: rtl;' : 'text-align: left; direction: ltr;';
-					
-					// NEW: Determine if an image exists, otherwise show a cool default pattern
-                    const imgHtml = data.imageUrl 
-                        ? `<div class="promo-img-box" style="background-image: url('${data.imageUrl}')"></div>` 
-                        : `<div class="promo-img-box" style="display:flex; align-items:center; justify-content:center; background: linear-gradient(45deg, #0b1426, #1a2a4a);"><i class="fas fa-image" style="font-size: 3rem; opacity: 0.1;"></i></div>`;
-
-					track.innerHTML += `
-                        <div class="promo-card" style="${alignStyle}">
-                            ${imgHtml} <div class="promo-badge">${ui.badge}</div>
-                            <h3 style="margin-top:0; color:white;">${data.name}</h3>
-                            <p style="font-size:0.9rem; color:#ccc;">${data.desc}</p>
-                            
-                            <div class="promo-price">
-                                <span class="price-old" style="margin: 0 10px;">${ui.was} <strike>$${data.oldPrice}</strike></span>
-                                <span class="price-new">$${data.newPrice}</span>
-                            </div>
-
-                            <div style="font-size: 0.75rem; color: #ff4b5c; margin-bottom: 15px;">
-                                <i class="fas fa-clock"></i> ${ui.valid} ${data.startDate} ➝ ${data.endDate}
-                            </div>
-
-                            <div class="promo-reqs" style="${alignStyle}">
-                                <strong>${ui.reqs}</strong>
-                                <ul style="list-style:none; padding:0; margin: 5px 0 0 0;">
-                                    ${reqsList}
-                                </ul>
-                            </div>
-
-                            <div class="promo-actions">
-                                <button class="btn-buy" onclick="window.location.href='products_services_room.html?pkg=${docSnap.id}'">${ui.btnRes}</button>
-                                <button class="btn-inq" onclick="window.location.href='contacts.html'">${ui.btnInq}</button>
-                            </div>
-                        </div>
-                    `;
-                });
-			} catch (error) {
-				console.error("Promo Engine Error:", error);
-				track.innerHTML = "<p style='color:red;'>Failed to load signals.</p>";
-			}
-		}
-
-		// Initialize when page loads
-		document.addEventListener('DOMContentLoaded', loadPromotions);
-	</script>
-	
-	<script type="module">
-		import { storage, ref, uploadBytes, getDownloadURL } from './assets/js/firebase-init.js';
-		// Add these to the top of your main.js if not already imported via a module
-		import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-		// 1. Update File Selection UI
-		window.updateFileLabel = function() {
-			const input = document.getElementById('real-file-input');
-			const label = document.getElementById('drop-label-text');
-			if(input.files.length > 0) {
-				label.innerText = "READY: " + input.files[0].name;
-				label.style.color = "#00f2ff"; // Cyan highlight
-				label.style.fontWeight = "bold";
-			}
-		}
-
-		// 2. The Main Processing Logic
-		window.processUploadAndSubmit = async function(e) {
-			e.preventDefault(); 
-
-			const fileInput = document.getElementById('real-file-input');
-			const googleInput = document.getElementById('google-entry-link'); 
-			const submitBtn = document.getElementById('reservation-btn_submit');
-			const form = document.getElementById('main-request-form');
-			
-			if(fileInput.files.length === 0) {
-				alert("Please select a document for translation.");
-				return;
-			}
-
-			// Lock UI
-			submitBtn.innerText = "SECURING CONNECTION...";
-			submitBtn.disabled = true;
-
-			try {
-				const file = fileInput.files[0];
-				const fileName = Date.now() + '_' + file.name; 
-				const storageRef = ref(storage, 'client_uploads/' + fileName);
-
-				// Trigger the visual "Hacker Sequence" first
-				if (typeof startServerSequence === "function") {
-					startServerSequence();
+				} catch (error) {
+					console.error("Transmission Error:", error);
+					alert("Gateway Error: " + error.message);
+					submitBtn.disabled = false;
+					submitBtn.innerText = "Retry Transmission";
 				}
-
-				// Perform the real background upload
-				const snapshot = await uploadBytes(storageRef, file);
-				const downloadURL = await getDownloadURL(snapshot.ref);
-				
-				// Inject URL for Google Forms
-				googleInput.value = downloadURL;
-
-				// Submit to Google Form via the hidden iframe
-				form.submit();
-
-			} catch (error) {
-				console.error("Transmission Error:", error);
-				alert("Gateway Error: " + error.message);
-				submitBtn.disabled = false;
-				submitBtn.innerText = "Retry Transmission";
 			}
-		}
 	</script>
 </body>
 </html>
