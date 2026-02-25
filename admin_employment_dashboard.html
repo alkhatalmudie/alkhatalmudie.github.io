@@ -265,11 +265,19 @@
                     const dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
                     const dateStr = dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
 
-                    let actionsHtml = '<button class="btn-cmd" onclick="window.open(\\'' + data.cvDownloadUrl + '\\', \\'_blank\\')" style="margin-bottom: 5px; width:100%;"><i class="fas fa-file-pdf"></i> EXTRACT CV</button><br>';
+                    let actionsHtml = `
+						<button class="btn-cmd" onclick="window.open('${data.cvDownloadUrl}', '_blank')" style="margin-bottom: 5px; width:100%;">
+							<i class="fas fa-file-pdf"></i> EXTRACT CV
+						</button><br>
+					`;
                     
                     if (isPending) {
-                        actionsHtml += '<button class="btn-cmd" onclick="markReviewed(\\'' + id + '\\')" style="border-color:var(--term-green); color:var(--term-green); width:100%;">MARK REVIEWED</button>';
-                    }
+						actionsHtml += `
+							<button class="btn-cmd" onclick="markReviewed('${id}')" style="border-color:var(--term-green); color:var(--term-green); width:100%;">
+								MARK REVIEWED
+							</button>
+						`;
+					}
 
                     logBox.innerHTML += `
                         <tr>
