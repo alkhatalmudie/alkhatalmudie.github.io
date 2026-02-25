@@ -217,9 +217,6 @@
                         </div>
                     </div>
                 </div>
-				
-				<script src="assets/js/main.js"></script>
-				<script src="assets/js/lang-engine.js"></script>
 
                 <script type="text/javascript">
 					function startServerSequence() {
@@ -454,7 +451,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p id="footer-copyright">&copy; <li><a href="https://alkhatalmudie.github.io/login_emp.html"></li>2026</a> Al-Khat Al-Mudi Translation. All rights reserved.</p>
+            <p id="footer-copyright">&copy; <li><a href="https://alkhatalmudie.github.io/login_emp.html">2026</a></li> Al-Khat Al-Mudi Translation. All rights reserved.</p>
         </div>
     </footer>
 
@@ -594,8 +591,9 @@
 			</div>
 		</div>
 	</div>
-	
-    <script src="assets/js/main.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/lang-engine.js"></script>
+	<script type="module" src="assets/js/global-auth.js"></script>
     <script>
         // Hero Carousel Logic
         let slideIndex = 0;
@@ -730,22 +728,19 @@
     </script>
 	
 	<script type="module">
-		import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-		import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+		// 1. IMPORT FIREBASE-INIT FIRST
+        // This forces firebase-init.js to run before anything else, 
+        // ensuring the App is initialized exactly once.
+        import './assets/js/firebase-init.js'; 
 
-		const firebaseConfig = {
-            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
-            authDomain: "al-khat-backend.firebaseapp.com",
-            projectId: "al-khat-backend",
-            storageBucket: "al-khat-backend.firebasestorage.app", // <--- THE CORRECT UPLINK
-            messagingSenderId: "310033181926",
-            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
-        };
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 
-		// ANTI-RACE CONDITION ARMOR: 
-        // If Firebase isn't built yet, build it. If it is, just grab the existing one.
-		const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-		const db = getFirestore(app);
+		// 2. REMOVE THE MANUAL CONFIG & INITIALIZATION
+        // Instead of defining firebaseConfig here again, we just grab the app 
+        // that firebase-init.js already created.
+        const app = getApp(); 
+        const db = getFirestore(app);
 
 		async function loadPromotions() {
 			const track = document.getElementById('promo-track');
@@ -889,8 +884,5 @@
 			}
 		}
 	</script>
-	
-	<script type="module" src="assets/js/global-auth.js"></script>
-	
 </body>
 </html>
