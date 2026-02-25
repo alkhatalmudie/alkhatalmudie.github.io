@@ -246,10 +246,14 @@
 
     <script type="module">
         import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc } from './assets/js/firebase-init.js';
-        import { query, where, orderBy, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-		import { updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+		import { db, storage, ref, uploadBytes, getDownloadURL, collection, addDoc } from './assets/js/firebase-init.js';
+
+		// ALL FIRESTORE TOOLS COMBINED HERE:
+		import { 
+			query, where, orderBy, getDocs, onSnapshot, 
+			serverTimestamp, updateDoc, doc 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const app = getApp();
         const auth = getAuth(app);
@@ -348,16 +352,23 @@
         }
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = "login_emp.html";
-            } else {
-                currentUserUid = user.uid;
-                await fetchOperativeIntel(user.uid);
-                fetchAuditTrail(user.uid);
-                initializeCommsChannel(user.uid);
+			if (!user) {
+				window.location.href = "login_emp.html";
+			} else {
+				currentUserUid = user.uid;
+				
+				// --- THE HEARTBEAT START ---
+				updateHeartbeat(user.uid); // Send first pulse immediately
+				setInterval(() => updateHeartbeat(user.uid), 60000); // Pulse every 60 seconds
+				// ---------------------------
+
+				await fetchOperativeIntel(user.uid);
+				fetchAuditTrail(user.uid);
+				initializeCommsChannel(user.uid);
 				fetchAssignedMissions(currentUserUid);
-            }
-        });
+				updateEarnings(user.uid); // Move this inside here to ensure it has the UID
+			}
+		});
 
         async function fetchOperativeIntel(uid) {
             const q = query(collection(db, "employees"), where("uid", "==", uid));
@@ -634,6 +645,48 @@
                 });
             });
         }
+		
+		async function updateEarnings(uid) {
+			const q = query(
+				collection(db, "orders"), 
+				where("assignedTo", "==", uid), 
+				where("status", "==", "Completed")
+			);
+			const snapshot = await getDocs(q);
+			let totalJOD = 0;
+			snapshot.forEach(doc => {
+				const data = doc.data();
+				totalJOD += parseFloat(data.price || 0);
+			});
+			document.getElementById('op-earnings').innerText = totalJOD.toFixed(2);
+			document.getElementById('op-completed-count').innerText = snapshot.size;
+		}
+
+		// Call this inside onAuthStateChanged after fetchAssignedMissions(user.uid);
+		updateEarnings(user.uid);
+
+		async function updateHeartbeat(uid) {
+			// 1. Find the document where the 'uid' field matches the current user
+			const q = query(collection(db, "employees"), where("uid", "==", uid));
+			
+			try {
+				const snapshot = await getDocs(q);
+				if (!snapshot.empty) {
+					// 2. Get the actual Document ID (e.g., zEmIGjx...)
+					const docId = snapshot.docs[0].id;
+					const userRef = doc(db, "employees", docId);
+					
+					// 3. Update that specific document
+					await updateDoc(userRef, {
+						lastSeen: serverTimestamp(),
+						status: "Online"
+					});
+					console.log("Heartbeat transmitted to doc: " + docId);
+				}
+			} catch (error) {
+				console.error("Signal lost:", error);
+			}
+		}
     </script>
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
