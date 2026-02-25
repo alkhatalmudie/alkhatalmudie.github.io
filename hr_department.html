@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR & Employee Affairs | Al-Khat Al-Mudi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        .hr-hero {
+            background: linear-gradient(135deg, #0b1426 0%, #1a2a4a 100%);
+            padding: 120px 0 80px 0;
+            text-align: center;
+            color: white;
+            border-bottom: 2px solid rgba(0, 242, 255, 0.2);
+        }
+        .hr-hero h1 {
+            font-size: 3rem;
+            color: var(--brand-cyan);
+            margin-bottom: 15px;
+        }
+        .hr-hero p {
+            font-size: 1.1rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Reusing your service-grid style for HR modules */
+        .hr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+        }
+        .hr-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 4px solid var(--brand-navy);
+            transition: 0.3s;
+        }
+        .hr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 242, 255, 0.2);
+            border-top-color: var(--brand-cyan);
+        }
+        .hr-card i {
+            font-size: 3rem;
+            color: var(--brand-magenta);
+            margin-bottom: 20px;
+        }
+        .hr-card h3 {
+            color: var(--brand-navy);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .hr-card p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <div class="brand-text">
+                        <h3>Al-Khat Al-Mudi</h3>
+                        <span id="header-brand_sub">TRANSLATION SERVICES</span>
+                    </div>
+                </a>
+                
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" id="header-menu_btn">MENU</span>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hr-hero">
+        <div class="container">
+            <div class="dna-logo" style="margin: 0 auto 20px auto; transform: scale(1.5);">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            <h1 id="hr-title">Human Resources & Employee Affairs</h1>
+            <p id="hr-desc">The backbone of Al-Khat Al-Mudi. Empowering our linguists, managing operations, and securing internal communications.</p>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: #f0f4f8; padding-bottom: 80px;">
+        <div class="container">
+            <div class="hr-grid">
+                
+                <div class="hr-card">
+                    <i class="fas fa-id-badge"></i>
+                    <h3 id="hr-card1-title">Employee Portal</h3>
+                    <p id="hr-card1-desc">Secure access for staff and registered translators. View assigned tasks, submit translations, and check salary statements.</p>
+                    <a href="login_emp.html" class="btn btn-primary" style="width: 100%;" id="hr-card1-btn">Authorized Login</a>
+                </div>
+
+                <div class="hr-card">
+                    <i class="fas fa-user-tie"></i>
+                    <h3 id="hr-card2-title">Join Our Team</h3>
+                    <p id="hr-card2-desc">We are always looking for certified linguists and administrative staff in Amman to join our growing dispatch matrix.</p>
+                    <a href="mailto:alkhatalmudi@gmail.com?subject=Career Application" class="btn btn-primary" style="background: transparent; border: 2px solid var(--brand-navy); color: var(--brand-navy); width: 100%;" id="hr-card2-btn">Submit CV</a>
+                </div>
+
+                <div class="hr-card">
+                    <i class="fas fa-file-contract"></i>
+                    <h3 id="hr-card3-title">Company Policies</h3>
+                    <p id="hr-card3-desc">Access our code of conduct, confidentiality agreements (NDA), and operational standards for government-certified translation.</p>
+                    <a href="#" class="btn btn-primary" style="background: #eee; color: #888; border: none; width: 100%; pointer-events: none;" id="hr-card3-btn">Intranet Only</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--brand-navy); color: white; padding: 60px 0; text-align: center;">
+        <div class="container">
+            <h2 id="hr-contact-title" style="color: var(--brand-cyan); margin-bottom: 15px;">Need HR Assistance?</h2>
+            <p id="hr-contact-desc" style="margin-bottom: 30px; opacity: 0.8;">For payroll inquiries, document verification, or grievance reporting.</p>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <div style="background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 8px;">
+                    <i class="fas fa-envelope" style="color: var(--brand-magenta); margin-right: 10px;"></i> alkhatalmudi@gmail.com
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px 30px; border-radius: 8px;">
+                    <i class="fas fa-phone-alt" style="color: var(--brand-cyan); margin-right: 10px;"></i> 078-077-0085
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="dna-logo" style="margin-bottom: 20px;">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
+                    </div>
+                    <h3 class="arabic-text">الخط المضيء للترجمة</h3>
+                    <p id="footer-about_text" style="opacity: 0.7; line-height: 1.6; margin-bottom: 25px;">
+                        Your partner in overcoming language barriers. We provide quality, speed, and reliability for all your translation needs.
+                    </p>
+                     <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1Gtg7R2phb/" class="social-icon facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/alkhatalmudi" class="social-icon instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/message/BFW6NB4D4ZLLL1" class="social-icon whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-icon linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_links">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="menu-home-footer">Home</a></li>
+                        <li><a href="#about" id="menu-about-footer">About Us</a></li>
+                        <li><a href="#services" id="menu-services-footer">Services</a></li>
+                        <li><a href="#reservation" id="menu-quote-footer">Get a Quote</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" id="footer-privacy">Privacy Policy</a></li>
+                        <li><a href="#" id="footer-terms">Terms of Service</a></li>
+                        <li><a href="#">Confidentiality</a></li>
+						<li><a href="https://alkhatalmudie.github.io/hr_department.html">HR Department & Employees Affairs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 id="footer-col_contact">Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Marka Al-Shamaliya, Nadi Al-Sibaq<br>Amran Mall, 3rd Floor, Office 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>078-077-0085</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>alkhatalmudi@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p id="footer-copyright">&copy; 2026 Al-Khat Al-Mudi Translation. All rights reserved.</p>
+        </div>
+    </footer>
+	
+    <div id="side-menu" class="menu-panel">
+        <a href="javascript:void(0)" class="close-btn" id="closeMenu">&times;</a>
+
+        <div class="menu-content">
+            <h4 class="menu-label" id="menu-label_nav">NAVIGATION</h4>
+            <ul class="main-links">
+                <li><a href="index.html" id="menu-home">Home</a></li>
+                <li class="dropdown-trigger">
+                    <a href="javascript:void(0)"><span id="menu-pages">Pages</span> <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-list">
+                        <li><a href="about.html" id="menu-about">About Us</a></li>
+                        <li><a href="services.html" id="menu-services">Services</a></li>
+                        <li><a href="translation.html" id="menu-translation">Translation Info</a></li>
+                        <li><a href="packages.html" id="menu-packages">Packages & Pricing</a></li>
+                        <li><a href="shop.html" id="menu-shop">Shop / Products</a></li>
+                        <li><a href="reservation.html" id="menu-reservation">Book Reservation</a></li>
+                        <li><a href="contacts.html" id="menu-contact">Contact Us</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="menu-label" id="menu-label_member">MEMBER AREA</h4>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-auth login" id="menu-login">Log In</a>
+                <a href="signup.html" class="btn-auth signup" id="menu-signup">Sign Up</a>
+            </div>
+
+            <h4 class="menu-label" id="menu-label_region">REGION SELECT</h4>
+            <div class="lang-grid">
+                <a href="javascript:void(0)" onclick="switchLanguage('en')" class="lang-orb" title="English"><img src="images/GB.png" alt="English"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ar')" class="lang-orb" title="Arabic"><img src="images/Ar.png" alt="Arabic"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('du')" class="lang-orb" title="Dutch"><img src="images/Du.png" alt="Dutch"></a>
+                <a href="javascript:void(0)" onclick="switchLanguage('ru')" class="lang-orb" title="Russian"><img src="images/Ru.png" alt="Russian"></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="processing-overlay" class="server-overlay">
+        <div class="terminal-box">
+            <div class="dna-loader">
+                <div class="dna-drop dna-magenta"></div>
+                <div class="dna-drop dna-cyan"></div>
+            </div>
+            
+            <div class="terminal-content">
+                <h4 class="terminal-title" id="overlay-title">AL-KHAT SECURE GATEWAY v4.0</h4>
+                <div id="terminal-log" class="terminal-log">
+                    <span class="log-line">> Initializing request...</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="status-blink" id="overlay-status">PROCESSING...</div>
+            </div>
+        </div>
+    </div>
+	
+	<div id="upload-modal" class="modal-overlay">
+		<div class="modal-box">
+			<a href="javascript:void(0)" class="close-modal" onclick="closeUploadHelp()">&times;</a>
+			
+			<div class="modal-header">
+				<div class="dna-logo small-logo">
+					<div class="dna-drop dna-magenta"></div>
+					<div class="dna-drop dna-cyan"></div>
+				</div>
+				<h3>&nbsp; &nbsp; &nbsp; How to Upload Files</h3>
+			</div>
+
+			<div class="modal-body">
+				<p>For security reasons, we use secure links instead of direct uploads. Here is how to send us your files in 30 seconds:</p>
+				
+				<div class="tutorial-steps">
+					<div class="step">
+						<div class="step-num">1</div>
+						<div class="step-text">
+							<strong>Go to WeTransfer.com</strong>
+							<span>It's free and requires no account.</span>
+						</div>
+						<a href="https://wetransfer.com/" target="_blank" class="btn-tiny">Open Site <i class="fas fa-external-link-alt"></i></a>
+					</div>
+
+					<div class="step">
+						<div class="step-num">2</div>
+						<div class="step-text">
+							<strong>Upload Your File</strong>
+							<span>Click "Upload files" and select your document.</span>
+						</div>
+					</div>
+
+					<div class="step">
+						<div class="step-num">3</div>
+						<div class="step-text">
+							<strong>Get Transfer Link</strong>
+							<span>Click the <i class="fas fa-ellipsis-h"></i> (three dots) icon and select <strong>"Get transfer link"</strong>.</span>
+						</div>
+					</div>
+
+					<div class="step">
+						<div class="step-num">4</div>
+						<div class="step-text">
+							<strong>Paste & Send</strong>
+							<span>Copy the link (e.g., https://we.tl/...) and paste it into our form box.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="service-modal" class="modal-overlay">
+		<div class="modal-box">
+			<a href="javascript:void(0)" class="close-modal" onclick="closeServiceModal()">&times;</a>
+			
+			<div class="modal-header">
+				<div id="modal-service-icon" style="font-size: 2rem; color: var(--brand-cyan); margin-right: 15px;">
+					</div>
+				<h3 id="modal-service-title">Service Name</h3>
+			</div>
+
+			<div class="modal-body">
+				<p id="modal-service-desc" style="margin-bottom: 25px; color: #555;">Description goes here...</p>
+				
+				<h4 style="color: var(--brand-navy); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+					<i class="fas fa-stream"></i> Process Workflow
+				</h4>
+				
+				<div class="tutorial-steps" id="modal-service-steps">
+					</div>
+
+				<div style="margin-top: 25px; text-align: center;">
+					<a href="#reservation" onclick="closeServiceModal()" class="btn btn-primary" style="width: 100%;">Book This Service</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/lang-engine.js"></script>
+    <script type="module" src="assets/js/global-auth.js"></script>
+
+</body>
+</html>
