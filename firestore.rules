@@ -15,7 +15,13 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow create: if true; 
       allow get: if true; 
-      allow list: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Update: Allow reading if the user is the Client (userId) OR the Operative (assignedTo)
+      allow list: if request.auth != null && (
+        request.auth.uid == resource.data.userId || 
+        request.auth.uid == resource.data.assignedTo
+      );
+      // Allow Operatives to update the status when they finish a mission
+      allow update: if request.auth != null && request.auth.uid == resource.data.assignedTo;
     }
 
     // =========================================================
