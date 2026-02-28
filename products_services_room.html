@@ -321,15 +321,19 @@
 
             try {
                 // 1. Fetch Package Data
-                const docSnap = await getDoc(targetRef);
-                if (!docSnap.exists()) { alert("Target package MIA or expired."); return; }
-                
-                const data = docSnap.data();
+				const docSnap = await getDoc(targetRef);
+				if (!docSnap.exists()) { alert("Target package MIA or expired."); return; }
+				
+				const data = docSnap.data();
 
-                // 2. Increment View Counter silently
-                await updateDoc(targetRef, { views: increment(1) });
+				// 2. Increment View Counter silently (ARMORED)
+				try {
+					await updateDoc(targetRef, { views: increment(1) });
+				} catch (telemetryError) {
+					console.warn("Telemetry blocked by Alpha Firewall, but mission proceeds.", telemetryError);
+				}
 
-                // 3. Populate UI
+				// 3. Populate UI
                 document.getElementById('ui-title').innerText = data.name;
                 document.getElementById('ui-desc').innerText = data.desc;
                 document.getElementById('ui-sku').innerText = `AKM-${targetId.substring(0,5).toUpperCase()}`;
