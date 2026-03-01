@@ -10,7 +10,9 @@
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     
     <style>
-        /* ALPHA BACKEND STYLE (TACTICAL UI) */
+        /* =========================================================
+           ALPHA BACKEND STYLE (TACTICAL UI)
+           ========================================================= */
         :root {
             --term-bg: #050a15;
             --term-cyan: #00f2ff;
@@ -25,10 +27,10 @@
             color: var(--term-cyan); 
             font-family: 'Share Tech Mono', monospace, sans-serif; 
             margin: 0; padding: 0; 
+            transition: all 0.3s ease; 
             display: flex; height: 100vh; overflow: hidden;
-            opacity: 0; /* Start invisible for boot sequence */
-            animation: systemBoot 0.4s ease-in forwards;
         }
+        body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
         @keyframes systemBoot {
             0% { opacity: 0; transform: scale(0.99); }
@@ -61,7 +63,7 @@
             40%, 100% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
         }
 
-        /* --- UNIFIED ADMIN SIDEBAR --- */
+       /* --- UNIFIED ADMIN SIDEBAR --- */
         .admin-sidebar { 
             width: 260px; 
             background: rgba(2, 6, 15, 0.95); 
