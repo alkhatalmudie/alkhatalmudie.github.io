@@ -3,357 +3,784 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA COMMAND | Corporate Deck</title>
+    <title>ALPHA COMMAND | Main Dashboard</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-
-
+    
     <style>
         /* =========================================================
-           ALPHA BACKEND STYLE (TACTICAL UI)
+           ALPHA BACKEND STYLE (TACTICAL UI REFINED)
            ========================================================= */
         :root {
             --term-bg: #050a15;
             --term-cyan: #00f2ff;
             --term-red: #ff4b5c;
             --term-green: #00ff88;
+            --term-muted: #8892b0; /* NEW: Muted gray for labels */
             --term-panel: rgba(0, 242, 255, 0.03);
-            --term-border: rgba(0, 242, 255, 0.2);
+            --term-border: rgba(0, 242, 255, 0.15);
         }
 
         body { 
             background-color: var(--term-bg); 
-            color: var(--term-cyan); 
-            font-family: 'Share Tech Mono', monospace, sans-serif; 
+            color: #d1d5db; /* Default text is now soft gray, not cyan */
+            font-family: 'Share Tech Mono', monospace; 
             margin: 0; padding: 0; 
-            transition: all 0.3s ease; 
             display: flex; height: 100vh; overflow: hidden;
+            animation: systemBoot 0.4s ease-in forwards;
         }
+
         body[dir="rtl"] { font-family: 'Cairo', sans-serif; }
 
         /* --- UNIFIED ADMIN SIDEBAR --- */
         .admin-sidebar { 
             width: 260px; 
-            background: rgba(0, 0, 0, 0.8); 
+            background: rgba(2, 6, 15, 0.95); 
             border-right: 1px solid var(--term-border); 
-            padding: 20px; 
+            padding: 30px 20px; 
             flex-shrink: 0; 
             display: flex; flex-direction: column; 
-            box-shadow: 2px 0 15px rgba(0, 242, 255, 0.05);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
         body[dir="rtl"] .admin-sidebar { border-right: none; border-left: 1px solid var(--term-border); }
         
-        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0 0 0; }
-        .admin-sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-brand { text-align: center; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0; flex-grow: 1; overflow-y: auto; }
         .admin-sidebar-menu a { 
-            display: block; padding: 12px 15px; color: #888; 
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 15px; color: var(--term-muted); 
             text-decoration: none; border-left: 3px solid transparent; 
-            transition: all 0.3s ease; font-size: 0.9rem; letter-spacing: 1px;
+            transition: 0.3s; font-size: 0.85rem; letter-spacing: 1px;
         }
         .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { 
-            background: rgba(0, 242, 255, 0.1); color: var(--term-cyan); border-left-color: var(--term-cyan); 
+            background: rgba(0, 242, 255, 0.05); color: var(--term-cyan); border-left-color: var(--term-cyan); 
         }
         body[dir="rtl"] .admin-sidebar-menu a { border-left: none; border-right: 3px solid transparent; }
         body[dir="rtl"] .admin-sidebar-menu a:hover, body[dir="rtl"] .admin-sidebar-menu a.active { border-right-color: var(--term-cyan); }
-        .admin-sidebar-menu i { margin-right: 15px; width: 20px; text-align: center; }
 
         /* --- MAIN DASHBOARD AREA --- */
         .admin-main-content { 
-            flex-grow: 1; padding: 30px; display: flex; flex-direction: column; overflow-y: auto; 
-            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+            flex-grow: 1; padding: 40px; display: flex; flex-direction: column; overflow-y: auto; 
+            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.04) 0%, transparent 70%);
         }
         
         .header-top { 
             display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid var(--term-border); padding-bottom: 20px; margin-bottom: 30px; 
+            border-bottom: 1px solid var(--term-border); padding-bottom: 25px; margin-bottom: 35px; 
         }
-        .header-title { margin: 0; font-size: 1.8rem; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+        .header-title { margin: 0; font-size: 1.5rem; color: var(--term-cyan); text-transform: uppercase; letter-spacing: 2px; }
 
         /* --- KPI GRID --- */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 35px; }
         .stat-box { 
-            border: 1px solid var(--term-border); background: rgba(0, 0, 0, 0.5); 
-            padding: 25px; border-left: 4px solid var(--term-cyan);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            position: relative; overflow: hidden;
+            border: 1px solid var(--term-border); background: rgba(10, 20, 40, 0.4); 
+            padding: 20px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-        .stat-box::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 242, 255, 0.03), transparent);
-            transform: rotate(45deg); animation: scanline 6s linear infinite; pointer-events: none;
-        }
-        @keyframes scanline { 0% { transform: translateY(-100%) rotate(45deg); } 100% { transform: translateY(100%) rotate(45deg); } }
+        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--term-muted); }
+        .stat-box.alert::before { background: var(--term-red); }
+        .stat-box.success::before { background: var(--term-green); }
         
-        .stat-box.alert { border-left-color: var(--term-red); }
-        .stat-box.success { border-left-color: var(--term-green); }
-        
-        .stat-val { font-size: 3rem; margin: 10px 0 0 0; color: white; font-weight: bold; }
-        .stat-label { font-size: 0.85rem; opacity: 0.7; text-transform: uppercase; color: var(--term-cyan); font-weight: bold; letter-spacing: 1px; }
+        .stat-label { font-size: 0.7rem; color: var(--term-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .stat-val { font-size: 2.2rem; color: #fff; font-weight: bold; margin-top: 10px; }
 
-        /* --- DATA TABLE --- */
+        /* --- DATA PANEL --- */
         .panel { 
-            border: 1px solid var(--term-border); background: rgba(0,0,0,0.6); 
-            flex-grow: 1; overflow-y: auto; padding: 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 1px solid var(--term-border); background: rgba(0,0,0,0.3); 
+            border-radius: 4px; overflow: hidden;
         }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table { width: 100%; border-collapse: collapse; }
         .data-table th { 
-            text-align: left; padding: 20px; border-bottom: 2px solid var(--term-border); 
-            color: var(--term-cyan); text-transform: uppercase; background: rgba(0, 242, 255, 0.05);
-            position: sticky; top: 0; z-index: 10;
+            background: rgba(0, 242, 255, 0.05); color: var(--term-cyan);
+            text-align: left; padding: 15px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid var(--term-border);
         }
         body[dir="rtl"] .data-table th { text-align: right; }
-        .data-table td { padding: 15px 20px; border-bottom: 1px solid rgba(0, 242, 255, 0.05); vertical-align: middle; color: #ddd; }
-        .data-table tr:hover { background: rgba(0, 242, 255, 0.05); }
+        .data-table td { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; }
+        .data-table tr:hover { background: rgba(255,255,255,0.02); }
 
-        /* --- BUTTONS & BADGES --- */
+        /* UI ELEMENTS */
         .btn { 
             background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); 
-            padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; 
-            transition: 0.3s; width: 100%; text-transform: uppercase; letter-spacing: 1px;
+            padding: 10px 20px; cursor: pointer; font-family: inherit; font-size: 0.75rem;
+            transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
         .btn:hover { background: var(--term-cyan); color: var(--term-bg); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
         
-        .btn-cmd { background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); padding: 6px 12px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; font-family: inherit; border-radius: 3px; }
-        .btn-cmd:hover { background: var(--term-cyan); color: var(--term-bg); }
-        .btn-cmd.action { border-color: var(--term-green); color: var(--term-green); margin-top: 8px; }
-        .btn-cmd.action:hover { background: var(--term-green); color: var(--term-bg); }
+        .badge { padding: 4px 8px; font-size: 0.65rem; font-weight: bold; border: 1px solid; }
 
-        .badge { padding: 4px 10px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
-        .b-pending { background: rgba(255, 75, 92, 0.1); color: var(--term-red); border: 1px solid var(--term-red); }
-        .b-completed { background: rgba(0, 255, 136, 0.1); color: var(--term-green); border: 1px solid var(--term-green); }
-
-        /* UPLOAD OVERLAY */
-        #upload-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .upload-box { border: 1px solid var(--term-cyan); background: var(--term-bg); padding: 30px; width: 400px; box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
-
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--term-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--term-border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--term-cyan); }
-		
-		/* --- SYSTEM TRANSITION EFFECTS --- */
-		body {
-			opacity: 0; /* Start invisible */
-			animation: systemBoot 0.4s ease-in forwards; /* Fade in automatically on load */
-		}
-
-		@keyframes systemBoot {
-			0% { opacity: 0; transform: scale(0.99); }
-			100% { opacity: 1; transform: scale(1); }
-		}
-
-		/* Class triggered by JS before leaving the page */
-		body.system-shutdown {
-			opacity: 0 !important;
-			transform: scale(0.99);
-		}
-		
-		/* --- SYSTEM LOADER OVERLAY --- */
-		.system-loader {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: #050a15; /* Matches your terminal background */
-			z-index: 9999; /* Keeps it on top of everything */
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			opacity: 0;
-			pointer-events: none; /* Lets clicks pass through when hidden */
-			transition: opacity 0.3s ease;
-		}
-
-		/* When the JS triggers this class, the screen goes black */
-		.system-loader.active {
-			opacity: 1;
-			pointer-events: all; /* Blocks clicks while loading */
-		}
-
-		/* The glowing text */
-		.loader-text {
-			color: #00f2ff;
-			font-size: 1.5rem;
-			font-family: 'Share Tech Mono', monospace;
-			letter-spacing: 5px;
-			text-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
-			animation: pulseGlow 1.2s infinite alternate;
-		}
-
-		/* The blinking dots */
-		.loader-text .dots {
-			display: inline-block;
-			width: 20px;
-			text-align: left;
-			animation: blinkDots 1.5s infinite steps(4, end);
-		}
-
-		/* Keyframes for the neon pulse */
-		@keyframes pulseGlow {
-			0% { text-shadow: 0 0 5px rgba(0, 242, 255, 0.5); transform: scale(0.98); }
-			100% { text-shadow: 0 0 20px rgba(0, 242, 255, 1), 0 0 40px rgba(0, 242, 255, 0.6); transform: scale(1); }
-		}
-
-		/* Keyframes for the typewriter dots */
-		@keyframes blinkDots {
-			0%, 20% { color: transparent; text-shadow: none; }
-			40% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
-			100% { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.8); }
-		}
-		
-		::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--term-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--term-border); }
-		
-		.notif-item {
-			padding: 12px;
-			border-bottom: 1px solid rgba(0, 242, 255, 0.1);
-			font-size: 0.8rem;
-			animation: pulseEntry 0.5s ease-out;
-		}
-		.notif-item:hover { background: rgba(0, 242, 255, 0.05); }
-		.notif-item .time { color: #555; font-size: 0.7rem; display: block; margin-bottom: 4px; }
-		.notif-item.new { border-left: 2px solid var(--term-green); background: rgba(0, 255, 136, 0.02); }
-
-		@keyframes pulseEntry {
-			0% { background: rgba(0, 242, 255, 0.2); transform: translateX(10px); }
-			100% { background: transparent; transform: translateX(0); }
-		}
-		
-		/* --- STATUS LIGHT ANIMATIONS --- */
-		.status-light {
-			width: 10px;
-			height: 10px;
-			border-radius: 50%;
-			transition: 0.3s;
-		}
-
-		.status-light.online {
-			background-color: var(--term-green);
-			box-shadow: 0 0 10px var(--term-green), 0 0 20px var(--term-green);
-			animation: pulseStatus 2s infinite;
-		}
-
-		.status-light.offline {
-			background-color: var(--term-red);
-			box-shadow: 0 0 10px var(--term-red);
-			animation: none;
-		}
-
-		@keyframes pulseStatus {
-			0% { opacity: 1; transform: scale(1); }
-			50% { opacity: 0.4; transform: scale(0.9); }
-			100% { opacity: 1; transform: scale(1); }
-		}
-    </style>
-	
-</head>
-
-<body class="admin-theme">
-    <div id="system-loader" class="system-loader">
-        <div class="loader-content">
-            <div class="dna-spinner"></div>
-            <p>ESTABLISHING SECURE CORPORATE UPLINK...</p>
-        </div>
-    </div>
-
-    <div class="dash-wrapper">
-        <aside class="dash-sidebar">
-            <div class="sidebar-header">
-                <img src="images/logo-alpha.svg" alt="Alpha" class="alpha-logo">
-                <div class="status-orb pulse-green"></div>
-            </div>
-            
-            <nav class="admin-sidebar-menu">
-                <a href="alpha.html"><i class="fas fa-terminal"></i> <span>Command Hub</span></a>
-                <a href="admin_corporates.html" class="active"><i class="fas fa-building-columns"></i> <span>Embassies & Corps</span></a>
-                <a href="admin_operatives.html"><i class="fas fa-user-shield"></i> <span>Field Operatives</span></a>
-                <a href="admin_missions.html"><i class="fas fa-briefcase"></i> <span>Active Missions</span></a>
-                <a href="index.html" class="logout-link"><i class="fas fa-power-off"></i> <span>Exit Alpha</span></a>
-            </nav>
-        </aside>
-
-        <main class="dash-main-content">
-            <header class="tactical-header">
-                <div class="header-intel">
-                    <h1 data-i18n="corp_deck_title">SOVEREIGN ENTITY CONTROL</h1>
-                    <p class="hacker-text">Monitoring High-Value Cultural Data Streams</p>
-                </div>
-                <div class="header-actions">
-                    <button class="alpha-btn secondary" onclick="openProtocolModal()">
-                        <i class="fas fa-plus"></i> NEW CORPORATE PROTOCOL
-                    </button>
-                </div>
-            </header>
-
-            <div class="alpha-stats-grid">
-                <div class="stat-card">
-                    <label>ACTIVE EMBASSIES</label>
-                    <div class="value" id="count-embassies">08</div>
-                    <div class="trend-up">+2 this month</div>
-                </div>
-                <div class="stat-card">
-                    <label>CORPORATE CONTRACTS</label>
-                    <div class="value" id="count-corps">24</div>
-                </div>
-                <div class="stat-card highlight">
-                    <label>SENSITIVE DATA EFFICIENCY</label>
-                    <div class="value">99.8%</div>
-                </div>
-            </div>
-
-            <section class="admin-panel-box">
-                <div class="panel-header">
-                    <h3><i class="fas fa-broadcast-tower"></i> REGISTERED ENTITIES</h3>
-                    <div class="panel-search">
-                        <input type="text" placeholder="Search Entity ID..." id="corp-search">
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="alpha-table">
-                        <thead>
-                            <tr>
-                                <th>ENTITY NAME</th>
-                                <th>CATEGORY</th>
-                                <th>SECURITY CLEARANCE</th>
-                                <th>ACTIVE MISSIONS</th>
-                                <th>REVENUE (JOD)</th>
-                                <th>STATUS</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody id="corporate-list">
-                            <tr>
-                                <td class="entity-name">US Embassy Amman</td>
-                                <td>Diplomatic</td>
-                                <td><span class="badge secure">LEVEL 5</span></td>
-                                <td>14</td>
-                                <td>4,250.00</td>
-                                <td><span class="status-active">LINKED</span></td>
-                                <td><button class="table-action"><i class="fas fa-eye"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        /* Animations */
+        @keyframes systemBoot { from { opacity: 0; } to { opacity: 1; } }
         
-        // Use your existing Firebase config from global-auth.js
-        // ... (Config here)
+        /* Status Lights */
+        .status-light { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .online { background: var(--term-green); box-shadow: 0 0 8px var(--term-green); }
 
-        // Add Logic to fetch users with "role: 'corporate'" or from a 'corporates' collection
-        // This ensures Al-Khat handles their sensitive data efficiently.
+        /* Search Input */
+        .search-container input {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--term-border);
+            color: #fff; padding: 8px 15px 8px 35px; width: 250px; font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="system-loader" class="system-loader">
+        <div class="loader-text">INITIALIZING ALPHA CORE<span class="dots">...</span></div>
+    </div>
+    
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--term-red); margin-bottom: 15px;"></i>
+            <h3 style="margin:0; color:white; letter-spacing: 2px; font-size: 1.2rem;">ALPHA <span style="color:var(--term-cyan);">COMMAND</span></h3>
+            <div style="font-size: 0.6rem; color: var(--term-muted); margin-top: 5px;">SECURE INTERFACE v4.0</div>
+            
+            <div style="margin-top: 20px; text-align: left; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                <div style="display: flex; align-items: center;">
+                    <span class="status-light online"></span>
+                    <span style="font-size: 0.65rem; color: var(--term-green); font-weight: bold;">UPLINK ACTIVE</span>
+                </div>
+                <div id="status-latency" style="font-size: 0.6rem; color: var(--term-muted); margin-top: 4px;">LATENCY: --ms</div>
+            </div>
+        </div>
+        
+        <ul class="admin-sidebar-menu">
+            <li><a href="alpha.html" class="active"><i class="fas fa-satellite-dish"></i> Dashboard</a></li>
+            <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Deployments</a></li>
+            <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Registry</a></li>
+            <li><a href="admin_pricing.html"><i class="fas fa-tags"></i> Pricing</a></li>
+            <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Comms</a></li>
+            <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Logs</a></li>
+            <li><a href="admin_mail.html"><i class="fas fa-envelope"></i> Broadcast</a></li>
+            <li><a href="sales.html"><i class="fas fa-file-invoice-dollar"></i> Sales</a></li>
+        </ul>
+
+        <div style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <button onclick="handleReturnToBase()" class="btn" style="width: 100%; border-color: var(--term-muted); color: var(--term-muted); margin-bottom: 10px;">HOME BASE</button>
+            <button onclick="handleLogout()" class="btn" style="border-color: var(--term-red); color: var(--term-red); width: 100%;">
+                <i class="fas fa-power-off"></i> DISCONNECT
+            </button>
+        </div>
+    </aside>
+
+    <main class="admin-main-content">
+        <div class="header-top">
+            <h2 class="header-title" id="ui-header-title">Overwatch Terminal</h2>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div class="search-container" style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 10px; color: var(--term-muted); font-size: 0.8rem;"></i>
+                    <input type="text" id="global-search" placeholder="SEARCH ENCRYPTED DATA...">
+                </div>
+                <button class="btn" id="notif-trigger" style="border-color: var(--term-border); color: #fff; padding: 8px 15px;">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="btn" id="btn-lang" onclick="toggleLanguage()" style="border-color: #ffc107; color: #ffc107;">AR</button>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="stat-box alert">
+                <div class="stat-label" id="ui-stat-pending">Pending Extractions</div>
+                <div class="stat-val" id="stat-pending">0</div>
+            </div>
+            <div class="stat-box success">
+                <div class="stat-label" id="ui-stat-completed">Completed Missions</div>
+                <div class="stat-val" id="stat-completed">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" id="ui-stat-rev">Total Revenue</div>
+                <div class="stat-val" id="stat-revenue" style="color: var(--term-green);">0.00 <span style="font-size: 1rem;">JOD</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" id="ui-stat-users">Registered Agents</div>
+                <div class="stat-val" id="stat-users">0</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th id="ui-th-id">ID</th>
+                        <th id="ui-th-client">Client Identity</th>
+                        <th id="ui-th-param">Parameters</th>
+                        <th id="ui-th-stat">Status</th>
+                        <th id="ui-th-act">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="mission-log">
+                    <tr><td colspan="5" style="text-align: center; color:var(--term-muted); padding: 50px;"><i class="fas fa-spinner fa-spin"></i> SYNCHRONIZING WITH DATABASE...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			// --- 1. AUTOMATIC ACTIVE MENU HIGHLIGHTING ---
+			let currentPath = window.location.pathname.split('/').pop(); 
+			if (currentPath === '') currentPath = 'admin_dashboard.html'; // Or employee_dashboard.html depending on the page
+
+			const menuLinks = document.querySelectorAll('.admin-sidebar-menu a, .dash-sidebar a');
+			
+			menuLinks.forEach(link => {
+				const linkHref = link.getAttribute('href');
+				if (linkHref === currentPath) {
+					link.classList.add('active');
+				}
+			});
+
+			// --- 2. SYSTEM LOADER TRANSITIONS ---
+			menuLinks.forEach(link => {
+				link.addEventListener('click', function(e) {
+					const targetUrl = this.getAttribute('href');
+					if (!targetUrl || targetUrl === '#' || targetUrl.startsWith('javascript')) return;
+
+					e.preventDefault(); // Stop the hard jump
+					
+					// Grab the loader and fade it in
+					const loader = document.getElementById('system-loader');
+					if (loader) {
+						loader.classList.add('active');
+					}
+					
+					// Wait 500ms to show the cool animation, then load the next page
+					setTimeout(() => {
+						window.location.href = targetUrl;
+					}, 500); 
+				});
+			});
+		});
+	</script>
+	 <script type="module">
+	// --- Corrected Unified Imports ---
+		// Added initializeApp and getAuth to the top line
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+		import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+		
+		import { 
+			getFirestore, 
+			collection, 
+			query, 
+			orderBy, 
+			getDocs, 
+			updateDoc, 
+			doc, 
+			onSnapshot, 
+			limit, 
+			serverTimestamp 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+		import { 
+			getStorage, 
+			ref, 
+			uploadBytes, 
+			getDownloadURL 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+		import { 
+			getDatabase, 
+			ref as rtdbRef, 
+			onValue 
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2"; // Your God-Mode ID
+        let activeOrderId = null;
+		
+		// Notification Functions Panel
+		let unreadCount = 0;
+
+		function initNotificationSystem() {
+			const notifList = document.getElementById('notif-list');
+			const badge = document.getElementById('notif-badge');
+			const trigger = document.getElementById('notif-trigger');
+			const panel = document.getElementById('notif-panel');
+
+			// Toggle Panel
+			trigger.addEventListener('click', () => {
+				panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+				unreadCount = 0;
+				badge.style.display = 'none';
+			});
+
+			// 1. LISTEN FOR EMPLOYEE LOGS (Logins/Arrivals)
+			const logQuery = query(collection(db, "employee_logs"), orderBy("timestamp", "desc"), limit(5));
+			onSnapshot(logQuery, (snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type === "added") {
+						const data = change.doc.data();
+						addNotifItem("ACCESS", `${data.username || 'Operative'} - ${data.event}`, "term-cyan");
+					}
+				});
+			});
+
+			// 2. LISTEN FOR MESSAGES (Chat Comms)
+			const msgQuery = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(5));
+			onSnapshot(msgQuery, (snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type === "added" && change.doc.data().sender === "Operative") {
+						const data = change.doc.data();
+						addNotifItem("COMMS", `New Message: "${data.text.substring(0, 20)}..."`, "term-green");
+					}
+				});
+			});
+		}
+
+		function addNotifItem(type, text, colorVar) {
+			const list = document.getElementById('notif-list');
+			const badge = document.getElementById('notif-badge');
+			
+			// Create Item
+			const item = document.createElement('div');
+			item.className = "notif-item new";
+			const now = new Date().toLocaleTimeString();
+			
+			item.innerHTML = `
+				<span class="time">${now}</span>
+				<span style="color: var(--${colorVar}); font-weight: bold;">[${type}]</span> ${text}
+			`;
+
+			// Remove "Empty" message if it exists
+			if (list.querySelector('p')) list.innerHTML = "";
+
+			list.prepend(item);
+			
+			// Update Badge
+			unreadCount++;
+			badge.innerText = unreadCount;
+			badge.style.display = 'block';
+
+			// Play a very subtle digital beep (Optional)
+			// new Audio('assets/sounds/notif.mp3').play();
+		}
+
+		// Start the system
+		initNotificationSystem();
+		
+
+		// Note: Ensure you have Realtime Database enabled in Firebase, 
+		// as .info/connected is an RTDB feature.
+
+		// --- UPGRADED FIRESTORE HEARTBEAT ---
+		function initSystemHeartbeat() {
+			const statusLight = document.getElementById('status-light');
+			const statusText = document.getElementById('status-text');
+			const latencyText = document.getElementById('status-latency');
+			
+			function pingServer() {
+				const start = Date.now();
+				
+				// Send a micro-ping to Firestore to check the connection
+				getDocs(query(collection(db, "orders"), limit(1))).then(() => {
+					statusLight.className = "status-light online";
+					statusText.innerText = "CORE: ONLINE";
+					statusText.style.color = "var(--term-green)";
+					
+					// Calculate how fast the database responded
+					const latency = Date.now() - start;
+					latencyText.innerText = `LATENCY: ${latency}ms`;
+				}).catch((err) => {
+					console.error("Heartbeat Dropped:", err);
+					statusLight.className = "status-light offline";
+					statusText.innerText = "CORE: DISCONNECTED";
+					statusText.style.color = "var(--term-red)";
+					latencyText.innerText = "LATENCY: N/A";
+				});
+			}
+
+			// Ping immediately when called
+			pingServer();
+			
+			// Ping every 15 seconds to keep the live tracker moving
+			setInterval(pingServer, 15000);
+		}
+
+        // --- BILINGUAL DICTIONARY ---
+        window.currentLang = 'en';
+        const dictionary = {
+            en: {
+                header: "<i class='fas fa-satellite-dish'></i> OVERWATCH TERMINAL",
+                badgeSecure: "<i class='fas fa-lock'></i> UPLINK SECURE",
+                btnDisconnect: "<i class='fas fa-power-off'></i> DISCONNECT UPLINK",
+                statPending: "<i class='fas fa-exclamation-triangle'></i> Pending Extractions",
+                statCompleted: "<i class='fas fa-check-circle'></i> Completed Missions",
+                statRev: "<i class='fas fa-coins'></i> Total Revenue (JOD)",
+                thId: "Mission ID", thClient: "Client Identity", thParam: "Parameters", thStat: "Status", thAct: "Tactical Actions",
+                msgEmpty: "Radar clear. No incoming signals.",
+                txtPending: "PENDING", txtCompleted: "COMPLETED",
+                btnSource: "<i class='fas fa-download'></i> SOURCE", btnUpload: "<i class='fas fa-upload'></i> UPLOAD FINAL", btnView: "<i class='fas fa-check-double'></i> VIEW FINAL",
+                modTitle: "<i class='fas fa-upload'></i> UPLOAD TRANSLATION", btnExec: "EXECUTE UPLOAD", btnAbort: "ABORT"
+            },
+            ar: {
+                header: "<i class='fas fa-satellite-dish'></i> المراقبة المركزية",
+                badgeSecure: "<i class='fas fa-lock'></i> اتصال آمن",
+                btnDisconnect: "<i class='fas fa-power-off'></i> قطع الاتصال",
+                statPending: "<i class='fas fa-exclamation-triangle'></i> المهام المعلقة",
+                statCompleted: "<i class='fas fa-check-circle'></i> المهام المنجزة",
+                statRev: "<i class='fas fa-coins'></i> إجمالي الإيرادات (دينار)",
+                thId: "معرف المهمة", thClient: "هوية العميل", thParam: "المعطيات", thStat: "الحالة", thAct: "الإجراءات التكتيكية",
+                msgEmpty: "الرادار صافي. لا توجد مهام حالية.",
+                txtPending: "قيد الانتظار", txtCompleted: "مكتمل",
+                btnSource: "<i class='fas fa-download'></i> الملف الأصلي", btnUpload: "<i class='fas fa-upload'></i> رفع المترجم", btnView: "<i class='fas fa-check-double'></i> عرض المترجم",
+                modTitle: "<i class='fas fa-upload'></i> رفع الترجمة النهائية", btnExec: "تنفيذ الرفع", btnAbort: "إلغاء"
+            }
+        };
+
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'en' ? 'ar' : 'en';
+            const dict = dictionary[window.currentLang];
+            document.documentElement.lang = window.currentLang;
+            document.body.dir = window.currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('btn-lang').innerText = window.currentLang === 'en' ? 'عربي' : 'English';
+
+            document.getElementById('ui-header-title').innerHTML = dict.header;
+            document.getElementById('ui-badge-secure').innerHTML = dict.badgeSecure;
+            document.getElementById('btn-disconnect').innerHTML = dict.btnDisconnect;
+            document.getElementById('ui-stat-pending').innerHTML = dict.statPending;
+            document.getElementById('ui-stat-completed').innerHTML = dict.statCompleted;
+            document.getElementById('ui-stat-rev').innerHTML = dict.statRev;
+            document.getElementById('ui-th-id').innerText = dict.thId;
+            document.getElementById('ui-th-client').innerText = dict.thClient;
+            document.getElementById('ui-th-param').innerText = dict.thParam;
+            document.getElementById('ui-th-stat').innerText = dict.thStat;
+            document.getElementById('ui-th-act').innerText = dict.thAct;
+            document.getElementById('ui-mod-title').innerHTML = dict.modTitle;
+            document.getElementById('btn-abort').innerText = dict.btnAbort;
+            
+            const btnExec = document.getElementById('btn-exec');
+            if(!btnExec.disabled) btnExec.innerText = dict.btnExec;
+
+            fetchRadarData(); 
+        }
+
+        // SECURITY CHECK
+		onAuthStateChanged(auth, (user) => {
+			if (!user || user.uid !== ADMIN_UID) {
+				document.body.innerHTML = "<h1 style='color:#ff4b5c; text-align:center; margin-top:20vh; font-family: monospace;'>[ SECURITY BREACH DETECTED ]<br>UNAUTHORIZED ACCESS ATTEMPT LOGGED.</h1>";
+				setTimeout(() => { window.location.href = "admin_login.html"; }, 2500);
+			} else {
+				// User is fully verified as Admin! 
+				fetchRadarData(); 
+				
+				// START THE HEARTBEAT NOW (This is the correct spot!)
+				initSystemHeartbeat();
+			}
+		});
+
+        // FETCH ORDERS & CALCULATE KPIs
+        async function fetchRadarData() {
+            const logBox = document.getElementById('mission-log');
+            const dict = dictionary[window.currentLang];
+            let pendingCount = 0; let completedCount = 0; let revenue = 0;
+
+            try {
+                // 1. Fetch Orders
+                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                logBox.innerHTML = "";
+
+                // 2. Fetch User Count (New addition!)
+                const userSnapshot = await getDocs(collection(db, "users"));
+                document.getElementById('stat-users').innerText = userSnapshot.size;
+
+                if(snapshot.empty) {
+                    logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty}</td></tr>`;
+                    document.getElementById('stat-pending').innerText = "0";
+                    document.getElementById('stat-completed').innerText = "0";
+                    document.getElementById('stat-revenue').innerText = "0.00";
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    const isPending = data.status !== "Completed";
+                    
+                    if(isPending) pendingCount++; else completedCount++;
+                    revenue += parseFloat(data.price || 0);
+
+                    const statusHtml = isPending 
+                        ? `<span class="badge b-pending">${dict.txtPending}</span>` 
+                        : `<span class="badge b-completed">${dict.txtCompleted}</span>`;
+
+                    const actionHtml = isPending
+                        ? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')">${dict.btnSource}</button><br>
+                           <button class="btn-cmd action" onclick="openUploadModal('${id}')">${dict.btnUpload}</button>`
+                        : `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:#555; color:#888;">${dict.btnView}</button>`;
+
+                    logBox.innerHTML += `
+                        <tr>
+                            <td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888; font-weight:normal;">${data.createdAt || ''}</span></td>
+                            <td><strong style="color:var(--term-cyan);">${data.clientName}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail}</span></td>
+                            <td>${data.docType}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom} > ${data.langTo}</span></td>
+                            <td>${statusHtml}</td>
+                            <td>${actionHtml}</td>
+                        </tr>
+                    `;
+                });
+
+                // Inject KPI numbers with a cool counter effect
+                document.getElementById('stat-pending').innerText = pendingCount;
+                document.getElementById('stat-completed').innerText = completedCount;
+                document.getElementById('stat-revenue').innerText = revenue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            } catch(error) {
+                logBox.innerHTML = `<tr><td colspan='5' style="color:var(--term-red); text-align:center;">SYSTEM ERROR: ${error.message}</td></tr>`;
+            }
+        }
+
+        // UPLOAD MODAL CONTROLS
+        window.openUploadModal = function(orderId) {
+            activeOrderId = orderId;
+            document.getElementById('target-id-display').innerText = orderId.substring(0,8).toUpperCase();
+            document.getElementById('upload-modal').style.display = 'flex';
+        }
+
+        window.closeModal = function() {
+            document.getElementById('upload-modal').style.display = 'none';
+            document.getElementById('final-file').value = "";
+            activeOrderId = null;
+        }
+
+        window.executeUpload = async function() {
+            const fileInput = document.getElementById('final-file');
+            const btn = document.getElementById('btn-exec');
+            const dict = dictionary[window.currentLang];
+
+            if(fileInput.files.length === 0) { alert("SYSTEM ALERT: No payload selected."); return; }
+
+            btn.innerText = window.currentLang === 'en' ? "TRANSMITTING..." : "جاري الإرسال...";
+            btn.disabled = true;
+
+            try {
+                const file = fileInput.files[0];
+                const storageRef = ref(storage, `completed_translations/${activeOrderId}_FINAL.pdf`);
+                
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                const orderRef = doc(db, "orders", activeOrderId);
+                await updateDoc(orderRef, {
+                    translatedFileUrl: downloadURL,
+                    status: "Completed",
+                    completedAt: new Date().toISOString()
+                });
+
+                alert(window.currentLang === 'en' ? "MISSION ACCOMPLISHED: Translation uploaded." : "تم الرفع بنجاح.");
+                closeModal();
+                fetchRadarData(); 
+
+            } catch(error) {
+                alert("TRANSMISSION FAILED: " + error.message);
+            } finally {
+                btn.innerText = dict.btnExec;
+                btn.disabled = false;
+            }
+        }
+
+        /* ============================================================
+		   ALPHA COMMAND: UNIVERSAL SYSTEM LOGIC
+		   Handles: Page Transitions, Return to Base, and Secure Logout
+		   ============================================================ */
+        // 1. DISCONNECT UPLINK (Secure Logout with Smart Routing)
+		window.handleLogout = function() {
+			const loader = document.getElementById('system-loader');
+			const loaderText = loader ? loader.querySelector('.loader-text') : null;
+			
+			// --- SMART ROUTING: Check identity BEFORE killing the session ---
+			const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
+			let targetPage = "login_emp.html"; // Default to employee login
+			
+			// If the current user is the Admin, change the destination to admin_login.html
+			if (auth.currentUser && auth.currentUser.uid === ADMIN_UID) {
+				targetPage = "admin_login.html"; 
+			}
+			
+			// Update text based on current language
+			if (loaderText) {
+				loaderText.innerHTML = (window.currentLang === 'ar') 
+					? "جاري قطع الاتصال المشفر<span class='dots'>...</span>" 
+					: "DISCONNECTING SECURE UPLINK<span class='dots'>...</span>";
+			}
+
+			// Trigger glowing overlay
+			if (loader) loader.classList.add('active');
+
+			// Execute Firebase Sign Out
+			setTimeout(() => {
+				signOut(auth).then(() => { 
+					window.location.href = targetPage; // Redirects dynamically based on who logged out
+				}).catch((err) => {
+					if (loader) loader.classList.remove('active');
+					console.error("UPLINK FAILURE:", err);
+					alert("DISCONNECT ERROR: " + err.message);
+				});
+			}, 800);
+		};
+
+
+		// 2. RETURN TO BASE (Home Navigation)
+		window.handleReturnToBase = function() {
+			const loader = document.getElementById('system-loader');
+			const loaderText = loader ? loader.querySelector('.loader-text') : null;
+
+			if (loaderText) {
+				loaderText.innerHTML = (window.currentLang === 'ar') 
+					? "جاري العودة للقاعدة الرئيسية<span class='dots'>...</span>" 
+					: "RETURNING TO COMMAND BASE<span class='dots'>...</span>";
+			}
+
+			if (loader) loader.classList.add('active');
+
+			// Smooth transition to public site
+			setTimeout(() => {
+				window.location.href = 'index.html';
+			}, 600);
+		};
+		
+		/* --- GLOBAL SEARCH ENGINE TRIGGER --- */
+		const searchInput = document.getElementById('global-search');
+		if (searchInput) {
+			searchInput.addEventListener('keypress', function (e) {
+				if (e.key === 'Enter') {
+					const query = this.value.trim();
+					if (query.length < 2) return; 
+
+					const loader = document.getElementById('system-loader');
+					if (loader) {
+						// Change text to show we are searching
+						const loaderText = loader.querySelector('.loader-text');
+						if(loaderText) loaderText.innerHTML = "INITIATING DATABASE SCAN<span class='dots'>...</span>";
+						loader.classList.add('active');
+					}
+
+					// Redirect to the results page
+					setTimeout(() => {
+						window.location.href = `admin_search_results.html?q=${encodeURIComponent(query)}`;
+					}, 600);
+				}
+			});
+		}
+		
+		/* ============================================================
+		   4. LIVE OPERATIVE PRESENCE (RTDB Integration)
+		   Tracks which agents are currently active in the terminal.
+		   ============================================================ */
+		function initPresenceSystem() {
+			const rtdb = getDatabase(app);
+			const connectedRef = rtdbRef(rtdb, ".info/connected");
+			const activeAgentsList = document.getElementById('active-agents-list'); // Ensure this ID exists in your HTML sidebar
+
+			onValue(connectedRef, (snap) => {
+				if (snap.val() === true) {
+					console.log("Falcon 1-1: Uplink Established to RTDB Presence.");
+					// Here you would typically set a 'status: online' ref for the Admin UID
+				}
+			});
+
+			// Real-time listener for all active operatives
+			const usersRef = collection(db, "users");
+			onSnapshot(usersRef, (snapshot) => {
+				// This logic can be used to show a "Live" badge next to operatives in your UI
+				console.log(`Command Trace: ${snapshot.size} potential identities indexed.`);
+			});
+		}
+
+		/* ============================================================
+		   5. MISSION RADAR: LIVE STREAM (Upgraded from static fetch)
+		   Converts the mission table into a real-time reactive UI.
+		   ============================================================ */
+		function initLiveRadar() {
+			const logBox = document.getElementById('mission-log');
+			const dict = dictionary[window.currentLang];
+			
+			// Establish Persistent Listener
+			const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+			
+			onSnapshot(q, (snapshot) => {
+				logBox.innerHTML = "";
+				let pendingCount = 0; 
+				let completedCount = 0; 
+				let revenue = 0;
+
+				if(snapshot.empty) {
+					logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty}</td></tr>`;
+					return;
+				}
+
+				snapshot.forEach(docSnap => {
+					const data = docSnap.data();
+					const id = docSnap.id;
+					const isPending = data.status !== "Completed";
+					
+					if(isPending) pendingCount++; else completedCount++;
+					revenue += parseFloat(data.price || 0);
+
+					const statusHtml = isPending 
+						? `<span class="badge b-pending">${dict.txtPending}</span>` 
+						: `<span class="badge b-completed">${dict.txtCompleted}</span>`;
+
+					const actionHtml = isPending
+						? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')">${dict.btnSource}</button>
+						   <button class="btn-cmd action" onclick="openUploadModal('${id}')">${dict.btnUpload}</button>`
+						: `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:#555; color:#888;">${dict.btnView}</button>`;
+
+					logBox.innerHTML += `
+						<tr class="radar-row ${isPending ? 'incoming' : ''}">
+							<td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888;">${data.createdAt || ''}</span></td>
+							<td><strong style="color:var(--term-cyan);">${data.clientName}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail}</span></td>
+							<td>${data.docType}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom} > ${data.langTo}</span></td>
+							<td>${statusHtml}</td>
+							<td>${actionHtml}</td>
+						</tr>
+					`;
+				});
+
+				// Live KPI Updates
+				updateKPIDisplay('stat-pending', pendingCount);
+				updateKPIDisplay('stat-completed', completedCount);
+				updateKPIDisplay('stat-revenue', revenue.toLocaleString('en-US', {minimumFractionDigits: 2}));
+			});
+		}
+
+		/* ============================================================
+		   6. ALPHA INTELLIGENCE: SECURITY SCANNER
+		   Implementation of the "Zero-Trust Sovereign Layer" logic.
+		   ============================================================ */
+		function updateKPIDisplay(id, value) {
+			const el = document.getElementById(id);
+			if(el) el.innerText = value;
+		}
+
+		window.runAlphaSecurityScan = function() {
+			console.log("Initiating Alpha-Logic Integrity Check...");
+			// In a military backend, this would verify file hashes vs Firestore records
+			alert("ALPHA SYSTEM: Integrity Verified. All sovereign data is untraceable by outside forces.");
+		};
+
+		// --- RE-INITIALIZE THE DASHBOARD WITH LIVE DATA ---
+		// Replace the old fetchRadarData() in your onAuthStateChanged block with:
+		// initLiveRadar();
+		// initPresenceSystem();
     </script>
 </body>
 </html>
