@@ -125,6 +125,28 @@
             background: rgba(0,0,0,0.3); border: 1px solid var(--term-border);
             color: #fff; padding: 8px 15px 8px 35px; width: 250px; font-family: inherit;
         }
+		
+		/* SYSTEM LOADER LOGIC */
+		.system-loader {
+			position: fixed;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background: var(--term-bg);
+			display: flex; justify-content: center; align-items: center;
+			z-index: 10000;
+			transition: opacity 0.5s ease, visibility 0.5s;
+		}
+
+		.system-loader.hidden {
+			opacity: 0;
+			visibility: hidden;
+		}
+
+		.loader-text {
+			color: var(--term-cyan);
+			font-size: 1.2rem;
+			letter-spacing: 3px;
+			text-shadow: 0 0 10px var(--term-cyan);
+		}
     </style>
 </head>
 <body>
@@ -347,40 +369,28 @@
 		let unreadCount = 0;
 
 		function initNotificationSystem() {
-			const notifList = document.getElementById('notif-list');
-			const badge = document.getElementById('notif-badge');
 			const trigger = document.getElementById('notif-trigger');
 			const panel = document.getElementById('notif-panel');
 
-			// Toggle Panel
-			trigger.addEventListener('click', () => {
-				panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-				unreadCount = 0;
-				badge.style.display = 'none';
-			});
-
-			// 1. LISTEN FOR EMPLOYEE LOGS (Logins/Arrivals)
-			const logQuery = query(collection(db, "employee_logs"), orderBy("timestamp", "desc"), limit(5));
-			onSnapshot(logQuery, (snapshot) => {
-				snapshot.docChanges().forEach((change) => {
-					if (change.type === "added") {
-						const data = change.doc.data();
-						addNotifItem("ACCESS", `${data.username || 'Operative'} - ${data.event}`, "term-cyan");
-					}
+			// Only add listener if the element actually exists to prevent the crash
+			if (trigger && panel) {
+				trigger.addEventListener('click', (e) => {
+					e.stopPropagation();
+					panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 				});
-			});
-
-			// 2. LISTEN FOR MESSAGES (Chat Comms)
-			const msgQuery = query(collection(db, "messages"), orderBy("timestamp", "desc"), limit(5));
-			onSnapshot(msgQuery, (snapshot) => {
-				snapshot.docChanges().forEach((change) => {
-					if (change.type === "added" && change.doc.data().sender === "Operative") {
-						const data = change.doc.data();
-						addNotifItem("COMMS", `New Message: "${data.text.substring(0, 20)}..."`, "term-green");
-					}
-				});
-			});
+			}
 		}
+		
+		// THIS HIDES THE LOADER ONCE EVERYTHING IS LOADED
+		window.addEventListener('load', () => {
+			const loader = document.getElementById('system-loader');
+			if (loader) {
+				// Short delay for tactical effect
+				setTimeout(() => {
+					loader.classList.add('hidden');
+				}, 800);
+			}
+		});
 
 		function addNotifItem(type, text, colorVar) {
 			const list = document.getElementById('notif-list');
