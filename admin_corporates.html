@@ -537,67 +537,87 @@
 			}
 		});
 
-        // FETCH ORDERS & CALCULATE KPIs
-        async function fetchRadarData() {
-            const logBox = document.getElementById('mission-log');
-            const dict = dictionary[window.currentLang];
-            let pendingCount = 0; let completedCount = 0; let revenue = 0;
+		// FETCH ORDERS & CALCULATE KPIs (Restructured with Safety Guards)
+		async function fetchRadarData() {
+			// 1. SELECTORS - Use 'let' or 'const'
+			const logBox = document.getElementById('mission-log');
+			const statUsers = document.getElementById('stat-users');
+			const statPending = document.getElementById('stat-pending');
+			const statCompleted = document.getElementById('stat-completed');
+			const statRevenue = document.getElementById('stat-revenue');
+			
+			// SAFETY CHECK: If the main table doesn't exist, stop here to prevent crash
+			if (!logBox) {
+				console.warn("ALPHA SYSTEM: Mission Log (Table) not found. Skipping UI update.");
+				return; 
+			}
 
-            try {
-                // 1. Fetch Orders
-                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-                const snapshot = await getDocs(q);
-                logBox.innerHTML = "";
+			const dict = dictionary[window.currentLang] || dictionary['en'];
+			let pendingCount = 0; 
+			let completedCount = 0; 
+			let revenue = 0;
 
-                // 2. Fetch User Count (New addition!)
-                const userSnapshot = await getDocs(collection(db, "users"));
-                document.getElementById('stat-users').innerText = userSnapshot.size;
+			try {
+				// 2. FETCH ORDERS
+				const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+				const snapshot = await getDocs(q);
+				logBox.innerHTML = "";
 
-                if(snapshot.empty) {
-                    logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty}</td></tr>`;
-                    document.getElementById('stat-pending').innerText = "0";
-                    document.getElementById('stat-completed').innerText = "0";
-                    document.getElementById('stat-revenue').innerText = "0.00";
-                    return;
-                }
+				// 3. FETCH USER COUNT (With safety check)
+				const userSnapshot = await getDocs(collection(db, "users"));
+				if (statUsers) statUsers.innerText = userSnapshot.size;
 
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const id = docSnap.id;
-                    const isPending = data.status !== "Completed";
-                    
-                    if(isPending) pendingCount++; else completedCount++;
-                    revenue += parseFloat(data.price || 0);
+				if (snapshot.empty) {
+					logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty || 'No missions found.'}</td></tr>`;
+					if (statPending) statPending.innerText = "0";
+					if (statCompleted) statCompleted.innerText = "0";
+					if (statRevenue) statRevenue.innerText = "0.00";
+					return;
+				}
 
-                    const statusHtml = isPending 
-                        ? `<span class="badge b-pending">${dict.txtPending}</span>` 
-                        : `<span class="badge b-completed">${dict.txtCompleted}</span>`;
+				// 4. GENERATE TABLE ROWS
+				snapshot.forEach(docSnap => {
+					const data = docSnap.data();
+					const id = docSnap.id;
+					const isPending = data.status !== "Completed";
+					
+					if (isPending) pendingCount++; else completedCount++;
+					revenue += parseFloat(data.price || 0);
 
-                    const actionHtml = isPending
-                        ? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')">${dict.btnSource}</button><br>
-                           <button class="btn-cmd action" onclick="openUploadModal('${id}')">${dict.btnUpload}</button>`
-                        : `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:#555; color:#888;">${dict.btnView}</button>`;
+					const statusHtml = isPending 
+						? `<span class="badge b-pending">${dict.txtPending || 'Pending'}</span>` 
+						: `<span class="badge b-completed">${dict.txtCompleted || 'Completed'}</span>`;
 
-                    logBox.innerHTML += `
-                        <tr>
-                            <td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888; font-weight:normal;">${data.createdAt || ''}</span></td>
-                            <td><strong style="color:var(--term-cyan);">${data.clientName}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail}</span></td>
-                            <td>${data.docType}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom} > ${data.langTo}</span></td>
-                            <td>${statusHtml}</td>
-                            <td>${actionHtml}</td>
-                        </tr>
-                    `;
-                });
+					const actionHtml = isPending
+						? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')">${dict.btnSource || 'Source'}</button><br>
+						   <button class="btn-cmd action" onclick="openUploadModal('${id}')">${dict.btnUpload || 'Upload'}</button>`
+						: `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:#555; color:#888;">${dict.btnView || 'View'}</button>`;
 
-                // Inject KPI numbers with a cool counter effect
-                document.getElementById('stat-pending').innerText = pendingCount;
-                document.getElementById('stat-completed').innerText = completedCount;
-                document.getElementById('stat-revenue').innerText = revenue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+					logBox.innerHTML += `
+						<tr>
+							<td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888; font-weight:normal;">${data.createdAt || ''}</span></td>
+							<td><strong style="color:var(--term-cyan);">${data.clientName}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail}</span></td>
+							<td>${data.docType}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom} > ${data.langTo}</span></td>
+							<td>${statusHtml}</td>
+							<td>${actionHtml}</td>
+						</tr>
+					`;
+				});
 
-            } catch(error) {
-                logBox.innerHTML = `<tr><td colspan='5' style="color:var(--term-red); text-align:center;">SYSTEM ERROR: ${error.message}</td></tr>`;
-            }
-        }
+				// 5. INJECT KPI NUMBERS (With safety checks for each ID)
+				if (statPending) statPending.innerText = pendingCount;
+				if (statCompleted) statCompleted.innerText = completedCount;
+				if (statRevenue) {
+					statRevenue.innerText = revenue.toLocaleString('en-US', {
+						minimumFractionDigits: 2, 
+						maximumFractionDigits: 2
+					});
+				}
+
+			} catch (error) {
+				console.error("Alpha Radar Intercept Failed:", error);
+			}
+		}
 
         // UPLOAD MODAL CONTROLS
         window.openUploadModal = function(orderId) {
