@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA COMMAND | Main Dashboard</title>
+    <title>ALPHA COMMAND | Corporate Deck</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -128,96 +128,109 @@
     </style>
 </head>
 <body>
-
     <div id="system-loader" class="system-loader">
-        <div class="loader-text">INITIALIZING ALPHA CORE<span class="dots">...</span></div>
+        <div class="loader-content">
+            <div class="dna-spinner"></div>
+            <p>ESTABLISHING SECURE CORPORATE UPLINK...</p>
+        </div>
     </div>
-    
-    <aside class="admin-sidebar">
-        <div class="sidebar-brand">
-            <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--term-red); margin-bottom: 15px;"></i>
-            <h3 style="margin:0; color:white; letter-spacing: 2px; font-size: 1.2rem;">ALPHA <span style="color:var(--term-cyan);">COMMAND</span></h3>
-            <div style="font-size: 0.6rem; color: var(--term-muted); margin-top: 5px;">SECURE INTERFACE v4.0</div>
-            
-            <div style="margin-top: 20px; text-align: left; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 4px;">
-                <div style="display: flex; align-items: center;">
-                    <span class="status-light online"></span>
-                    <span style="font-size: 0.65rem; color: var(--term-green); font-weight: bold;">UPLINK ACTIVE</span>
+
+		<aside class="admin-sidebar">
+			<div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
+				<i class="fas fa-shield-alt" style="font-size: 2.5rem; color: #ff4b5c; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 75, 92, 0.4);"></i>
+				<h3 style="margin:0; color:white; letter-spacing: 2px;">ALPHA <span style="color:var(--term-cyan);">COMMAND</span></h3>
+				<div style="font-size: 0.7rem; color: #888; margin-top: 5px;">HR DEPARTMENT</div>
+			</div>
+			
+			<ul class="admin-sidebar-menu">
+				<li><a href="alpha.html"><i class="fas fa-satellite-dish"></i> Main Dashboard</a></li>
+				<li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Ad Deployments</a></li>
+				<li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Employee Registry</a></li>
+				<li><a href="admin_pricing.html"><i class="fas fa-tags"></i> Pricing & Docs</a></li>
+				<li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Comms & Inbox</a></li>
+				<li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Employee Logs</a></li>
+				<li><a href="admin_mail.html"><i class="fas fa-envelope-open-text"></i> Broadcasts</a></li>
+				<li><a href="admin_create_products.html"><i class="fas fa-box"></i> Products Page Creator</a></li>
+				<li><a href="sales.html"><i class="fas fa-file-invoice-dollar"></i> Sales & Visas</a></li>
+				<li><a href="admin_employment_dashboard.html"><i class="fas fa-user-tie"></i> Employee Attendancy</a></li>
+				<li><a href="admin_corporates.html" class="active"><i class="fas fa-building"></i>Corporate Deck</a></li>
+			</ul>
+			
+			<div style="margin-top: auto; padding-top: 20px;">
+				<button onclick="handleReturnToBase()" class="btn-cmd" style="width: 100%; border-color: var(--term-cyan); color: var(--term-cyan); padding: 10px; margin-bottom: 10px;">
+					RETURN TO BASE
+				</button>
+				<button onclick="handleLogout()" class="btn-cmd" style="width: 100%; border-color: var(--term-red); color: var(--term-red); padding: 10px;">
+					<i class="fas fa-power-off"></i> DISCONNECT
+				</button>
+			</div>
+		</aside>
+
+        <main class="dash-main-content">
+            <header class="tactical-header">
+                <div class="header-intel">
+                    <h1 data-i18n="corp_deck_title">SOVEREIGN ENTITY CONTROL</h1>
+                    <p class="hacker-text">Monitoring High-Value Cultural Data Streams</p>
                 </div>
-                <div id="status-latency" style="font-size: 0.6rem; color: var(--term-muted); margin-top: 4px;">LATENCY: --ms</div>
-            </div>
-        </div>
-        
-        <ul class="admin-sidebar-menu">
-            <li><a href="alpha.html" class="active"><i class="fas fa-satellite-dish"></i> Dashboard</a></li>
-            <li><a href="admin_deployment.html"><i class="fas fa-rocket"></i> Deployments</a></li>
-            <li><a href="employee_reg.html"><i class="fas fa-user-plus"></i> Registry</a></li>
-            <li><a href="admin_pricing.html"><i class="fas fa-tags"></i> Pricing</a></li>
-            <li><a href="admin_inbox.html"><i class="fas fa-inbox"></i> Comms</a></li>
-            <li><a href="admin_logs.html"><i class="fas fa-user-clock"></i> Logs</a></li>
-            <li><a href="admin_mail.html"><i class="fas fa-envelope"></i> Broadcast</a></li>
-            <li><a href="sales.html"><i class="fas fa-file-invoice-dollar"></i> Sales</a></li>
-        </ul>
-
-        <div style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
-            <button onclick="handleReturnToBase()" class="btn" style="width: 100%; border-color: var(--term-muted); color: var(--term-muted); margin-bottom: 10px;">HOME BASE</button>
-            <button onclick="handleLogout()" class="btn" style="border-color: var(--term-red); color: var(--term-red); width: 100%;">
-                <i class="fas fa-power-off"></i> DISCONNECT
-            </button>
-        </div>
-    </aside>
-
-    <main class="admin-main-content">
-        <div class="header-top">
-            <h2 class="header-title" id="ui-header-title">Overwatch Terminal</h2>
-            <div style="display: flex; gap: 20px; align-items: center;">
-                <div class="search-container" style="position: relative;">
-                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 10px; color: var(--term-muted); font-size: 0.8rem;"></i>
-                    <input type="text" id="global-search" placeholder="SEARCH ENCRYPTED DATA...">
+                <div class="header-actions">
+                    <button class="alpha-btn secondary" onclick="openProtocolModal()">
+                        <i class="fas fa-plus"></i> NEW CORPORATE PROTOCOL
+                    </button>
                 </div>
-                <button class="btn" id="notif-trigger" style="border-color: var(--term-border); color: #fff; padding: 8px 15px;">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <button class="btn" id="btn-lang" onclick="toggleLanguage()" style="border-color: #ffc107; color: #ffc107;">AR</button>
-            </div>
-        </div>
+            </header>
 
-        <div class="kpi-grid">
-            <div class="stat-box alert">
-                <div class="stat-label" id="ui-stat-pending">Pending Extractions</div>
-                <div class="stat-val" id="stat-pending">0</div>
+            <div class="alpha-stats-grid">
+                <div class="stat-card">
+                    <label>ACTIVE EMBASSIES</label>
+                    <div class="value" id="count-embassies">08</div>
+                    <div class="trend-up">+2 this month</div>
+                </div>
+                <div class="stat-card">
+                    <label>CORPORATE CONTRACTS</label>
+                    <div class="value" id="count-corps">24</div>
+                </div>
+                <div class="stat-card highlight">
+                    <label>SENSITIVE DATA EFFICIENCY</label>
+                    <div class="value">99.8%</div>
+                </div>
             </div>
-            <div class="stat-box success">
-                <div class="stat-label" id="ui-stat-completed">Completed Missions</div>
-                <div class="stat-val" id="stat-completed">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label" id="ui-stat-rev">Total Revenue</div>
-                <div class="stat-val" id="stat-revenue" style="color: var(--term-green);">0.00 <span style="font-size: 1rem;">JOD</span></div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label" id="ui-stat-users">Registered Agents</div>
-                <div class="stat-val" id="stat-users">0</div>
-            </div>
-        </div>
 
-        <div class="panel">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th id="ui-th-id">ID</th>
-                        <th id="ui-th-client">Client Identity</th>
-                        <th id="ui-th-param">Parameters</th>
-                        <th id="ui-th-stat">Status</th>
-                        <th id="ui-th-act">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="mission-log">
-                    <tr><td colspan="5" style="text-align: center; color:var(--term-muted); padding: 50px;"><i class="fas fa-spinner fa-spin"></i> SYNCHRONIZING WITH DATABASE...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+            <section class="admin-panel-box">
+                <div class="panel-header">
+                    <h3><i class="fas fa-broadcast-tower"></i> REGISTERED ENTITIES</h3>
+                    <div class="panel-search">
+                        <input type="text" placeholder="Search Entity ID..." id="corp-search">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="alpha-table">
+                        <thead>
+                            <tr>
+                                <th>ENTITY NAME</th>
+                                <th>CATEGORY</th>
+                                <th>SECURITY CLEARANCE</th>
+                                <th>ACTIVE MISSIONS</th>
+                                <th>REVENUE (JOD)</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corporate-list">
+                            <tr>
+                                <td class="entity-name">US Embassy Amman</td>
+                                <td>Diplomatic</td>
+                                <td><span class="badge secure">LEVEL 5</span></td>
+                                <td>14</td>
+                                <td>4,250.00</td>
+                                <td><span class="status-active">LINKED</span></td>
+                                <td><button class="table-action"><i class="fas fa-eye"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
