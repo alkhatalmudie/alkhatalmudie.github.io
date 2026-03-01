@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Khat Al-Mudi | Professional Translation Services</title>
+    <title>Terms & Conditions | Al-Khat Al-Mudi</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,387 +12,116 @@
     
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <style>
+        body { padding-top: 80px; background-color: #f8fafc; }
+
+        /* LEGAL HERO SECTION */
+        .legal-hero {
+            background: linear-gradient(135deg, var(--brand-navy) 0%, #0a101f 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--brand-cyan);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .legal-hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,174,239,0.05) 0%, rgba(0,0,0,0) 60%);
+            pointer-events: none;
+        }
+
+        .legal-hero h1 { font-size: clamp(2rem, 4vw, 3rem); color: white; margin-bottom: 10px; }
+        .legal-hero p { color: var(--brand-cyan); font-weight: bold; letter-spacing: 1px; }
+
+        /* DOCUMENT CONTAINER */
+        .legal-document-wrapper {
+            max-width: 900px;
+            margin: -40px auto 80px auto; /* Pulls it up over the hero slightly */
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--brand-magenta);
+            position: relative;
+            z-index: 10;
+        }
+
+        .legal-content { color: var(--text-light); line-height: 1.8; font-size: 1rem; }
+        .legal-content h3 { color: var(--brand-navy); margin-top: 30px; margin-bottom: 15px; font-size: 1.3rem; border-left: 3px solid var(--brand-cyan); padding-left: 10px; }
+        .legal-content p { margin-bottom: 20px; }
+        .legal-content ul { margin-bottom: 20px; padding-left: 20px; list-style-type: square; }
+        .legal-content li { margin-bottom: 10px; }
+
+        @media (max-width: 768px) {
+            .legal-document-wrapper { padding: 30px 20px; margin-top: -20px; border-radius: 10px; }
+        }
+    </style>
 </head>
-
-<style>
-    /* Hide scrollbar for Chrome/Safari/Edge but keep functionality */
-    #promo-track::-webkit-scrollbar { display: none; }
-    
-    .promo-card {
-        min-width: 320px;
-        max-width: 350px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(0, 242, 255, 0.2);
-        border-radius: 15px;
-        padding: 25px;
-        scroll-snap-align: start;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        flex-shrink: 0;
-    }
-    
-    .promo-badge {
-        position: absolute;
-        top: 15px; right: -30px;
-        background: var(--brand-magenta);
-        color: white;
-        font-weight: bold;
-        font-size: 0.8rem;
-        padding: 5px 30px;
-        transform: rotate(45deg);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    .promo-price { margin: 15px 0; }
-    .price-old { text-decoration: line-through; color: #888; font-size: 1rem; margin-right: 10px; }
-    .price-new { color: var(--brand-cyan); font-size: 1.8rem; font-weight: 900; }
-    
-    .promo-reqs { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 20px; }
-    
-    .promo-actions { display: flex; gap: 10px; }
-    .promo-actions button { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s;}
-    .btn-buy { background: var(--brand-cyan); color: #000; }
-    .btn-buy:hover { background: white; }
-    .btn-inq { background: transparent; border: 1px solid white; color: white; }
-    .btn-inq:hover { background: rgba(255,255,255,0.1); }
-	
-	.promo-img-box {
-        height: 160px;
-        background-color: #0b1426;
-        margin: -25px -25px 15px -25px; /* Pulls image to the edges of the card */
-        border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-        background-size: cover;
-        background-position: center;
-    }
-</style>
-
 <body>
 
-		<header>
-			<div class="container">
-				<nav class="navbar">
-					<a href="index.html" class="logo-box" style="text-decoration: none;">
-						<div class="dna-logo">
-							<div class="dna-drop dna-magenta"></div>
-							<div class="dna-drop dna-cyan"></div>
-						</div>
-						<div class="brand-text">
-							<h3>Al-Khat Al-Mudi</h3>
-							<span id="header-brand_sub">TRANSLATION SERVICES</span>
-						</div>
-					</a>
-					
-					<div id="user-profile-section" class="user-status-hidden">
-						<a href="profile.html" class="user-orb">
-							<i class="fas fa-user-circle"></i>
-							<span id="user-display-name">Client</span>
-						</a>
-						<button onclick="handleLogout()" class="logout-link">Logout</button>
-					</div>
-					
-					<a href="#menu" class="menu-toggle" id="menuToggle">
-						<span class="text" id="header-menu_btn">MENU</span>
-						<div class="hamburger">
-							<span></span>
-							<span></span>
-							<span></span>
-						</div>
-					</a>
-					
-				</nav>
-			</div>
-		</header>
-
-		<section id="home" class="carousel">
-			<div class="slide active">
-				<div class="slide-bg bg-1"></div>
-				<div class="slide-content">
-					<h1 id="hero-slide1_title">Bridging Languages,<br>Connecting Worlds</h1>
-					<p id="hero-slide1_desc">Amman's most trusted certified translation service. Accuracy you can rely on.</p>
-					<a href="#reservation" class="btn btn-primary" id="hero-slide1_btn">Get a Free Quote</a>
-				</div>
-			</div>
-			<div class="slide">
-				<div class="slide-bg bg-2"></div>
-				<div class="slide-content">
-					<h1 id="hero-slide2_title">Official & Legal<br>Documentation</h1>
-					<p id="hero-slide2_desc">Certified by the Ministry of Justice. We handle your contracts, visas, and certificates with speed.</p>
-					<a href="#services" class="btn btn-primary" id="hero-slide2_btn">Our Services</a>
-				</div>
-			</div>
-			<div class="slide">
-				<div class="slide-bg bg-3"></div>
-				<div class="slide-content dark-text">
-					<h1 id="hero-slide3_title" style="color:var(--brand-navy)">The Luminous Line<br>of Communication</h1>
-					<p id="hero-slide3_desc" style="color:var(--brand-dark)">Expert linguists located in the heart of Marka Al-Shamaliya.</p>
-					<a href="#contact" class="btn btn-primary" id="hero-slide3_btn">Visit Our Office</a>
-				</div>
-			</div>
-
-			<button class="carousel-btn prev" onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
-			<button class="carousel-btn next" onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></button>
-		</section>
-
-		<section id="about" class="section-padding about-section">
-			<div class="container">
-				<div class="about-grid">
-					<div class="about-image">
-						<div class="about-shape">
-							<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
-								<i class="fas fa-language" style="font-size: 8rem; opacity: 0.2;"></i>
-								<h2 style="font-size: 2rem; margin-top: 10px;">Since 2026</h2>
-							</div>
-						</div>
-					</div>
-					<div class="about-text">
-						<h2 class="section-title" id="about-title">Who We Are</h2>
-						<h3 class="arabic-text" id="about-arabic_name" style="color: var(--text-grey); margin-bottom: 20px; font-size: 1.5rem;">الخط المضيء للترجمة</h3>
-						<p id="about-p1" style="margin-bottom: 20px; line-height: 1.8;">
-							At <strong>Al-Khat Al-Mudi</strong> (The Luminous Line), we believe that translation is more than just swapping words; it’s about preserving meaning, tone, and intent. Located in Marka Al-Shamaliya, we serve individuals and businesses with certified translation services accepted by all government bodies and embassies in Jordan.
-						</p>
-						<p id="about-p2" style="margin-bottom: 30px; line-height: 1.8;">
-							Whether you are a student applying abroad, a business expanding internationally, or dealing with complex legal documents, our team ensures your message remains clear and professional.
-						</p>
-						<div style="display: flex; gap: 20px;">
-							<div>
-								<i class="fas fa-check-circle" style="color: var(--brand-cyan);"></i> <span id="about-badge_certified">Certified</span>
-							</div>
-							<div>
-								<i class="fas fa-check-circle" style="color: var(--brand-cyan);"></i> <span id="about-badge_confidential">Confidential</span>
-							</div>
-							<div>
-								<i class="fas fa-check-circle" style="color: var(--brand-cyan);"></i> <span id="about-badge_fast">Fast</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		
-		<section style="padding: 60px 0; background-color: #080d1a;" id="special-ops-section">
-			<div class="container">
-				<h2 style="color: var(--brand-cyan); margin-bottom: 30px; border-left: 4px solid var(--brand-magenta); padding-left: 15px;">
-					<i class="fas fa-star"></i> CURRENT OPERATIONS & OFFERS
-				</h2>
-				
-				<div id="promo-track" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; scrollbar-width: none;">
-					<div style="color: white; opacity: 0.5;"><i class="fas fa-circle-notch fa-spin"></i> Scanning for active offers...</div>
-				</div>
-			</div>
-		</section>
-
-		<section id="reservation" class="section-padding" style="background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);">
-			<div class="container">
-				<div class="reservation-grid">
-                
-                <div class="reservation-text">
-                    <h2 class="section-title" id="reservation-title">Get Your Quote</h2>
-                    <h3 id="reservation-subtitle" style="font-size: 2rem; margin-bottom: 20px; color: var(--brand-navy);">Ready to Translate?</h3>
-                    <p id="reservation-desc" style="margin-bottom: 30px; color: var(--text-light);">
-                        Upload your documents securely and get a fast, certified quote within minutes. We respect your privacy and deadlines.
-                    </p>
-
-                    <div class="steps-container">
-                        <div class="step-item">
-                            <div class="step-number">01</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step1_title">Upload File</h4>
-                                <p id="reservation-step1_desc">Select your document (PDF, Word, Image)</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-number">02</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step2_title">Select Details</h4>
-                                <p id="reservation-step2_desc">Choose languages and urgency</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-number">03</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step3_title">Receive Quote</h4>
-                                <p id="reservation-step3_desc">We send you the price & time instantly</p>
-                            </div>
-                        </div>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo-box" style="text-decoration: none;">
+                    <div class="dna-logo">
+                        <div class="dna-drop dna-magenta"></div>
+                        <div class="dna-drop dna-cyan"></div>
                     </div>
+                    <div class="brand-text">
+                        <h3>Al-Khat Al-Mudi</h3>
+                        <span id="header-brand_sub">TRANSLATION SERVICES</span>
+                    </div>
+                </a>
+                
+                <div id="user-profile-section" class="user-status-hidden">
+                    <a href="profile.html" class="user-orb">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="user-display-name">Client</span>
+                    </a>
+                    <button onclick="handleLogout()" class="logout-link">Logout</button>
                 </div>
-
-                <script type="text/javascript">
-					function startServerSequence() {
-						const overlay = document.getElementById('processing-overlay');
-						const logBox = document.getElementById('terminal-log');
-						const progressBar = document.getElementById('progress-bar');
-						overlay.classList.add('active');
-
-						// The "Hacker" Sequence
-						const messages = [
-							{ text: "> Secure Link Established (TLS 1.3)...", delay: 500 },
-							{ text: "> File Upload Verified (Firebase Cloud)...", delay: 1500 }, // Updated Text
-							{ text: "> Encrypting Metadata...", delay: 3000 },
-							{ text: "> Handshaking with Google Forms API...", delay: 5000 },
-							{ text: "> Packet Transmission Complete.", delay: 7000 },
-							{ text: "> Ticket Generated Successfully.", delay: 8500 },
-							{ text: "> DONE.", delay: 9500, type: "success" }
-						];
-
-						messages.forEach(msg => {
-							setTimeout(() => {
-								const p = document.createElement('div');
-								p.className = `log-line ${msg.type || ''}`;
-								p.innerText = msg.text;
-								logBox.appendChild(p);
-								// Auto-scroll to bottom
-								logBox.scrollTop = logBox.scrollHeight;
-							}, msg.delay);
-						});
-
-						let width = 0;
-						const interval = setInterval(() => {
-							width += 1;
-							progressBar.style.width = width + '%';
-							if (width >= 100) clearInterval(interval);
-						}, 100);
-
-						setTimeout(() => {
-							alert('Request Received! We will review your documents and reply shortly.');
-							window.location.reload();
-						}, 10500);
-					}
-				</script>
-
-					<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe> 
-
-					<form id="main-request-form" class="glass-form" action="https://docs.google.com/forms/d/e/1FAIpQLScDbenz1p7B5GI6IVC6QlPTkgjvaCHWUTN4NDT6sK9y5J1g2Q/formResponse" method="post" target="hidden_iframe" onsubmit="processUploadAndSubmit(event);">
-						
-						<div class="form-header">
-							<h4 id="reservation-form_header">Quick Request</h4>
-						</div>
-						
-						<div class="form-group">
-							<input type="text" id="reservation-ph_name" name="entry.2005620554" placeholder="Full Name" required>
-							<i class="fas fa-user input-icon"></i>
-						</div>
-
-						<div class="form-row">
-							<div class="form-group">
-								<input type="email" id="reservation-ph_email" name="entry.84455640" placeholder="Email Address" required>
-								<i class="fas fa-envelope input-icon"></i>
-							</div>
-							<div class="form-group">
-								<input type="tel" id="reservation-ph_phone" name="entry.1065046570" placeholder="Phone Number" required>
-								<i class="fas fa-phone input-icon"></i>
-							</div>
-						</div>
-
-						<div class="form-row">
-							<div class="form-group">
-								<select name="entry.1166974658" required>
-									<option value="" disabled selected id="reservation-ph_from">Translate From...</option>
-									<option value="English">English</option>
-									<option value="Arabic">Arabic</option>
-									<option value="Russian">Russian</option>
-								</select>
-								<i class="fas fa-globe-americas input-icon"></i>
-							</div>
-							<div class="form-group">
-								<select name="entry.839337160" required>
-									<option value="" disabled selected id="reservation-ph_to">Translate To...</option>
-									<option value="Arabic">Arabic</option>
-									<option value="English">English</option>
-									<option value="Russian">Russian</option>
-								</select>
-								<i class="fas fa-language input-icon"></i>
-							</div>
-						</div>
-
-						<div class="form-group" style="margin-top: 15px;">
-							<input type="file" id="real-file-input" style="display: none;" onchange="updateFileLabel()">
-							
-							<input type="hidden" id="google-entry-link" name="entry.1269480027">
-
-							<label for="real-file-input" class="drop-zone-container" style="cursor: pointer;">
-								<div class="drop-zone-visual">
-									<i class="fas fa-cloud-upload-alt"></i>
-									<span id="drop-label-text">Click to Select Document</span>
-									<small>(PDF, DOCX, JPG supported)</small>
-								</div>
-							</label>
-						</div>
-
-						<button type="submit" class="btn btn-primary" id="reservation-btn_submit" style="width: 100%; margin-top: 20px;">Send Request</button>
-					</form>
-                </div>
-            </div>
+                
+                <a href="#menu" class="menu-toggle" id="menuToggle">
+                    <span class="text" id="header-menu_btn">MENU</span>
+                    <div class="hamburger"><span></span><span></span><span></span></div>
+                </a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <section id="services" class="section-padding services-section">
+    <section class="legal-hero">
         <div class="container">
-            <div style="text-align: center; max-width: 700px; margin: 0 auto;">
-                <h2 class="section-title" id="services-section_title">Our Services</h2>
-                <p id="services-section_desc">Comprehensive language solutions tailored to your specific needs.</p>
-            </div>
-
-            <div class="services-grid">
-                <div class="service-card" onclick="openServiceModal('legal')" style="cursor: pointer;">
-                    <i class="fas fa-gavel service-icon"></i>
-                    <h3 id="services-s1_title">Legal Translation</h3>
-                    <p id="services-s1_desc">Certified translation for contracts, court documents, and powers of attorney. Recognized by the Ministry of Justice.</p>
-                </div>
-                <div class="service-card" onclick="openServiceModal('immigration')" style="cursor: pointer;">
-                    <i class="fas fa-passport service-icon"></i>
-                    <h3 id="services-s2_title">Immigration & Visas</h3>
-                    <p id="services-s2_desc">Accurate translation of birth certificates, marriage licenses, and passports for embassy appointments.</p>
-                </div>
-                <div class="service-card" onclick="openServiceModal('academic')" style="cursor: pointer;">
-                    <i class="fas fa-graduation-cap service-icon"></i>
-                    <h3 id="services-s3_title">Academic Translation</h3>
-                    <p id="services-s3_desc">Translation of university transcripts, diplomas, and research papers for students studying abroad.</p>
-                </div>
-                <div class="service-card" onclick="openServiceModal('website')" style="cursor: pointer;">
-                    <i class="fas fa-laptop-code service-icon"></i>
-                    <h3 id="services-s4_title">Website Localization</h3>
-                    <p id="services-s4_desc">Adapt your digital content for new markets. We translate websites, apps, and software interfaces.</p>
-                </div>
-                <div class="service-card" onclick="openServiceModal('medical')" style="cursor: pointer;">
-                    <i class="fas fa-stethoscope service-icon"></i>
-                    <h3 id="services-s5_title">Medical Translation</h3>
-                    <p id="services-s5_desc">Precise translation of medical reports, prescriptions, and pharmaceutical documents.</p>
-                </div>
-                <div class="service-card" onclick="openServiceModal('proofreading')" style="cursor: pointer;">
-                    <i class="fas fa-file-signature service-icon"></i>
-                    <h3 id="services-s6_title">Proofreading</h3>
-                    <p id="services-s6_desc">Polishing your existing documents to ensure grammatical perfection and stylistic consistency.</p>
-                </div>
-            </div>
+            <h1 id="legal-title">Privacy Policy</h1>
+            <p id="legal-date">Last Updated: March 2026</p>
         </div>
     </section>
 
-    <section class="section-padding stats-section">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h2>20+</h2>
-                    <p id="stats-languages">Languages Supported</p>
-                </div>
-                <div class="stat-item">
-                    <h2>100%</h2>
-                    <p id="stats-acceptance">Acceptance Rate</p>
-                </div>
-                <div class="stat-item">
-                    <h2>500+</h2>
-                    <p id="stats-clients">Happy Clients</p>
-                </div>
-                <div class="stat-item">
-                    <h2>24h</h2>
-                    <p id="stats-delivery">Express Delivery</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <main class="container">
+        <div class="legal-document-wrapper">
+            <div class="legal-content">
+				<h3>1. Zero-Trust Data Handling</h3>
+					<p>Al-Khat Al-Mudi utilizes an advanced "Alpha Backend" architecture. We adhere to a Zero-Trust sovereign layer policy, ensuring that your personal documents, passports, and corporate contracts are verifiable but strictly untraceable by outside entities.</p>
 
-    <footer id="contact">
+				<h3>2. Information We Collect</h3>
+				<ul>
+					<li><strong>Identity Data:</strong> Full names, contact numbers, and email addresses provided during registration.</li>
+					<li><strong>Document Data:</strong> The files you upload for translation processing.</li>
+					<li><strong>System Telemetry:</strong> Connection protocols (e.g., TLS 1.3) and basic usage analytics to ensure portal security.</li>
+				</ul>
+
+				<h3>3. Document Retention & Purging</h3>
+				<p>We do not hold your sensitive documents indefinitely. Once a translation is marked "Completed" and securely delivered to you, the source and translated files are automatically purged from our active operational servers after 30 days, retaining only the billing metadata.</p>
+
+				<h3>4. Third-Party Sharing</h3>
+				<p>Your data is strictly confidential. We do not sell, trade, or expose your information to third-party marketing agencies. Data is only accessible to cleared Al-Khat operatives actively assigned to your translation.</p>
+			</div>
+        </div>
+    </main>
+
+        <footer id="contact">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-about">
@@ -514,87 +243,8 @@
             </div>
         </div>
     </div>
-	
-	<div id="upload-modal" class="modal-overlay">
-		<div class="modal-box">
-			<a href="javascript:void(0)" class="close-modal" onclick="closeUploadHelp()">&times;</a>
-			
-			<div class="modal-header">
-				<div class="dna-logo small-logo">
-					<div class="dna-drop dna-magenta"></div>
-					<div class="dna-drop dna-cyan"></div>
-				</div>
-				<h3>&nbsp; &nbsp; &nbsp; How to Upload Files</h3>
-			</div>
 
-			<div class="modal-body">
-				<p>For security reasons, we use secure links instead of direct uploads. Here is how to send us your files in 30 seconds:</p>
-				
-				<div class="tutorial-steps">
-					<div class="step">
-						<div class="step-num">1</div>
-						<div class="step-text">
-							<strong>Go to WeTransfer.com</strong>
-							<span>It's free and requires no account.</span>
-						</div>
-						<a href="https://wetransfer.com/" target="_blank" class="btn-tiny">Open Site <i class="fas fa-external-link-alt"></i></a>
-					</div>
-
-					<div class="step">
-						<div class="step-num">2</div>
-						<div class="step-text">
-							<strong>Upload Your File</strong>
-							<span>Click "Upload files" and select your document.</span>
-						</div>
-					</div>
-
-					<div class="step">
-						<div class="step-num">3</div>
-						<div class="step-text">
-							<strong>Get Transfer Link</strong>
-							<span>Click the <i class="fas fa-ellipsis-h"></i> (three dots) icon and select <strong>"Get transfer link"</strong>.</span>
-						</div>
-					</div>
-
-					<div class="step">
-						<div class="step-num">4</div>
-						<div class="step-text">
-							<strong>Paste & Send</strong>
-							<span>Copy the link (e.g., https://we.tl/...) and paste it into our form box.</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="service-modal" class="modal-overlay">
-		<div class="modal-box">
-			<a href="javascript:void(0)" class="close-modal" onclick="closeServiceModal()">&times;</a>
-			
-			<div class="modal-header">
-				<div id="modal-service-icon" style="font-size: 2rem; color: var(--brand-cyan); margin-right: 15px;">
-					</div>
-				<h3 id="modal-service-title">Service Name</h3>
-			</div>
-
-			<div class="modal-body">
-				<p id="modal-service-desc" style="margin-bottom: 25px; color: #555;">Description goes here...</p>
-				
-				<h4 style="color: var(--brand-navy); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
-					<i class="fas fa-stream"></i> Process Workflow
-				</h4>
-				
-				<div class="tutorial-steps" id="modal-service-steps">
-					</div>
-
-				<div style="margin-top: 25px; text-align: center;">
-					<a href="#reservation" onclick="closeServiceModal()" class="btn btn-primary" style="width: 100%;">Book This Service</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
 	<script src="assets/js/lang-engine.js"></script>
 	<script type="module" src="assets/js/global-auth.js"></script>
     <script>
@@ -866,5 +516,6 @@
 				}
 			}
 	</script>
+
 </body>
 </html>
