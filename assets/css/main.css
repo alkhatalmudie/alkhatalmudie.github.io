@@ -2228,9 +2228,64 @@ body[dir="rtl"] .agent-item:hover, body[dir="rtl"] .agent-item.active { border-l
 .admin-theme ::-webkit-scrollbar-thumb, .admin-login-theme ::-webkit-scrollbar-thumb { background: var(--term-border); border-radius: 4px; }
 .admin-theme ::-webkit-scrollbar-thumb:hover, .admin-login-theme ::-webkit-scrollbar-thumb:hover { background: var(--term-cyan); }
 
-/* Responsive Adjustments */
-@media (max-width: 900px) {
-    .admin-wrapper, .dash-wrapper { flex-direction: column; height: auto; display: block; }
-    .admin-sidebar, .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--term-border); }
-    .grid-layout, .admin-main-content { grid-template-columns: 1fr; }
+/* ==========================================================================
+   ALPHA COMMAND: MOBILE TACTICAL ARMOR (V2)
+   ========================================================================== */
+@media (max-width: 992px) {
+    /* 1. Main Viewport Adjustments */
+    body, body.admin-theme { 
+        position: relative; 
+        overflow: hidden; /* Prevent body scroll, handle inside main */
+    }
+    
+    .admin-main-content, .dash-main { 
+        padding: 20px 15px; 
+        width: 100%; 
+        box-sizing: border-box;
+    }
+
+    /* 2. Off-Canvas Sidebar (Hidden by default, slides over content) */
+    .admin-sidebar, .dash-sidebar { 
+        position: fixed; 
+        top: 0; left: -100%; /* Hidden off left edge */
+        height: 100vh; 
+        width: 280px; 
+        z-index: 9999; 
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy tech transition */
+        box-shadow: 20px 0 50px rgba(0,0,0,0.9);
+        background: rgba(2, 6, 15, 0.98); /* Less transparent for readability */
+        backdrop-filter: blur(10px);
+    }
+    
+    /* RTL Support for Arabic mode sliding from the right */
+    body[dir="rtl"] .admin-sidebar, body[dir="rtl"] .dash-sidebar {
+        left: auto; right: -100%;
+        box-shadow: -20px 0 50px rgba(0,0,0,0.9);
+    }
+
+    /* 3. The Activation Trigger Class */
+    body.sidebar-active .admin-sidebar, body.sidebar-active .dash-sidebar { left: 0; }
+    body[dir="rtl"].sidebar-active .admin-sidebar, body[dir="rtl"].sidebar-active .dash-sidebar { right: 0; }
+
+    /* 4. Data Tables & Grids */
+    .panel { 
+        overflow-x: auto; /* Allow tactical swiping on tables */
+        padding: 15px;
+    }
+    .data-table { 
+        min-width: 800px; /* Forces table to stay readable, user swipes to see columns */
+    }
+    .kpi-grid { grid-template-columns: 1fr; } /* Stack KPI blocks vertically */
+
+    /* 5. Header Wrapping */
+    .header-top { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px; 
+    }
+    .header-top > div { 
+        width: 100%; 
+        justify-content: flex-start; 
+        flex-wrap: wrap; 
+    }
 }

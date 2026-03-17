@@ -911,6 +911,19 @@
 					submitBtn.innerText = "Retry Transmission";
 				}
 			}
+			
+			// --- PROMO TRACK SCROLLER ---
+			window.scrollPromo = function(direction) {
+				const track = document.getElementById('promo-track');
+				// Card width (320px) + gap (20px) = 340px scroll amount
+				const scrollAmount = 340 * direction; 
+				
+				// Smooth scroll native to the browser
+				track.scrollBy({
+					left: scrollAmount,
+					behavior: 'smooth'
+				});
+			};
 	</script>
 </body>
 </html>
