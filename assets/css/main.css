@@ -665,7 +665,7 @@ footer {
 }
 
 /* -------------------------------------------------------------------------- */
-/*	13. RESPONSIVE MEDIA QUERIES
+/*	13. RESPONSIVE MEDIA QUERIES (V2 MOBILE ARMOR)
 /* -------------------------------------------------------------------------- */
 @media screen and (max-width: 992px) {
     .about-grid { grid-template-columns: 1fr; }
@@ -674,12 +674,44 @@ footer {
 }
 
 @media screen and (max-width: 768px) {
-    .navbar { flex-direction: column; height: auto; padding: 20px 0; }
-    .nav-menu { margin-top: 20px; gap: 20px; }
-    .carousel-btn { width: 40px; height: 40px; }
-    .prev { left: 10px; } .next { right: 10px; }
-    .footer-grid { grid-template-columns: 1fr; }
+    /* 1. NAVBAR: Keep horizontal, hide text labels to save space */
+    .navbar { flex-direction: row; height: 80px; padding: 0; }
+    .brand-text h3 { font-size: 1rem; }
+    .brand-text span { font-size: 0.65rem; }
+    .menu-toggle .text { display: none; } /* Leaves only the hamburger icon */
+    
+    /* 2. COMMAND CENTER MENU: Convert to full-screen fluid */
+    .menu-panel { width: 100%; right: -100%; padding: 60px 20px; }
+    .menu-panel.active { right: 0; }
+    
+    /* 3. GRIDS & SECTIONS: Force vertical stack and override minmax bleeds */
+    .reservation-grid, .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid { grid-template-columns: 1fr; } 
+    .service-card { padding: 30px 20px; }
+    
+    /* 4. FORMS: Stack inputs securely */
+    .form-row { display: flex; flex-direction: column; gap: 15px; }
+    .form-group { margin-bottom: 0; width: 100%; }
+    
+    /* 5. PROMO TRACK: Fluid horizontal scrolling relative to viewport */
+    .promo-card { min-width: 85vw; max-width: 100%; margin-right: 15px; padding: 20px; }
+    .promo-img-box { margin: -20px -20px 15px -20px; }
+
+    /* 6. TYPOGRAPHY & SPACING */
+    .section-padding { padding: 60px 0; }
     .section-title { font-size: 2rem; }
+    .slide-content p { font-size: 1.1rem; }
+    
+    /* 7. CAROUSEL CONTROLS: Scale down and tuck to edges */
+    .carousel-btn { width: 45px; height: 45px; font-size: 1rem; }
+    .prev { left: 10px; } .next { right: 10px; }
+}
+
+/* Extra breakpoint for narrow phones (e.g., iPhone SE / Galaxy Fold) */
+@media screen and (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat-item h2 { font-size: 2.5rem; }
+    .logo-box .brand-text { display: none; } /* Shows only the DNA logo */
 }
 
 /* -------------------------------------------------------------------------- */
