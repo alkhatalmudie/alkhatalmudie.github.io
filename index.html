@@ -65,6 +65,45 @@
         background-size: cover;
         background-position: center;
     }
+	
+	/* Promo Track Navigation Arrows */
+	.promo-controls {
+		display: flex;
+		gap: 12px;
+	}
+
+	.promo-arrow {
+		background: rgba(0, 242, 255, 0.05);
+		border: 1px solid rgba(0, 242, 255, 0.3);
+		color: var(--brand-cyan, #00f2ff);
+		width: 45px;
+		height: 45px;
+		border-radius: 8px; /* Slightly rounded squares to match cards */
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.3s ease;
+		font-size: 1.2rem;
+	}
+
+	.promo-arrow:hover {
+		background: var(--brand-cyan, #00f2ff);
+		color: #000;
+		box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+		transform: translateY(-2px);
+	}
+
+	.promo-arrow:active {
+		transform: translateY(0);
+	}
+
+	/* Optional: Hide arrows on very small phones where swiping is deeply natural */
+	@media screen and (max-width: 480px) {
+		.promo-controls {
+			display: none; 
+		}
+	}
 </style>
 
 <body>
@@ -149,7 +188,7 @@
 						<h2 class="section-title" id="about-title">Who We Are</h2>
 						<h3 class="arabic-text" id="about-arabic_name" style="color: var(--text-grey); margin-bottom: 20px; font-size: 1.5rem;">الخط المضيء للترجمة</h3>
 						<p id="about-p1" style="margin-bottom: 20px; line-height: 1.8;">
-							At <strong>Al-Khat Al-Mudi</strong> (The Luminous Line), we believe that translation is more than just swapping words; it’s about preserving meaning, tone, and intent. Located in Marka Al-Shamaliya, we serve individuals and businesses with certified translation services accepted by all government bodies and embassies in Jordan.
+							At <strong>Al-Khat Al-Mudi</strong> (The Luminous Line), we believe that translation is more than just swapping words; it’s about preserving meaning, tone, and intent. Located in Marka Al-Janubia, we serve individuals and businesses with certified translation services accepted by all government bodies and embassies in Jordan.
 						</p>
 						<p id="about-p2" style="margin-bottom: 30px; line-height: 1.8;">
 							Whether you are a student applying abroad, a business expanding internationally, or dealing with complex legal documents, our team ensures your message remains clear and professional.
@@ -172,9 +211,16 @@
 		
 		<section style="padding: 60px 0; background-color: #080d1a;" id="special-ops-section">
 			<div class="container">
-				<h2 style="color: var(--brand-cyan); margin-bottom: 30px; border-left: 4px solid var(--brand-magenta); padding-left: 15px;">
-					<i class="fas fa-star"></i> CURRENT OPERATIONS & OFFERS
-				</h2>
+				<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+					<h2 style="color: var(--brand-cyan); margin: 0; border-left: 4px solid var(--brand-magenta); padding-left: 15px;">
+						<i class="fas fa-star"></i> CURRENT OPERATIONS & OFFERS
+					</h2>
+					
+					<div class="promo-controls">
+						<button class="promo-arrow" onclick="scrollPromo(-1)" aria-label="Previous offers"><i class="fas fa-chevron-left"></i></button>
+						<button class="promo-arrow" onclick="scrollPromo(1)" aria-label="Next offers"><i class="fas fa-chevron-right"></i></button>
+					</div>
+				</div>
 				
 				<div id="promo-track" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-snap-type: x mandatory; scrollbar-width: none;">
 					<div style="color: white; opacity: 0.5;"><i class="fas fa-circle-notch fa-spin"></i> Scanning for active offers...</div>
@@ -183,149 +229,149 @@
 		</section>
 
 		<section id="reservation" class="section-padding" style="background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);">
-			<div class="container">
-				<div class="reservation-grid">
-                
-                <div class="reservation-text">
-                    <h2 class="section-title" id="reservation-title">Get Your Quote</h2>
-                    <h3 id="reservation-subtitle" style="font-size: 2rem; margin-bottom: 20px; color: var(--brand-navy);">Ready to Translate?</h3>
-                    <p id="reservation-desc" style="margin-bottom: 30px; color: var(--text-light);">
-                        Upload your documents securely and get a fast, certified quote within minutes. We respect your privacy and deadlines.
-                    </p>
+				<div class="container">
+					<div class="reservation-grid">
+					
+					<div class="reservation-text">
+						<h2 class="section-title" id="reservation-title">Get Your Quote</h2>
+						<h3 id="reservation-subtitle" style="font-size: 2rem; margin-bottom: 20px; color: var(--brand-navy);">Ready to Translate?</h3>
+						<p id="reservation-desc" style="margin-bottom: 30px; color: var(--text-light);">
+							Upload your documents securely and get a fast, certified quote within minutes. We respect your privacy and deadlines.
+						</p>
 
-                    <div class="steps-container">
-                        <div class="step-item">
-                            <div class="step-number">01</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step1_title">Upload File</h4>
-                                <p id="reservation-step1_desc">Select your document (PDF, Word, Image)</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-number">02</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step2_title">Select Details</h4>
-                                <p id="reservation-step2_desc">Choose languages and urgency</p>
-                            </div>
-                        </div>
-                        <div class="step-item">
-                            <div class="step-number">03</div>
-                            <div class="step-content">
-                                <h4 id="reservation-step3_title">Receive Quote</h4>
-                                <p id="reservation-step3_desc">We send you the price & time instantly</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <script type="text/javascript">
-					function startServerSequence() {
-						const overlay = document.getElementById('processing-overlay');
-						const logBox = document.getElementById('terminal-log');
-						const progressBar = document.getElementById('progress-bar');
-						overlay.classList.add('active');
-
-						// The "Hacker" Sequence
-						const messages = [
-							{ text: "> Secure Link Established (TLS 1.3)...", delay: 500 },
-							{ text: "> File Upload Verified (Firebase Cloud)...", delay: 1500 }, // Updated Text
-							{ text: "> Encrypting Metadata...", delay: 3000 },
-							{ text: "> Handshaking with Google Forms API...", delay: 5000 },
-							{ text: "> Packet Transmission Complete.", delay: 7000 },
-							{ text: "> Ticket Generated Successfully.", delay: 8500 },
-							{ text: "> DONE.", delay: 9500, type: "success" }
-						];
-
-						messages.forEach(msg => {
-							setTimeout(() => {
-								const p = document.createElement('div');
-								p.className = `log-line ${msg.type || ''}`;
-								p.innerText = msg.text;
-								logBox.appendChild(p);
-								// Auto-scroll to bottom
-								logBox.scrollTop = logBox.scrollHeight;
-							}, msg.delay);
-						});
-
-						let width = 0;
-						const interval = setInterval(() => {
-							width += 1;
-							progressBar.style.width = width + '%';
-							if (width >= 100) clearInterval(interval);
-						}, 100);
-
-						setTimeout(() => {
-							alert('Request Received! We will review your documents and reply shortly.');
-							window.location.reload();
-						}, 10500);
-					}
-				</script>
-
-					<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe> 
-
-					<form id="main-request-form" class="glass-form" action="https://docs.google.com/forms/d/e/1FAIpQLScDbenz1p7B5GI6IVC6QlPTkgjvaCHWUTN4NDT6sK9y5J1g2Q/formResponse" method="post" target="hidden_iframe" onsubmit="processUploadAndSubmit(event);">
-						
-						<div class="form-header">
-							<h4 id="reservation-form_header">Quick Request</h4>
-						</div>
-						
-						<div class="form-group">
-							<input type="text" id="reservation-ph_name" name="entry.2005620554" placeholder="Full Name" required>
-							<i class="fas fa-user input-icon"></i>
-						</div>
-
-						<div class="form-row">
-							<div class="form-group">
-								<input type="email" id="reservation-ph_email" name="entry.84455640" placeholder="Email Address" required>
-								<i class="fas fa-envelope input-icon"></i>
-							</div>
-							<div class="form-group">
-								<input type="tel" id="reservation-ph_phone" name="entry.1065046570" placeholder="Phone Number" required>
-								<i class="fas fa-phone input-icon"></i>
-							</div>
-						</div>
-
-						<div class="form-row">
-							<div class="form-group">
-								<select name="entry.1166974658" required>
-									<option value="" disabled selected id="reservation-ph_from">Translate From...</option>
-									<option value="English">English</option>
-									<option value="Arabic">Arabic</option>
-									<option value="Russian">Russian</option>
-								</select>
-								<i class="fas fa-globe-americas input-icon"></i>
-							</div>
-							<div class="form-group">
-								<select name="entry.839337160" required>
-									<option value="" disabled selected id="reservation-ph_to">Translate To...</option>
-									<option value="Arabic">Arabic</option>
-									<option value="English">English</option>
-									<option value="Russian">Russian</option>
-								</select>
-								<i class="fas fa-language input-icon"></i>
-							</div>
-						</div>
-
-						<div class="form-group" style="margin-top: 15px;">
-							<input type="file" id="real-file-input" style="display: none;" onchange="updateFileLabel()">
-							
-							<input type="hidden" id="google-entry-link" name="entry.1269480027">
-
-							<label for="real-file-input" class="drop-zone-container" style="cursor: pointer;">
-								<div class="drop-zone-visual">
-									<i class="fas fa-cloud-upload-alt"></i>
-									<span id="drop-label-text">Click to Select Document</span>
-									<small>(PDF, DOCX, JPG supported)</small>
+						<div class="steps-container">
+							<div class="step-item">
+								<div class="step-number">01</div>
+								<div class="step-content">
+									<h4 id="reservation-step1_title">Upload File</h4>
+									<p id="reservation-step1_desc">Select your document (PDF, Word, Image)</p>
 								</div>
-							</label>
+							</div>
+							<div class="step-item">
+								<div class="step-number">02</div>
+								<div class="step-content">
+									<h4 id="reservation-step2_title">Select Details</h4>
+									<p id="reservation-step2_desc">Choose languages and urgency</p>
+								</div>
+							</div>
+							<div class="step-item">
+								<div class="step-number">03</div>
+								<div class="step-content">
+									<h4 id="reservation-step3_title">Receive Quote</h4>
+									<p id="reservation-step3_desc">We send you the price & time instantly</p>
+								</div>
+							</div>
 						</div>
+					</div>
 
-						<button type="submit" class="btn btn-primary" id="reservation-btn_submit" style="width: 100%; margin-top: 20px;">Send Request</button>
-					</form>
-                </div>
-            </div>
-        </div>
-    </section>
+					<script type="text/javascript">
+						function startServerSequence() {
+							const overlay = document.getElementById('processing-overlay');
+							const logBox = document.getElementById('terminal-log');
+							const progressBar = document.getElementById('progress-bar');
+							overlay.classList.add('active');
+
+							// The "Hacker" Sequence
+							const messages = [
+								{ text: "> Secure Link Established (TLS 1.3)...", delay: 500 },
+								{ text: "> File Upload Verified (Firebase Cloud)...", delay: 1500 }, // Updated Text
+								{ text: "> Encrypting Metadata...", delay: 3000 },
+								{ text: "> Handshaking with Google Forms API...", delay: 5000 },
+								{ text: "> Packet Transmission Complete.", delay: 7000 },
+								{ text: "> Ticket Generated Successfully.", delay: 8500 },
+								{ text: "> DONE.", delay: 9500, type: "success" }
+							];
+
+							messages.forEach(msg => {
+								setTimeout(() => {
+									const p = document.createElement('div');
+									p.className = `log-line ${msg.type || ''}`;
+									p.innerText = msg.text;
+									logBox.appendChild(p);
+									// Auto-scroll to bottom
+									logBox.scrollTop = logBox.scrollHeight;
+								}, msg.delay);
+							});
+
+							let width = 0;
+							const interval = setInterval(() => {
+								width += 1;
+								progressBar.style.width = width + '%';
+								if (width >= 100) clearInterval(interval);
+							}, 100);
+
+							setTimeout(() => {
+								alert('Request Received! We will review your documents and reply shortly.');
+								window.location.reload();
+							}, 10500);
+						}
+					</script>
+
+						<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe> 
+
+						<form id="main-request-form" class="glass-form" action="https://docs.google.com/forms/d/e/1FAIpQLScDbenz1p7B5GI6IVC6QlPTkgjvaCHWUTN4NDT6sK9y5J1g2Q/formResponse" method="post" target="hidden_iframe" onsubmit="processUploadAndSubmit(event);">
+							
+							<div class="form-header">
+								<h4 id="reservation-form_header">Quick Request</h4>
+							</div>
+							
+							<div class="form-group">
+								<input type="text" id="reservation-ph_name" name="entry.2005620554" placeholder="Full Name" required>
+								<i class="fas fa-user input-icon"></i>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<input type="email" id="reservation-ph_email" name="entry.84455640" placeholder="Email Address" required>
+									<i class="fas fa-envelope input-icon"></i>
+								</div>
+								<div class="form-group">
+									<input type="tel" id="reservation-ph_phone" name="entry.1065046570" placeholder="Phone Number" required>
+									<i class="fas fa-phone input-icon"></i>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<select name="entry.1166974658" required>
+										<option value="" disabled selected id="reservation-ph_from">Translate From...</option>
+										<option value="English">English</option>
+										<option value="Arabic">Arabic</option>
+										<option value="Russian">Russian</option>
+									</select>
+									<i class="fas fa-globe-americas input-icon"></i>
+								</div>
+								<div class="form-group">
+									<select name="entry.839337160" required>
+										<option value="" disabled selected id="reservation-ph_to">Translate To...</option>
+										<option value="Arabic">Arabic</option>
+										<option value="English">English</option>
+										<option value="Russian">Russian</option>
+									</select>
+									<i class="fas fa-language input-icon"></i>
+								</div>
+							</div>
+
+							<div class="form-group" style="margin-top: 15px;">
+								<input type="file" id="real-file-input" style="display: none;" onchange="updateFileLabel()">
+								
+								<input type="hidden" id="google-entry-link" name="entry.1269480027">
+
+								<label for="real-file-input" class="drop-zone-container" style="cursor: pointer;">
+									<div class="drop-zone-visual">
+										<i class="fas fa-cloud-upload-alt"></i>
+										<span id="drop-label-text">Click to Select Document</span>
+										<small>(PDF, DOCX, JPG supported)</small>
+									</div>
+								</label>
+							</div>
+
+							<button type="submit" class="btn btn-primary" id="reservation-btn_submit" style="width: 100%; margin-top: 20px;">Send Request</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
 
     <section id="services" class="section-padding services-section">
         <div class="container">
