@@ -2229,31 +2229,43 @@ body[dir="rtl"] .agent-item:hover, body[dir="rtl"] .agent-item.active { border-l
 .admin-theme ::-webkit-scrollbar-thumb:hover, .admin-login-theme ::-webkit-scrollbar-thumb:hover { background: var(--term-cyan); }
 
 /* ==========================================================================
-   ALPHA COMMAND: MOBILE TACTICAL ARMOR (V2)
+   ALPHA COMMAND: MOBILE TACTICAL ARMOR (V2.1 - SCROLL & 725px FIX)
    ========================================================================== */
 @media (max-width: 725px) {
     /* 1. Main Viewport Adjustments */
-    body, body.admin-theme { 
+    /* REMOVED global 'body' to fix public site scroll. 
+       Admin theme stays locked at 100vh so it feels like a native app. */
+    body.admin-theme, body.admin-login-theme { 
         position: relative; 
-        overflow: hidden; /* Prevent body scroll, handle inside main */
+        overflow: hidden; 
+        height: 100vh;
+    }
+    
+    .admin-wrapper, .dash-wrapper {
+        display: flex;
+        height: 100vh;
+        width: 100%;
     }
     
     .admin-main-content, .dash-main { 
         padding: 20px 15px; 
         width: 100%; 
         box-sizing: border-box;
+        overflow-y: auto; /* RESTORES VERTICAL SCROLL inside the admin dashboard */
+        height: 100%;
+        padding-bottom: 100px; /* Buffer for the mobile HUD button */
     }
 
-    /* 2. Off-Canvas Sidebar (Hidden by default, slides over content) */
+    /* 2. Off-Canvas Sidebar */
     .admin-sidebar, .dash-sidebar { 
         position: fixed; 
-        top: 0; left: -100%; /* Hidden off left edge */
+        top: 0; left: -100%; 
         height: 100vh; 
         width: 280px; 
         z-index: 9999; 
-        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy tech transition */
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         box-shadow: 20px 0 50px rgba(0,0,0,0.9);
-        background: rgba(2, 6, 15, 0.98); /* Less transparent for readability */
+        background: rgba(2, 6, 15, 0.98); 
         backdrop-filter: blur(10px);
     }
     
@@ -2269,13 +2281,13 @@ body[dir="rtl"] .agent-item:hover, body[dir="rtl"] .agent-item.active { border-l
 
     /* 4. Data Tables & Grids */
     .panel { 
-        overflow-x: auto; /* Allow tactical swiping on tables */
+        overflow-x: auto; /* Allows horizontal swiping on tables */
         padding: 15px;
     }
     .data-table { 
-        min-width: 800px; /* Forces table to stay readable, user swipes to see columns */
+        min-width: 800px; /* Prevents columns from squishing on mobile */
     }
-    .kpi-grid { grid-template-columns: 1fr; } /* Stack KPI blocks vertically */
+    .kpi-grid { grid-template-columns: 1fr; } 
 
     /* 5. Header Wrapping */
     .header-top { 
