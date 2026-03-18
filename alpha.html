@@ -660,45 +660,15 @@
                 const snapshot = await getDocs(q);
                 logBox.innerHTML = "";
 
-		// FETCH ORDERS, SALES & CALCULATE KPIs SAFELY (BACKTICK-FREE)
-        async function fetchRadarData() {
-            const logBox = document.getElementById('mission-log');
-            const dict = dictionary[window.currentLang];
-            let pendingCount = 0; let completedCount = 0; let revenue = 0;
-
-            // Updated loading text to verify the script is actually running
-            logBox.innerHTML = "<tr><td colspan='5' style='text-align: center; color:#888; padding: 40px;'><i class='fas fa-circle-notch fa-spin'></i> Analyzing data nodes...</td></tr>";
-
-            try {
-                // 1. ISOLATED USER COUNT
-                try {
-                    const userSnapshot = await getDocs(collection(db, "users"));
-                    document.getElementById('stat-users').innerText = userSnapshot.size;
-                } catch (e) {
-                    console.warn("User DB blocked/empty:", e);
-                    document.getElementById('stat-users').innerText = "0";
-                }
-
-                // 2. ISOLATED SALES REVENUE (Trips, Packages, etc.)
-                try {
-                    const salesSnapshot = await getDocs(collection(db, "sales"));
-                    salesSnapshot.forEach(doc => {
-                        revenue += parseFloat(doc.data().amount || doc.data().price || 0);
-                    });
-                } catch (e) {
-                    console.warn("Sales DB check bypassed.");
-                }
-
-                // 3. FETCH CORE MISSIONS (Orders)
-                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-                const snapshot = await getDocs(q);
-                logBox.innerHTML = "";
+                // 2. Fetch User Count (New addition!)
+                const userSnapshot = await getDocs(collection(db, "users"));
+                document.getElementById('stat-users').innerText = userSnapshot.size;
 
                 if(snapshot.empty) {
-                    logBox.innerHTML = "<tr><td colspan='5' style='text-align:center; color:#888; padding:30px;'>" + dict.msgEmpty + "</td></tr>";
+                    logBox.innerHTML = `<tr><td colspan='5' style="text-align:center; color:#888; padding:30px;">${dict.msgEmpty}</td></tr>`;
                     document.getElementById('stat-pending').innerText = "0";
                     document.getElementById('stat-completed').innerText = "0";
-                    document.getElementById('stat-revenue').innerText = revenue.toLocaleString('en-US', {minimumFractionDigits: 2});
+                    document.getElementById('stat-revenue').innerText = "0.00";
                     return;
                 }
 
@@ -708,65 +678,35 @@
                     const isPending = data.status !== "Completed";
                     
                     if(isPending) pendingCount++; else completedCount++;
-                    
-                    // Add Order price to Total Revenue
-                    revenue += parseFloat(data.price || data.amount || 0);
+                    revenue += parseFloat(data.price || 0);
 
                     const statusHtml = isPending 
-                        ? "<span class='badge b-pending'>" + dict.txtPending + "</span>" 
-                        : "<span class='badge b-completed'>" + dict.txtCompleted + "</span>";
+                        ? `<span class="badge b-pending">${dict.txtPending}</span>` 
+                        : `<span class="badge b-completed">${dict.txtCompleted}</span>`;
 
-                    // --- PARSER-FRIENDLY BUTTON BUILDER ---
-                    let dynamicButtons = "";
-                    if (isPending) {
-                        let fUrl = data.fileUrl || '#';
-                        dynamicButtons = "<button onclick=\"window.open('" + fUrl + "', '_blank')\"><i class='fas fa-download'></i> Source File</button>" +
-                                         "<button onclick=\"openUploadModal('" + id + "')\"><i class='fas fa-upload'></i> Upload Final</button>";
-                    } else {
-                        let tUrl = data.translatedFileUrl || '#';
-                        dynamicButtons = "<button onclick=\"window.open('" + tUrl + "', '_blank')\"><i class='fas fa-check-double'></i> View Final</button>";
-                    }
+                    const actionHtml = isPending
+                        ? `<button class="btn-cmd" onclick="window.open('${data.fileUrl}', '_blank')">${dict.btnSource}</button><br>
+                           <button class="btn-cmd action" onclick="openUploadModal('${id}')">${dict.btnUpload}</button>`
+                        : `<button class="btn-cmd" onclick="window.open('${data.translatedFileUrl}', '_blank')" style="border-color:#555; color:#888;">${dict.btnView}</button>`;
 
-                    // --- 3-DOT TACTICAL MENU (CONCATENATED) ---
-                    const actionHtml = 
-                        "<div class='action-menu'>" +
-                            "<button class='btn-dots' onclick=\"toggleDropdown('" + id + "')\" title='Tactical Actions'>" +
-                                "<i class='fas fa-ellipsis-v'></i>" +
-                            "</button>" +
-                            "<div id='dropdown-" + id + "' class='action-dropdown'>" +
-                                dynamicButtons +
-                                "<button onclick=\"editMission('" + id + "')\"><i class='fas fa-edit'></i> Edit Parameters</button>" +
-                                "<button onclick=\"deleteMission('" + id + "')\" class='text-danger'><i class='fas fa-trash'></i> Terminate Mission</button>" +
-                            "</div>" +
-                        "</div>";
-
-                    // --- ROW BUILDER (CONCATENATED) ---
-                    const displayId = id.substring(0,8).toUpperCase();
-                    const createdAt = data.createdAt || '';
-                    const clientName = data.clientName || 'Unknown';
-                    const clientEmail = data.clientEmail || '';
-                    const docType = data.docType || 'Service/Package';
-                    const langFrom = data.langFrom || '';
-                    const langTo = data.langTo || '';
-
-                    logBox.innerHTML += 
-                        "<tr>" +
-                            "<td style='color: white; font-weight:bold;'>" + displayId + "<br><span style='font-size:0.75rem; color:#888; font-weight:normal;'>" + createdAt + "</span></td>" +
-                            "<td><strong style='color:var(--term-cyan);'>" + clientName + "</strong><br><span style='color:#888; font-size:0.85rem;'>" + clientEmail + "</span></td>" +
-                            "<td>" + docType + "<br><span style='color:#888; font-size:0.85rem;'>" + langFrom + " > " + langTo + "</span></td>" +
-                            "<td>" + statusHtml + "</td>" +
-                            "<td>" + actionHtml + "</td>" +
-                        "</tr>";
+                    logBox.innerHTML += `
+                        <tr>
+                            <td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888; font-weight:normal;">${data.createdAt || ''}</span></td>
+                            <td><strong style="color:var(--term-cyan);">${data.clientName}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail}</span></td>
+                            <td>${data.docType}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom} > ${data.langTo}</span></td>
+                            <td>${statusHtml}</td>
+                            <td>${actionHtml}</td>
+                        </tr>
+                    `;
                 });
 
-                // Update KPIs Visually
+                // Inject KPI numbers with a cool counter effect
                 document.getElementById('stat-pending').innerText = pendingCount;
                 document.getElementById('stat-completed').innerText = completedCount;
                 document.getElementById('stat-revenue').innerText = revenue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             } catch(error) {
-                console.error("Dashboard Load Error:", error);
-                logBox.innerHTML = "<tr><td colspan='5' style='color:var(--term-red); text-align:center;'>SYSTEM ERROR: " + error.message + "</td></tr>";
+                logBox.innerHTML = `<tr><td colspan='5' style="color:var(--term-red); text-align:center;">SYSTEM ERROR: ${error.message}</td></tr>`;
             }
         }
 
@@ -816,36 +756,6 @@
             } finally {
                 btn.innerText = dict.btnExec;
                 btn.disabled = false;
-            }
-        }
-		
-		// --- DROPDOWN MENU CONTROLLERS ---
-        window.toggleDropdown = function(id) {
-            // Close any currently open menus first
-            document.querySelectorAll('.action-dropdown.show').forEach(el => {
-                if(el.id !== 'dropdown-' + id) el.classList.remove('show');
-            });
-            // Toggle the one we clicked
-            document.getElementById('dropdown-' + id).classList.toggle('show');
-        }
-
-        // Close dropdown if clicked outside
-        window.onclick = function(event) {
-            if (!event.target.closest('.btn-dots')) {
-                document.querySelectorAll(".action-dropdown.show").forEach(el => {
-                    el.classList.remove('show');
-                });
-            }
-        }
-
-        // --- STUBS FOR EDIT/DELETE ACTIONS ---
-        window.editMission = function(id) {
-            alert("INITIATING EDIT PROTOCOL FOR: " + id + "\n(Link this to your edit page)");
-        }
-        
-        window.deleteMission = function(id) {
-            if(confirm("CRITICAL: Are you sure you want to terminate Mission ID: " + id + "?")) {
-                alert("Mission " + id + " Terminated. (Add Firebase delete logic here)");
             }
         }
 
