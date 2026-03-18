@@ -853,6 +853,70 @@
 				});
 			});
 		});
+		
+		// --- ALPHA COMMAND: MOBILE HUD CONTROLLER ---
+		document.addEventListener("DOMContentLoaded", () => {
+			// Only spawn the button on mobile/tablet screens
+			if (window.innerWidth <= 992) {
+				// Create the tactical button
+				const mobileMenuBtn = document.createElement('button');
+				mobileMenuBtn.innerHTML = '<i class="fas fa-satellite-dish"></i>';
+				
+				// Style it like a piece of Alpha Command hardware
+				mobileMenuBtn.style.cssText = `
+					position: fixed; 
+					bottom: 25px; 
+					right: 25px; 
+					z-index: 10000; 
+					background: rgba(5, 10, 21, 0.9); 
+					border: 1px solid var(--term-cyan); 
+					color: var(--term-cyan); 
+					width: 55px; 
+					height: 55px; 
+					border-radius: 50%; 
+					box-shadow: 0 0 20px rgba(0,242,255,0.4); 
+					font-size: 1.2rem; 
+					cursor: pointer;
+					transition: all 0.3s ease;
+					backdrop-filter: blur(5px);
+				`;
+				
+				// Adjust for RTL (Arabic) so it doesn't block UI
+				if (document.body.dir === 'rtl') {
+					mobileMenuBtn.style.right = 'auto';
+					mobileMenuBtn.style.left = '25px';
+				}
+
+				document.body.appendChild(mobileMenuBtn);
+
+				// Click Logic: Toggle Sidebar and morph the button
+				mobileMenuBtn.addEventListener('click', () => {
+					const isActive = document.body.classList.toggle('sidebar-active');
+					
+					if (isActive) {
+						mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+						mobileMenuBtn.style.borderColor = 'var(--term-red)';
+						mobileMenuBtn.style.color = 'var(--term-red)';
+						mobileMenuBtn.style.boxShadow = '0 0 20px rgba(255, 75, 92, 0.4)';
+					} else {
+						mobileMenuBtn.innerHTML = '<i class="fas fa-satellite-dish"></i>';
+						mobileMenuBtn.style.borderColor = 'var(--term-cyan)';
+						mobileMenuBtn.style.color = 'var(--term-cyan)';
+						mobileMenuBtn.style.boxShadow = '0 0 20px rgba(0,242,255,0.4)';
+					}
+				});
+				
+				// Close sidebar if user taps the main content area
+				const mainContent = document.querySelector('.admin-main-content') || document.querySelector('.dash-main');
+				if(mainContent) {
+					mainContent.addEventListener('click', () => {
+						if(document.body.classList.contains('sidebar-active')) {
+							mobileMenuBtn.click(); // Programmatically click to reset styles safely
+						}
+					});
+				}
+			}
+		});
 	</script>
 </body>
 </html>
