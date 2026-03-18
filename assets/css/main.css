@@ -2231,7 +2231,7 @@ body[dir="rtl"] .agent-item:hover, body[dir="rtl"] .agent-item.active { border-l
 /* ==========================================================================
    ALPHA COMMAND: MOBILE TACTICAL ARMOR (V2)
    ========================================================================== */
-@media (max-width: 992px) {
+@media (max-width: 725px) {
     /* 1. Main Viewport Adjustments */
     body, body.admin-theme { 
         position: relative; 
