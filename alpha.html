@@ -660,16 +660,17 @@
                 const snapshot = await getDocs(q);
                 logBox.innerHTML = "";
 
-                // FETCH ORDERS, SALES & CALCULATE KPIs SAFELY
+		// FETCH ORDERS, SALES & CALCULATE KPIs SAFELY (BACKTICK-FREE)
         async function fetchRadarData() {
             const logBox = document.getElementById('mission-log');
             const dict = dictionary[window.currentLang];
             let pendingCount = 0; let completedCount = 0; let revenue = 0;
 
-            logBox.innerHTML = `<tr><td colspan='5' style="text-align: center; color:#888; padding: 40px;"><i class="fas fa-circle-notch fa-spin"></i> Analyzing data nodes...</td></tr>`;
+            // Updated loading text to verify the script is actually running
+            logBox.innerHTML = "<tr><td colspan='5' style='text-align: center; color:#888; padding: 40px;'><i class='fas fa-circle-notch fa-spin'></i> Analyzing data nodes...</td></tr>";
 
             try {
-                // 1. ISOLATED USER COUNT (Won't crash the rest if it fails)
+                // 1. ISOLATED USER COUNT
                 try {
                     const userSnapshot = await getDocs(collection(db, "users"));
                     document.getElementById('stat-users').innerText = userSnapshot.size;
@@ -682,7 +683,6 @@
                 try {
                     const salesSnapshot = await getDocs(collection(db, "sales"));
                     salesSnapshot.forEach(doc => {
-                        // Looks for 'amount' or 'price' depending on how you named it
                         revenue += parseFloat(doc.data().amount || doc.data().price || 0);
                     });
                 } catch (e) {
@@ -717,7 +717,6 @@
                         : "<span class='badge b-completed'>" + dict.txtCompleted + "</span>";
 
                     // --- PARSER-FRIENDLY BUTTON BUILDER ---
-                    // Eliminates nested backticks to fix Notepad++ syntax highlighting
                     let dynamicButtons = "";
                     if (isPending) {
                         let fUrl = data.fileUrl || '#';
@@ -728,29 +727,36 @@
                         dynamicButtons = "<button onclick=\"window.open('" + tUrl + "', '_blank')\"><i class='fas fa-check-double'></i> View Final</button>";
                     }
 
-                    // --- NEW 3-DOT TACTICAL MENU ---
-                    const actionHtml = `
-                        <div class="action-menu">
-                            <button class="btn-dots" onclick="toggleDropdown('${id}')" title="Tactical Actions">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <div id="dropdown-${id}" class="action-dropdown">
-                                ${dynamicButtons}
-                                <button onclick="editMission('${id}')"><i class="fas fa-edit"></i> Edit Parameters</button>
-                                <button onclick="deleteMission('${id}')" class="text-danger"><i class="fas fa-trash"></i> Terminate Mission</button>
-                            </div>
-                        </div>
-                    `;
+                    // --- 3-DOT TACTICAL MENU (CONCATENATED) ---
+                    const actionHtml = 
+                        "<div class='action-menu'>" +
+                            "<button class='btn-dots' onclick=\"toggleDropdown('" + id + "')\" title='Tactical Actions'>" +
+                                "<i class='fas fa-ellipsis-v'></i>" +
+                            "</button>" +
+                            "<div id='dropdown-" + id + "' class='action-dropdown'>" +
+                                dynamicButtons +
+                                "<button onclick=\"editMission('" + id + "')\"><i class='fas fa-edit'></i> Edit Parameters</button>" +
+                                "<button onclick=\"deleteMission('" + id + "')\" class='text-danger'><i class='fas fa-trash'></i> Terminate Mission</button>" +
+                            "</div>" +
+                        "</div>";
 
-                    logBox.innerHTML += `
-                        <tr>
-                            <td style="color: white; font-weight:bold;">${id.substring(0,8).toUpperCase()}<br><span style="font-size:0.75rem; color:#888; font-weight:normal;">${data.createdAt || ''}</span></td>
-                            <td><strong style="color:var(--term-cyan);">${data.clientName || 'Unknown'}</strong><br><span style="color:#888; font-size:0.85rem;">${data.clientEmail || ''}</span></td>
-                            <td>${data.docType || 'Service/Package'}<br><span style="color:#888; font-size:0.85rem;">${data.langFrom || ''} > ${data.langTo || ''}</span></td>
-                            <td>${statusHtml}</td>
-                            <td>${actionHtml}</td>
-                        </tr>
-                    `;
+                    // --- ROW BUILDER (CONCATENATED) ---
+                    const displayId = id.substring(0,8).toUpperCase();
+                    const createdAt = data.createdAt || '';
+                    const clientName = data.clientName || 'Unknown';
+                    const clientEmail = data.clientEmail || '';
+                    const docType = data.docType || 'Service/Package';
+                    const langFrom = data.langFrom || '';
+                    const langTo = data.langTo || '';
+
+                    logBox.innerHTML += 
+                        "<tr>" +
+                            "<td style='color: white; font-weight:bold;'>" + displayId + "<br><span style='font-size:0.75rem; color:#888; font-weight:normal;'>" + createdAt + "</span></td>" +
+                            "<td><strong style='color:var(--term-cyan);'>" + clientName + "</strong><br><span style='color:#888; font-size:0.85rem;'>" + clientEmail + "</span></td>" +
+                            "<td>" + docType + "<br><span style='color:#888; font-size:0.85rem;'>" + langFrom + " > " + langTo + "</span></td>" +
+                            "<td>" + statusHtml + "</td>" +
+                            "<td>" + actionHtml + "</td>" +
+                        "</tr>";
                 });
 
                 // Update KPIs Visually
@@ -760,7 +766,7 @@
 
             } catch(error) {
                 console.error("Dashboard Load Error:", error);
-                logBox.innerHTML = `<tr><td colspan='5' style="color:var(--term-red); text-align:center;">SYSTEM ERROR: ${error.message}</td></tr>`;
+                logBox.innerHTML = "<tr><td colspan='5' style='color:var(--term-red); text-align:center;'>SYSTEM ERROR: " + error.message + "</td></tr>";
             }
         }
 
