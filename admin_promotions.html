@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA COMMAND | Ad Deployments</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    
+    <style>
+        /* ALPHA BACKEND CORE STYLES */
+        :root {
+            --term-bg: #050a15;
+            --term-cyan: #00f2ff;
+            --term-red: #ff4b5c;
+            --term-green: #00ff88;
+            --term-magenta: #ff00ff;
+            --term-panel: rgba(0, 242, 255, 0.03);
+            --term-border: rgba(0, 242, 255, 0.2);
+        }
+
+        body { 
+            background-color: var(--term-bg); color: var(--term-cyan); 
+            font-family: 'Share Tech Mono', monospace, sans-serif; 
+            margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* --- UNIFIED ADMIN SIDEBAR --- */
+        .admin-sidebar { 
+            width: 260px; background: rgba(2, 6, 15, 0.95); 
+            border-right: 1px solid var(--term-border); padding: 30px 20px; 
+            flex-shrink: 0; display: flex; flex-direction: column; 
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5); z-index: 100;
+        }
+        .admin-sidebar-menu { list-style: none; padding: 0; margin: 30px 0; flex-grow: 1; overflow-y: auto; }
+        .admin-sidebar-menu a { 
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 15px; color: #888; text-decoration: none; border-left: 3px solid transparent; 
+            transition: 0.3s; font-size: 0.85rem; letter-spacing: 1px;
+        }
+        .admin-sidebar-menu a:hover, .admin-sidebar-menu a.active { 
+            background: rgba(0, 242, 255, 0.05); color: var(--term-cyan); border-left-color: var(--term-cyan); 
+        }
+
+        /* --- MAIN CONTENT --- */
+        .admin-main-content { 
+            flex-grow: 1; padding: 30px; overflow-y: auto; 
+            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+        }
+        
+        .header-title { margin: 0 0 30px 0; font-size: 1.8rem; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); border-bottom: 1px solid var(--term-border); padding-bottom: 20px;}
+
+        /* --- TACTICAL FORM --- */
+        .panel { 
+            border: 1px solid var(--term-border); background: rgba(0,0,0,0.6); 
+            padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 30px;
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full { grid-column: span 2; }
+        
+        label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        input, textarea { 
+            background: rgba(0,0,0,0.5); border: 1px solid var(--term-border); 
+            color: white; padding: 12px; font-family: inherit; font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--term-cyan); box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+        
+        .btn { 
+            background: transparent; border: 1px solid var(--term-cyan); color: var(--term-cyan); 
+            padding: 12px 20px; cursor: pointer; font-family: inherit; font-weight: bold; 
+            transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn:hover { background: var(--term-cyan); color: var(--term-bg); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
+
+        /* --- DATA TABLE & 3-DOT MENU --- */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { text-align: left; padding: 15px; border-bottom: 2px solid var(--term-border); color: var(--term-cyan); text-transform: uppercase; }
+        .data-table td { padding: 15px; border-bottom: 1px solid rgba(0, 242, 255, 0.05); vertical-align: middle; color: #ddd; }
+        
+        .action-menu { position: relative; display: inline-block; }
+        .btn-dots { background: transparent; border: 1px solid var(--term-border); color: var(--term-cyan); width: 35px; height: 35px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .btn-dots:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--term-cyan); box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+        
+        .action-dropdown {
+            display: none; position: absolute; right: 0; top: 40px; 
+            background: rgba(5, 10, 21, 0.98); border: 1px solid var(--term-cyan);
+            min-width: 170px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 100; border-radius: 4px;
+        }
+        .action-dropdown.show { display: block; }
+        .action-dropdown button {
+            display: block; width: 100%; text-align: left; padding: 12px 15px; background: none; border: none; 
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1); color: #ccc; font-family: inherit; font-size: 0.85rem; cursor: pointer;
+        }
+        .action-dropdown button:hover { background: rgba(0, 242, 255, 0.1); color: var(--term-cyan); padding-left: 20px; }
+        .action-dropdown .text-danger:hover { background: rgba(255, 75, 92, 0.1); color: var(--term-red); border-left: 3px solid var(--term-red); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--term-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--term-border); }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.2);">
+            <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--term-magenta); margin-bottom: 10px; text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);"></i>
+            <h3 style="margin:0; color:white; letter-spacing: 2px;">ALPHA <span style="color:var(--term-cyan);">COMMAND</span></h3>
+            <div style="font-size: 0.7rem; color: #888; margin-top: 5px;">AD DEPLOYMENT MODULE</div>
+        </div>
+        
+        <ul class="admin-sidebar-menu">
+            <li><a href="alpha.html"><i class="fas fa-satellite-dish"></i> Main Dashboard</a></li>
+            <li><a href="admin_promotions.html" class="active"><i class="fas fa-bullhorn"></i> Ad Deployments</a></li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 20px;">
+            <button onclick="window.location.href='index.html'" class="btn" style="width: 100%; font-size: 0.8rem;">RETURN TO BASE</button>
+        </div>
+    </aside>
+
+    <main class="admin-main-content">
+        <h2 class="header-title"><i class="fas fa-bullhorn"></i> DEPLOY NEW ADVERTISEMENT / PROMOTION</h2>
+        
+        <div class="panel">
+            <form id="ad-form" onsubmit="executeAdDeployment(event)">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label>Target Audience Title (e.g. Mega Translation Bundle)</label>
+                        <input type="text" id="ad-name" required placeholder="Enter transmission title...">
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label>Description Details</label>
+                        <textarea id="ad-desc" rows="3" required placeholder="Enter promotion details..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Old Price (JOD) - Optional</label>
+                        <input type="number" id="ad-old" step="0.01" placeholder="e.g. 50.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>New Price (JOD)</label>
+                        <input type="number" id="ad-new" step="0.01" required placeholder="e.g. 35.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="ad-start" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="ad-end" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Requirements / Features (Comma Separated)</label>
+                        <input type="text" id="ad-reqs" required placeholder="e.g. 3 Documents max, Birth Certificates only, 24h delivery">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Upload Promo Image</label>
+                        <input type="file" id="ad-image" accept="image/*" style="padding: 10px; border: 1px dashed var(--term-cyan);">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" id="btn-deploy" style="width: 100%; margin-top: 20px; border-color: var(--term-green); color: var(--term-green);">
+                    <i class="fas fa-rocket"></i> DEPLOY TO LIVE SERVERS
+                </button>
+            </form>
+        </div>
+
+        <h2 class="header-title" style="margin-top: 40px;"><i class="fas fa-broadcast-tower"></i> LIVE BROADCASTS</h2>
+        
+        <div class="panel" style="padding: 0;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Visual</th>
+                        <th>Ad Parameters</th>
+                        <th>Pricing</th>
+                        <th>Status / Duration</th>
+                        <th>Tactical Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ads-log">
+                    <tr><td colspan="5" style="text-align: center; color:#888; padding: 40px;"><i class="fas fa-circle-notch fa-spin"></i> Scanning for active broadcasts...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT5mqFBwSBea1_5RMXv3_59V4Y5LUy5to",
+            authDomain: "al-khat-backend.firebaseapp.com",
+            projectId: "al-khat-backend",
+            storageBucket: "al-khat-storage-doha",
+            messagingSenderId: "310033181926",
+            appId: "1:310033181926:web:9a028807fa7c7ab31c5f27"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        const ADMIN_UID = "EOQEt04azKTTWcmNXVtpgSVsRxt2";
+
+        // Security Check
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.uid !== ADMIN_UID) {
+                document.body.innerHTML = "<h1 style='color:#ff4b5c; text-align:center; margin-top:20vh;'>[ SECURITY BREACH DETECTED ]</h1>";
+                setTimeout(() => { window.location.href = "admin_login.html"; }, 2000);
+            } else {
+                fetchActiveAds(); 
+            }
+        });
+
+        // 1. DEPLOY NEW AD TO FIRESTORE
+        window.executeAdDeployment = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-deploy');
+            btn.innerText = "TRANSMITTING TO SATELLITE...";
+            btn.disabled = true;
+
+            try {
+                const fileInput = document.getElementById('ad-image');
+                let imageUrl = "";
+
+                // Upload image if selected
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const storageRef = ref(storage, 'promotions/' + Date.now() + '_' + file.name);
+                    const snapshot = await uploadBytes(storageRef, file);
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                }
+
+                // Compile Payload
+                const payload = {
+                    name: document.getElementById('ad-name').value,
+                    desc: document.getElementById('ad-desc').value,
+                    oldPrice: document.getElementById('ad-old').value || "0",
+                    newPrice: document.getElementById('ad-new').value,
+                    startDate: document.getElementById('ad-start').value,
+                    endDate: document.getElementById('ad-end').value,
+                    reqs: document.getElementById('ad-reqs').value,
+                    imageUrl: imageUrl,
+                    timestamp: serverTimestamp()
+                };
+
+                // Inject into Database
+                await addDoc(collection(db, "promotions"), payload);
+                
+                alert("SUCCESS: Broadcast is now live across the network.");
+                document.getElementById('ad-form').reset();
+                fetchActiveAds(); // Refresh table
+
+            } catch (error) {
+                console.error("Deploy Error:", error);
+                alert("TRANSMISSION FAILED: " + error.message);
+            } finally {
+                btn.innerHTML = "<i class='fas fa-rocket'></i> DEPLOY TO LIVE SERVERS";
+                btn.disabled = false;
+            }
+        }
+
+        // 2. FETCH & DISPLAY ACTIVE ADS (BACKTICK SAFE)
+        async function fetchActiveAds() {
+            const logBox = document.getElementById('ads-log');
+            logBox.innerHTML = "<tr><td colspan='5' style='text-align:center; color:#888; padding:20px;'><i class='fas fa-spinner fa-spin'></i></td></tr>";
+
+            try {
+                const q = query(collection(db, "promotions"), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                logBox.innerHTML = "";
+
+                if(snapshot.empty) {
+                    logBox.innerHTML = "<tr><td colspan='5' style='text-align:center; color:#888; padding:30px;'>No active broadcasts. Airwaves are clear.</td></tr>";
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    
+                    const imgHtml = data.imageUrl 
+                        ? "<img src='" + data.imageUrl + "' style='width:60px; height:60px; object-fit:cover; border-radius:5px; border:1px solid var(--term-cyan);'>"
+                        : "<div style='width:60px; height:60px; background:#111; display:flex; align-items:center; justify-content:center; border:1px dashed #555;'><i class='fas fa-image'></i></div>";
+
+                    // The Tactical Menu HTML
+                    const actionHtml = 
+                        "<div class='action-menu'>" +
+                            "<button class='btn-dots' onclick=\"toggleDropdown('" + id + "')\">" +
+                                "<i class='fas fa-ellipsis-v'></i>" +
+                            "</button>" +
+                            "<div id='dropdown-" + id + "' class='action-dropdown'>" +
+                                "<button onclick=\"terminateAd('" + id + "')\" class='text-danger'><i class='fas fa-trash'></i> Terminate Broadcast</button>" +
+                            "</div>" +
+                        "</div>";
+
+                    logBox.innerHTML += 
+                        "<tr>" +
+                            "<td>" + imgHtml + "</td>" +
+                            "<td><strong style='color:white;'>" + data.name + "</strong><br><span style='font-size:0.8rem;'>" + data.desc.substring(0,30) + "...</span></td>" +
+                            "<td><strike style='color:#888;'>$" + data.oldPrice + "</strike> <strong style='color:var(--term-green);'>$" + data.newPrice + "</strong></td>" +
+                            "<td>" + data.startDate + " to " + data.endDate + "</td>" +
+                            "<td>" + actionHtml + "</td>" +
+                        "</tr>";
+                });
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                logBox.innerHTML = "<tr><td colspan='5' style='color:red;'>Failed to intercept signals.</td></tr>";
+            }
+        }
+
+        // 3. TACTICAL TERMINATION CONTROLS
+        window.toggleDropdown = function(id) {
+            document.querySelectorAll('.action-dropdown.show').forEach(el => {
+                if(el.id !== 'dropdown-' + id) el.classList.remove('show');
+            });
+            document.getElementById('dropdown-' + id).classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.btn-dots')) {
+                document.querySelectorAll(".action-dropdown.show").forEach(el => el.classList.remove('show'));
+            }
+        }
+
+        window.terminateAd = async function(id) {
+            if(confirm("CRITICAL: Disconnect this broadcast from the server permanently?")) {
+                try {
+                    await deleteDoc(doc(db, "promotions", id));
+                    fetchActiveAds();
+                } catch (error) {
+                    alert("Termination failed: " + error.message);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
