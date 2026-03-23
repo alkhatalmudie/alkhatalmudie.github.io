@@ -648,19 +648,7 @@
 			}
 		});
 
-        // FETCH ORDERS & CALCULATE KPIs
-        async function fetchRadarData() {
-            const logBox = document.getElementById('mission-log');
-            const dict = dictionary[window.currentLang];
-            let pendingCount = 0; let completedCount = 0; let revenue = 0;
-
-            try {
-                // 1. Fetch Orders
-                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-                const snapshot = await getDocs(q);
-                logBox.innerHTML = "";
-
-		 // FETCH ORDERS, SALES & CALCULATE KPIs SAFELY (PARSER-SAFE VERSION)
+        // FETCH ORDERS, SALES & CALCULATE KPIs SAFELY (PARSER-SAFE VERSION)
         async function fetchRadarData() {
             const logBox = document.getElementById('mission-log');
             const dict = dictionary[window.currentLang];
@@ -763,6 +751,32 @@
 
             } catch(error) {
                 logBox.innerHTML = "<tr><td colspan='5' style='color:var(--term-red); text-align:center;'>SYSTEM ERROR: " + error.message + "</td></tr>";
+            }
+        }
+
+        // --- DROPDOWN MENU CONTROLLERS ---
+        window.toggleDropdown = function(id) {
+            document.querySelectorAll('.action-dropdown.show').forEach(el => {
+                if(el.id !== 'dropdown-' + id) el.classList.remove('show');
+            });
+            document.getElementById('dropdown-' + id).classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.btn-dots')) {
+                document.querySelectorAll(".action-dropdown.show").forEach(el => {
+                    el.classList.remove('show');
+                });
+            }
+        }
+
+        window.editMission = function(id) {
+            alert("INITIATING EDIT PROTOCOL FOR: " + id);
+        }
+        
+        window.deleteMission = function(id) {
+            if(confirm("CRITICAL: Are you sure you want to terminate Mission ID: " + id + "?")) {
+                alert("Mission " + id + " Terminated.");
             }
         }
 
