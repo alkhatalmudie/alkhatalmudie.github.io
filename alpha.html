@@ -434,7 +434,8 @@
 			doc, 
 			onSnapshot, 
 			limit, 
-			serverTimestamp 
+			serverTimestamp, 
+			deleteDoc
 		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 		import { 
@@ -774,9 +775,31 @@
             alert("INITIATING EDIT PROTOCOL FOR: " + id);
         }
         
-        window.deleteMission = function(id) {
-            if(confirm("CRITICAL: Are you sure you want to terminate Mission ID: " + id + "?")) {
-                alert("Mission " + id + " Terminated.");
+        // --- LIVE TERMINATION PROTOCOL ---
+        window.deleteMission = async function(id) {
+            // Ask for final confirmation before permanent deletion
+            if(confirm("CRITICAL WARNING: Are you sure you want to permanently terminate Mission ID: " + id + "? This action cannot be undone.")) {
+                
+                // Change cursor to show system is working
+                document.body.style.cursor = 'wait';
+                
+                try {
+                    // Target the specific document in the "orders" collection and destroy it
+                    await deleteDoc(doc(db, "orders", id));
+                    
+                    // Alert the Commander
+                    alert("Mission " + id + " has been completely purged from the system.");
+                    
+                    // Automatically refresh the dashboard to clear the ghost data
+                    fetchRadarData(); 
+                    
+                } catch (error) {
+                    console.error("Termination Failed:", error);
+                    alert("SYSTEM ERROR: Could not terminate mission. " + error.message);
+                } finally {
+                    // Restore normal cursor
+                    document.body.style.cursor = 'default';
+                }
             }
         }
 
